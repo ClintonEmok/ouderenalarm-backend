@@ -54,13 +54,27 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
 
-    public function address(): BelongsTo
+    public function addresses()
     {
-        return $this->belongsTo(Address::class);
+        return $this->belongsToMany(Address::class, 'user_address')->withTimestamps();
     }
 
     public function devices(): HasMany
     {
         return $this->hasMany(Device::class);
+    }
+
+    public function shippingAddresses()
+    {
+        return $this->belongsToMany(Address::class, 'user_address')
+            ->wherePivot('type', 'shipping')
+            ->withTimestamps();
+    }
+
+    public function billingAddresses()
+    {
+        return $this->belongsToMany(Address::class, 'user_address')
+            ->wherePivot('type', 'billing')
+            ->withTimestamps();
     }
 }

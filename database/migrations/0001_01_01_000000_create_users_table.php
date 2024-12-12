@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->unsignedBigInteger('address_id')->nullable(); // Foreign key to addresses
             $table->string('last_name');
-            $table->string('phone_number');
+            $table->string('phone_number')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

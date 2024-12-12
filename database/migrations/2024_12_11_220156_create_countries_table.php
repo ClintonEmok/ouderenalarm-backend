@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('countries', function (Blueprint $table) {
             $table->id(); // Primary Key (CountryID)
             $table->string('name'); // Country Name
+            $table->string('iso_code')->unique();
             $table->timestamps();
         });
     }
