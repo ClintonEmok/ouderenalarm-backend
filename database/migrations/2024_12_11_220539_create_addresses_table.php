@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('street_name');
             $table->string('house_number');
             $table->string('postal_code');
+            $table->enum('type', ['billing', 'shipping'])->default('shipping');
             $table->timestamps();
         });
     }

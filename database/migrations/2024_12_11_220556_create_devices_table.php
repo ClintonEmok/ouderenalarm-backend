@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('alarm_code')->nullable();
-            $table->decimal('longitude', 10, 7);
-            $table->decimal('latitude', 10, 7);
+            $table->decimal('longitude', 10, 8);
+            $table->decimal('latitude', 10, 8);
             $table->string('maps_link')->nullable();
-            $table->string('phone_number')->nullable();
-            $table->integer('battery_percentage')->unsigned()->default(100);
+            $table->string('phone_number');
+            $table->tinyInteger('battery_percentage')->unsigned()->default(100);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
