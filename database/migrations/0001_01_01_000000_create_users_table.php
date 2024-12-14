@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->unsignedBigInteger('address_id')->nullable(); // Foreign key to addresses
             $table->string('last_name');
             $table->string('phone_number')->nullable();
             $table->rememberToken();
