@@ -1,0 +1,367 @@
+openapi: 3.0.3
+info:
+  title: 'Ouderenalarm API'
+  description: ''
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost:8000'
+paths:
+  /api/devices:
+    get:
+      summary: 'Display a listing of the devices.'
+      operationId: displayAListingOfTheDevices
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                example:
+                  -
+                    id: 1
+                    user_id: 2
+                    alarm_code: '12345'
+                    longitude: 12.34
+                    latitude: 56.78
+                    maps_link: 'https://maps.google.com/?q=56.78,12.34'
+                    phone_number: '+1234567890'
+                    battery_percentage: 90
+      tags:
+        - Devices
+      security: []
+    post:
+      summary: 'Store a newly created device in storage.'
+      operationId: storeANewlyCreatedDeviceInStorage
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  user_id: 2
+                  alarm_code: '12345'
+                  longitude: 12.34
+                  latitude: 56.78
+                  maps_link: 'https://maps.google.com/?q=56.78,12.34'
+                  phone_number: '+1234567890'
+                  battery_percentage: 90
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  user_id:
+                    type: integer
+                    example: 2
+                  alarm_code:
+                    type: string
+                    example: '12345'
+                  longitude:
+                    type: number
+                    example: 12.34
+                  latitude:
+                    type: number
+                    example: 56.78
+                  maps_link:
+                    type: string
+                    example: 'https://maps.google.com/?q=56.78,12.34'
+                  phone_number:
+                    type: string
+                    example: '+1234567890'
+                  battery_percentage:
+                    type: integer
+                    example: 90
+      tags:
+        - Devices
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  description: 'The ID of the user associated with the device.'
+                  example: 1
+                  nullable: false
+                alarm_code:
+                  type: string
+                  description: 'optional The alarm code for the device.'
+                  example: '1234'
+                  nullable: true
+                longitude:
+                  type: numeric
+                  description: 'optional The longitude of the device location.'
+                  example: '12.345'
+                  nullable: true
+                latitude:
+                  type: numeric
+                  description: 'optional The latitude of the device location.'
+                  example: '54.321'
+                  nullable: true
+                maps_link:
+                  type: string
+                  description: 'optional A Google Maps link for the device location.'
+                  example: 'https://maps.google.com/?q=12.345,54.321'
+                  nullable: true
+                phone_number:
+                  type: string
+                  description: 'The phone number associated with the device.'
+                  example: '+1234567890'
+                  nullable: false
+                battery_percentage:
+                  type: integer
+                  description: 'optional The battery percentage of the device.'
+                  example: 85
+                  nullable: true
+              required:
+                - user_id
+                - phone_number
+      security: []
+  '/api/devices/{id}':
+    get:
+      summary: 'Display the specified device.'
+      operationId: displayTheSpecifiedDevice
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  user_id: 2
+                  alarm_code: '12345'
+                  longitude: 12.34
+                  latitude: 56.78
+                  maps_link: 'https://maps.google.com/?q=56.78,12.34'
+                  phone_number: '+1234567890'
+                  battery_percentage: 90
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  user_id:
+                    type: integer
+                    example: 2
+                  alarm_code:
+                    type: string
+                    example: '12345'
+                  longitude:
+                    type: number
+                    example: 12.34
+                  latitude:
+                    type: number
+                    example: 56.78
+                  maps_link:
+                    type: string
+                    example: 'https://maps.google.com/?q=56.78,12.34'
+                  phone_number:
+                    type: string
+                    example: '+1234567890'
+                  battery_percentage:
+                    type: integer
+                    example: 90
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Device not found'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Device not found'
+      tags:
+        - Devices
+      security: []
+    put:
+      summary: 'Update the specified device in storage.'
+      operationId: updateTheSpecifiedDeviceInStorage
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  user_id: 2
+                  alarm_code: '12345'
+                  longitude: 12.34
+                  latitude: 56.78
+                  maps_link: 'https://maps.google.com/?q=56.78,12.34'
+                  phone_number: '+1234567890'
+                  battery_percentage: 90
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  user_id:
+                    type: integer
+                    example: 2
+                  alarm_code:
+                    type: string
+                    example: '12345'
+                  longitude:
+                    type: number
+                    example: 12.34
+                  latitude:
+                    type: number
+                    example: 56.78
+                  maps_link:
+                    type: string
+                    example: 'https://maps.google.com/?q=56.78,12.34'
+                  phone_number:
+                    type: string
+                    example: '+1234567890'
+                  battery_percentage:
+                    type: integer
+                    example: 90
+      tags:
+        - Devices
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the users table.'
+                  example: null
+                  nullable: false
+                alarm_code:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: qdrxluqgzxpljnfabf
+                  nullable: true
+                longitude:
+                  type: number
+                  description: 'Must be between -180 and 180.'
+                  example: -179
+                  nullable: true
+                latitude:
+                  type: number
+                  description: 'Must be between -90 and 90.'
+                  example: -89
+                  nullable: true
+                maps_link:
+                  type: string
+                  description: 'Must not be greater than 2083 characters.'
+                  example: ethyzuuuzvjbpzijqoasm
+                  nullable: true
+                phone_number:
+                  type: string
+                  description: 'Must not be greater than 15 characters.'
+                  example: ckpcaxhncpli
+                  nullable: true
+                battery_percentage:
+                  type: integer
+                  description: 'Must be between 0 and 100.'
+                  example: 1
+                  nullable: true
+      security: []
+    delete:
+      summary: 'Remove the specified device from storage.'
+      operationId: removeTheSpecifiedDeviceFromStorage
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Device deleted successfully'
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Device deleted successfully'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Device not found'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Device not found'
+      tags:
+        - Devices
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the device.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/user:
+    get:
+      summary: ''
+      operationId: getApiUser
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+tags:
+  -
+    name: Devices
+    description: "**List All Devices**\n\nThis endpoint retrieves a list of all devices."
+  -
+    name: Endpoints
+    description: ''

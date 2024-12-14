@@ -13,6 +13,40 @@ class AuthenticatedSessionController extends Controller
 {
     /**
      * Handle an incoming authentication request.
+     *
+     * @group Authentication
+     *
+     * **Login to the system**
+     *
+     * This endpoint allows users to log in with their email and password.
+     * If successful, it returns an access token for mobile users and a session-based cookie for SPA users.
+     *
+     * @bodyParam email string required The user's email address. Example: user@example.com
+     * @bodyParam password string required The user's password. Example: password123
+     *
+     * @response 200 {
+     *   "message": "Login successful",
+     *   "access_token": "1|e3PDeODU1v6Fw7zUb1DQcqNfXk7LJACXfiHVAmk2",
+     *   "token_type": "Bearer",
+     *   "user": {
+     *     "id": 1,
+     *     "name": "John Doe",
+     *     "email": "user@example.com",
+     *     "created_at": "2024-11-20T12:00:00.000000Z",
+     *     "updated_at": "2024-11-20T12:00:00.000000Z"
+     *   }
+     * }
+     *
+     * @response 401 {
+     *   "message": "Authentication failed. Please check your credentials."
+     * }
+     *
+     * @response 500 {
+     *   "message": "Internal server error."
+     * }
+     *
+     * @param  \App\Http\Requests\Auth\LoginRequest  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(LoginRequest $request): JsonResponse
     {
@@ -50,6 +84,26 @@ class AuthenticatedSessionController extends Controller
 
     /**
      * Destroy an authenticated session.
+     *
+     * @group Authentication
+     *
+     * **Logout from the system**
+     *
+     * This endpoint allows the user to log out.
+     * For mobile users, the token is revoked, and for SPA users, the session is invalidated.
+     *
+     * @authenticated
+     *
+     * @response 200 {
+     *   "message": "Logout successful"
+     * }
+     *
+     * @response 500 {
+     *   "message": "Failed to log out."
+     * }
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Request $request): JsonResponse
     {
