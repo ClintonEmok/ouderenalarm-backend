@@ -27,7 +27,7 @@
 
     <script>
         var tryItOutBaseUrl = "http://localhost:8000";
-        var useCsrf = Boolean();
+        var useCsrf = Boolean(1);
         var csrfUrl = "/sanctum/csrf-cookie";
     </script>
     <script src="../docs/js/tryitout-4.38.0.js"></script>
@@ -72,19 +72,19 @@
                 </li>
                                     <ul id="tocify-subheader-devices" class="tocify-subheader">
                                                     <li class="tocify-item level-2" data-unique="devices-GETapi-devices">
-                                <a href="#devices-GETapi-devices">Display a listing of the devices.</a>
+                                <a href="#devices-GETapi-devices">Display a listing of the user's devices.</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="devices-POSTapi-devices">
-                                <a href="#devices-POSTapi-devices">Store a newly created device in storage.</a>
+                                <a href="#devices-POSTapi-devices">Store a newly created device for the authenticated user.</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="devices-GETapi-devices--id-">
-                                <a href="#devices-GETapi-devices--id-">Display the specified device.</a>
+                                <a href="#devices-GETapi-devices--id-">Display the specified device for the authenticated user.</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="devices-PUTapi-devices--id-">
-                                <a href="#devices-PUTapi-devices--id-">Update the specified device in storage.</a>
+                                <a href="#devices-PUTapi-devices--id-">Update the specified device for the authenticated user.</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="devices-DELETEapi-devices--id-">
-                                <a href="#devices-DELETEapi-devices--id-">Remove the specified device from storage.</a>
+                                <a href="#devices-DELETEapi-devices--id-">Remove the specified device for the authenticated user.</a>
                             </li>
                                                                         </ul>
                             </ul>
@@ -107,7 +107,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: December 14, 2024</li>
+        <li>Last updated: December 15, 2024</li>
     </ul>
 </div>
 
@@ -123,16 +123,18 @@
 You can switch the language used with the tabs at the top right (or from the nav menu at the top left on mobile).</aside>
 
         <h1 id="authenticating-requests">Authenticating requests</h1>
-<p>This API is not authenticated.</p>
+<p>To authenticate requests, include an <strong><code>Authorization</code></strong> header with the value <strong><code>"Bearer {YOUR_AUTH_KEY}"</code></strong>.</p>
+<p>All authenticated endpoints are marked with a <code>requires authentication</code> badge in the documentation below.</p>
+<p>You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.</p>
 
         <h1 id="devices">Devices</h1>
 
-    <p><strong>List All Devices</strong></p>
-<p>This endpoint retrieves a list of all devices.</p>
+    
 
-                                <h2 id="devices-GETapi-devices">Display a listing of the devices.</h2>
+                                <h2 id="devices-GETapi-devices">Display a listing of the user&#039;s devices.</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 
@@ -144,6 +146,7 @@ You can switch the language used with the tabs at the top right (or from the nav
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
     --get "http://localhost:8000/api/devices" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
@@ -154,6 +157,7 @@ You can switch the language used with the tabs at the top right (or from the nav
 );
 
 const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -171,18 +175,7 @@ fetch(url, {
         </blockquote>
                 <pre>
 
-<code class="language-json" style="max-height: 300px;">[
-    {
-        &quot;id&quot;: 1,
-        &quot;user_id&quot;: 2,
-        &quot;alarm_code&quot;: &quot;12345&quot;,
-        &quot;longitude&quot;: 12.34,
-        &quot;latitude&quot;: 56.78,
-        &quot;maps_link&quot;: &quot;https://maps.google.com/?q=56.78,12.34&quot;,
-        &quot;phone_number&quot;: &quot;+1234567890&quot;,
-        &quot;battery_percentage&quot;: 90
-    }
-]</code>
+<code class="language-json" style="max-height: 300px;">{}</code>
  </pre>
     </span>
 <span id="execution-results-GETapi-devices" hidden>
@@ -202,7 +195,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-GETapi-devices" data-method="GET"
       data-path="api/devices"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -233,6 +226,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-devices"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -256,9 +260,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                         </form>
 
-                    <h2 id="devices-POSTapi-devices">Store a newly created device in storage.</h2>
+                    <h2 id="devices-POSTapi-devices">Store a newly created device for the authenticated user.</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 
@@ -270,16 +275,16 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
     "http://localhost:8000/api/devices" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"user_id\": 1,
-    \"alarm_code\": \"1234\",
-    \"longitude\": \"12.345\",
-    \"latitude\": \"54.321\",
-    \"maps_link\": \"https:\\/\\/maps.google.com\\/?q=12.345,54.321\",
-    \"phone_number\": \"+1234567890\",
-    \"battery_percentage\": 85
+    \"alarm_code\": \"qyglpfirscihxxvyyuo\",
+    \"longitude\": -180,
+    \"latitude\": -89,
+    \"maps_link\": \"iwyljgcushr\",
+    \"phone_number\": \"tfsloayxf\",
+    \"battery_percentage\": 0
 }"
 </code></pre></div>
 
@@ -290,18 +295,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
 );
 
 const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
 
 let body = {
-    "user_id": 1,
-    "alarm_code": "1234",
-    "longitude": "12.345",
-    "latitude": "54.321",
-    "maps_link": "https:\/\/maps.google.com\/?q=12.345,54.321",
-    "phone_number": "+1234567890",
-    "battery_percentage": 85
+    "alarm_code": "qyglpfirscihxxvyyuo",
+    "longitude": -180,
+    "latitude": -89,
+    "maps_link": "iwyljgcushr",
+    "phone_number": "tfsloayxf",
+    "battery_percentage": 0
 };
 
 fetch(url, {
@@ -313,23 +318,7 @@ fetch(url, {
 </span>
 
 <span id="example-responses-POSTapi-devices">
-            <blockquote>
-            <p>Example response (201):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;id&quot;: 1,
-    &quot;user_id&quot;: 2,
-    &quot;alarm_code&quot;: &quot;12345&quot;,
-    &quot;longitude&quot;: 12.34,
-    &quot;latitude&quot;: 56.78,
-    &quot;maps_link&quot;: &quot;https://maps.google.com/?q=56.78,12.34&quot;,
-    &quot;phone_number&quot;: &quot;+1234567890&quot;,
-    &quot;battery_percentage&quot;: 90
-}</code>
- </pre>
-    </span>
+</span>
 <span id="execution-results-POSTapi-devices" hidden>
     <blockquote>Received response<span
                 id="execution-response-status-POSTapi-devices"></span>:
@@ -347,7 +336,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-POSTapi-devices" data-method="POST"
       data-path="api/devices"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -378,6 +367,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-devices"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -401,48 +401,37 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                                 <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>user_id</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="user_id"                data-endpoint="POSTapi-devices"
-               value="1"
-               data-component="body">
-    <br>
-<p>The ID of the user associated with the device. Example: <code>1</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>alarm_code</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="alarm_code"                data-endpoint="POSTapi-devices"
-               value="1234"
+               value="qyglpfirscihxxvyyuo"
                data-component="body">
     <br>
-<p>optional The alarm code for the device. Example: <code>1234</code></p>
+<p>Must not be greater than 20 characters. Example: <code>qyglpfirscihxxvyyuo</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>longitude</code></b>&nbsp;&nbsp;
-<small>numeric</small>&nbsp;
+<small>number</small>&nbsp;
 <i>optional</i> &nbsp;
-                <input type="text" style="display: none"
-                              name="longitude"                data-endpoint="POSTapi-devices"
-               value="12.345"
+                <input type="number" style="display: none"
+               step="any"               name="longitude"                data-endpoint="POSTapi-devices"
+               value="-180"
                data-component="body">
     <br>
-<p>optional The longitude of the device location. Example: <code>12.345</code></p>
+<p>Must be between -180 and 180. Example: <code>-180</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>latitude</code></b>&nbsp;&nbsp;
-<small>numeric</small>&nbsp;
+<small>number</small>&nbsp;
 <i>optional</i> &nbsp;
-                <input type="text" style="display: none"
-                              name="latitude"                data-endpoint="POSTapi-devices"
-               value="54.321"
+                <input type="number" style="display: none"
+               step="any"               name="latitude"                data-endpoint="POSTapi-devices"
+               value="-89"
                data-component="body">
     <br>
-<p>optional The latitude of the device location. Example: <code>54.321</code></p>
+<p>Must be between -90 and 90. Example: <code>-89</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>maps_link</code></b>&nbsp;&nbsp;
@@ -450,10 +439,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="maps_link"                data-endpoint="POSTapi-devices"
-               value="https://maps.google.com/?q=12.345,54.321"
+               value="iwyljgcushr"
                data-component="body">
     <br>
-<p>optional A Google Maps link for the device location. Example: <code>https://maps.google.com/?q=12.345,54.321</code></p>
+<p>Must not be greater than 2083 characters. Example: <code>iwyljgcushr</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>phone_number</code></b>&nbsp;&nbsp;
@@ -461,10 +450,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="phone_number"                data-endpoint="POSTapi-devices"
-               value="+1234567890"
+               value="tfsloayxf"
                data-component="body">
     <br>
-<p>The phone number associated with the device. Example: <code>+1234567890</code></p>
+<p>Must not be greater than 15 characters. Example: <code>tfsloayxf</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>battery_percentage</code></b>&nbsp;&nbsp;
@@ -472,16 +461,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="battery_percentage"                data-endpoint="POSTapi-devices"
-               value="85"
+               value="0"
                data-component="body">
     <br>
-<p>optional The battery percentage of the device. Example: <code>85</code></p>
+<p>Must be between 0 and 100. Example: <code>0</code></p>
         </div>
         </form>
 
-                    <h2 id="devices-GETapi-devices--id-">Display the specified device.</h2>
+                    <h2 id="devices-GETapi-devices--id-">Display the specified device for the authenticated user.</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 
@@ -492,17 +482,19 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/devices/1" \
+    --get "http://localhost:8000/api/devices/a" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/devices/1"
+    "http://localhost:8000/api/devices/a"
 );
 
 const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -516,29 +508,20 @@ fetch(url, {
 
 <span id="example-responses-GETapi-devices--id-">
             <blockquote>
-            <p>Example response (200):</p>
+            <p>Example response (401):</p>
         </blockquote>
-                <pre>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+access-control-allow-origin: http://localhost:3000
+access-control-allow-credentials: true
+ </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;id&quot;: 1,
-    &quot;user_id&quot;: 2,
-    &quot;alarm_code&quot;: &quot;12345&quot;,
-    &quot;longitude&quot;: 12.34,
-    &quot;latitude&quot;: 56.78,
-    &quot;maps_link&quot;: &quot;https://maps.google.com/?q=56.78,12.34&quot;,
-    &quot;phone_number&quot;: &quot;+1234567890&quot;,
-    &quot;battery_percentage&quot;: 90
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (404):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;success&quot;: false,
-    &quot;message&quot;: &quot;Device not found&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -559,7 +542,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-GETapi-devices--id-" data-method="GET"
       data-path="api/devices/{id}"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -590,6 +573,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-devices--id-"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -614,20 +608,21 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
+<small>string</small>&nbsp;
  &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="id"                data-endpoint="GETapi-devices--id-"
-               value="1"
+                <input type="text" style="display: none"
+                              name="id"                data-endpoint="GETapi-devices--id-"
+               value="a"
                data-component="url">
     <br>
-<p>The ID of the device. Example: <code>1</code></p>
+<p>The ID of the device. Example: <code>a</code></p>
             </div>
                     </form>
 
-                    <h2 id="devices-PUTapi-devices--id-">Update the specified device in storage.</h2>
+                    <h2 id="devices-PUTapi-devices--id-">Update the specified device for the authenticated user.</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 
@@ -638,15 +633,16 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/devices/1" \
+    "http://localhost:8000/api/devices/voluptatem" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"alarm_code\": \"qdrxluqgzxpljnfabf\",
-    \"longitude\": -179,
-    \"latitude\": -89,
-    \"maps_link\": \"ethyzuuuzvjbpzijqoasm\",
-    \"phone_number\": \"ckpcaxhncpli\",
+    \"alarm_code\": \"nuzgt\",
+    \"longitude\": -180,
+    \"latitude\": -90,
+    \"maps_link\": \"yuxxkdggvzngd\",
+    \"phone_number\": \"siekyjhqxacf\",
     \"battery_percentage\": 1
 }"
 </code></pre></div>
@@ -654,20 +650,21 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/devices/1"
+    "http://localhost:8000/api/devices/voluptatem"
 );
 
 const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
 
 let body = {
-    "alarm_code": "qdrxluqgzxpljnfabf",
-    "longitude": -179,
-    "latitude": -89,
-    "maps_link": "ethyzuuuzvjbpzijqoasm",
-    "phone_number": "ckpcaxhncpli",
+    "alarm_code": "nuzgt",
+    "longitude": -180,
+    "latitude": -90,
+    "maps_link": "yuxxkdggvzngd",
+    "phone_number": "siekyjhqxacf",
     "battery_percentage": 1
 };
 
@@ -680,23 +677,7 @@ fetch(url, {
 </span>
 
 <span id="example-responses-PUTapi-devices--id-">
-            <blockquote>
-            <p>Example response (200):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;id&quot;: 1,
-    &quot;user_id&quot;: 2,
-    &quot;alarm_code&quot;: &quot;12345&quot;,
-    &quot;longitude&quot;: 12.34,
-    &quot;latitude&quot;: 56.78,
-    &quot;maps_link&quot;: &quot;https://maps.google.com/?q=56.78,12.34&quot;,
-    &quot;phone_number&quot;: &quot;+1234567890&quot;,
-    &quot;battery_percentage&quot;: 90
-}</code>
- </pre>
-    </span>
+</span>
 <span id="execution-results-PUTapi-devices--id-" hidden>
     <blockquote>Received response<span
                 id="execution-response-status-PUTapi-devices--id-"></span>:
@@ -714,7 +695,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-PUTapi-devices--id-" data-method="PUT"
       data-path="api/devices/{id}"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -749,6 +730,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="PUTapi-devices--id-"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -773,37 +765,26 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
+<small>string</small>&nbsp;
  &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="id"                data-endpoint="PUTapi-devices--id-"
-               value="1"
+                <input type="text" style="display: none"
+                              name="id"                data-endpoint="PUTapi-devices--id-"
+               value="voluptatem"
                data-component="url">
     <br>
-<p>The ID of the device to be updated. Example: <code>1</code></p>
+<p>The ID of the device. Example: <code>voluptatem</code></p>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>user_id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
-                <input type="text" style="display: none"
-                              name="user_id"                data-endpoint="PUTapi-devices--id-"
-               value=""
-               data-component="body">
-    <br>
-<p>The <code>id</code> of an existing record in the users table.</p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>alarm_code</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="alarm_code"                data-endpoint="PUTapi-devices--id-"
-               value="qdrxluqgzxpljnfabf"
+               value="nuzgt"
                data-component="body">
     <br>
-<p>Must not be greater than 20 characters. Example: <code>qdrxluqgzxpljnfabf</code></p>
+<p>Must not be greater than 20 characters. Example: <code>nuzgt</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>longitude</code></b>&nbsp;&nbsp;
@@ -811,10 +792,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="longitude"                data-endpoint="PUTapi-devices--id-"
-               value="-179"
+               value="-180"
                data-component="body">
     <br>
-<p>Must be between -180 and 180. Example: <code>-179</code></p>
+<p>Must be between -180 and 180. Example: <code>-180</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>latitude</code></b>&nbsp;&nbsp;
@@ -822,10 +803,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="latitude"                data-endpoint="PUTapi-devices--id-"
-               value="-89"
+               value="-90"
                data-component="body">
     <br>
-<p>Must be between -90 and 90. Example: <code>-89</code></p>
+<p>Must be between -90 and 90. Example: <code>-90</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>maps_link</code></b>&nbsp;&nbsp;
@@ -833,10 +814,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="maps_link"                data-endpoint="PUTapi-devices--id-"
-               value="ethyzuuuzvjbpzijqoasm"
+               value="yuxxkdggvzngd"
                data-component="body">
     <br>
-<p>Must not be greater than 2083 characters. Example: <code>ethyzuuuzvjbpzijqoasm</code></p>
+<p>Must not be greater than 2083 characters. Example: <code>yuxxkdggvzngd</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>phone_number</code></b>&nbsp;&nbsp;
@@ -844,10 +825,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="phone_number"                data-endpoint="PUTapi-devices--id-"
-               value="ckpcaxhncpli"
+               value="siekyjhqxacf"
                data-component="body">
     <br>
-<p>Must not be greater than 15 characters. Example: <code>ckpcaxhncpli</code></p>
+<p>Must not be greater than 15 characters. Example: <code>siekyjhqxacf</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>battery_percentage</code></b>&nbsp;&nbsp;
@@ -862,9 +843,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </div>
         </form>
 
-                    <h2 id="devices-DELETEapi-devices--id-">Remove the specified device from storage.</h2>
+                    <h2 id="devices-DELETEapi-devices--id-">Remove the specified device for the authenticated user.</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 
@@ -875,17 +857,19 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/devices/1" \
+    "http://localhost:8000/api/devices/voluptas" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/devices/1"
+    "http://localhost:8000/api/devices/voluptas"
 );
 
 const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -898,27 +882,7 @@ fetch(url, {
 </span>
 
 <span id="example-responses-DELETEapi-devices--id-">
-            <blockquote>
-            <p>Example response (200):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;success&quot;: true,
-    &quot;message&quot;: &quot;Device deleted successfully&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (404):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;success&quot;: false,
-    &quot;message&quot;: &quot;Device not found&quot;
-}</code>
- </pre>
-    </span>
+</span>
 <span id="execution-results-DELETEapi-devices--id-" hidden>
     <blockquote>Received response<span
                 id="execution-response-status-DELETEapi-devices--id-"></span>:
@@ -936,7 +900,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-DELETEapi-devices--id-" data-method="DELETE"
       data-path="api/devices/{id}"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -967,6 +931,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-devices--id-"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -991,14 +966,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
+<small>string</small>&nbsp;
  &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="id"                data-endpoint="DELETEapi-devices--id-"
-               value="1"
+                <input type="text" style="display: none"
+                              name="id"                data-endpoint="DELETEapi-devices--id-"
+               value="voluptas"
                data-component="url">
     <br>
-<p>The ID of the device to be deleted. Example: <code>1</code></p>
+<p>The ID of the device. Example: <code>voluptas</code></p>
             </div>
                     </form>
 
