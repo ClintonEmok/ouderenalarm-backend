@@ -19,11 +19,72 @@ class RegisteredUserController extends Controller
     /**
      * Handle an incoming registration request.
      *
+     * @group Authentication
+     *
+     * **User Registration**
+     *
+     * This endpoint allows new users to register an account. The user must provide personal information and address details.
+     * The system will create or link the user, city, country, and address.
+     *
+     * **Requirements:**
+     * - Passwords must be at least 8 characters and match the password confirmation.
+     * - Email must be unique in the system.
+     *
+     * **Note:**
+     * - The user's address is linked to the user as a "shipping" address.
+     * - All operations are performed within a database transaction for data integrity.
+     *
+     * @bodyParam name string required The first name of the user. Example: John
+     * @bodyParam last_name string required The last name of the user. Example: Doe
+     * @bodyParam email string required The email address of the user. Must be unique. Example: john.doe@example.com
+     * @bodyParam password string required The password for the user. Must be at least 8 characters. Example: Password123!
+     * @bodyParam password_confirmation string required Confirmation of the password. Must match the `password` field. Example: Password123!
+     * @bodyParam phone_number string optional The user's phone number. Example: +1234567890
+     * @bodyParam street string required The street name of the user's address. Example: Main Street
+     * @bodyParam house_number string required The house number of the user's address. Example: 42A
+     * @bodyParam postal_code string required The postal code of the user's address. Example: 12345
+     * @bodyParam city string required The city where the user resides. Example: Amsterdam
+     * @bodyParam country string required The country where the user resides. Example: Netherlands
+     *
+     * @response 201 {
+     *   "success": true,
+     *   "message": "User registered successfully",
+     *   "user": {
+     *     "id": 1,
+     *     "name": "John",
+     *     "last_name": "Doe",
+     *     "email": "john.doe@example.com",
+     *     "phone_number": "+1234567890",
+     *     "created_at": "2024-12-12T08:00:00.000000Z",
+     *     "updated_at": "2024-12-12T08:00:00.000000Z",
+     *     "addresses": [
+     *       {
+     *         "id": 1,
+     *         "street_name": "Main Street",
+     *         "house_number": "42A",
+     *         "postal_code": "12345",
+     *         "city_id": 1,
+     *         "country_id": 1,
+     *         "created_at": "2024-12-12T08:00:00.000000Z",
+     *         "updated_at": "2024-12-12T08:00:00.000000Z"
+     *       }
+     *     ]
+     *   }
+     * }
+     *
+     * @response 500 {
+     *   "success": false,
+     *   "message": "Registration failed. Please try again.",
+     *   "error": "Failed to create the user."
+     * }
+     *
      * @throws \Illuminate\Validation\ValidationException
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
-        // Start a try-catch block to capture and handle any errors
         try {
             // 1️⃣ Validate the user and address input
             $validatedData = $request->validate([
@@ -39,10 +100,8 @@ class RegisteredUserController extends Controller
                 'country' => ['required', 'string', 'max:100'],
             ]);
 
-            // 2️⃣ Use a database transaction to ensure atomicity
             DB::beginTransaction();
 
-            // 3️⃣ Create the user and hash the password
             $user = User::create([
                 'name' => $validatedData['name'],
                 'last_name' => $validatedData['last_name'],
@@ -55,24 +114,13 @@ class RegisteredUserController extends Controller
                 throw new Exception('Failed to create the user.');
             }
 
-            // 4️⃣ Create or get the country
             $country = Country::firstOrCreate(['name' => $validatedData['country']]);
 
-            if (!$country) {
-                throw new Exception('Failed to create or fetch the country.');
-            }
-
-            // 5️⃣ Create or get the city and link it to the country
             $city = City::firstOrCreate([
                 'name' => $validatedData['city'],
                 'country_id' => $country->id
             ]);
 
-            if (!$city) {
-                throw new Exception('Failed to create or fetch the city.');
-            }
-
-            // 6️⃣ Create or get the address
             $address = Address::firstOrCreate([
                 'street_name' => $validatedData['street'],
                 'house_number' => $validatedData['house_number'],
@@ -81,20 +129,12 @@ class RegisteredUserController extends Controller
                 'country_id' => $country->id
             ]);
 
-            if (!$address) {
-                throw new Exception('Failed to create or fetch the address.');
-            }
-
-            // 7️⃣ Attach the address to the user with the type (billing or shipping)
             $user->addresses()->attach($address->id, ['type' => "shipping"]);
 
-            // If everything is successful, commit the transaction
             DB::commit();
 
-            // 8️⃣ Fire the user registered event
             event(new Registered($user));
 
-            // 9️⃣ Return success response
             return response()->json([
                 'success' => true,
                 'message' => 'User registered successfully',
@@ -102,16 +142,13 @@ class RegisteredUserController extends Controller
             ], 201);
 
         } catch (Exception $e) {
-            // Rollback any changes to maintain data integrity
             DB::rollBack();
 
-            // Log the error message for debugging purposes
             Log::error('User registration failed', [
                 'error' => $e->getMessage(),
                 'request_data' => $request->all()
             ]);
 
-            // Return an error response to the client
             return response()->json([
                 'success' => false,
                 'message' => 'Registration failed. Please try again.',

@@ -1,0 +1,194 @@
+openapi: 3.0.3
+info:
+  title: 'Ouderenalarm API'
+  description: ''
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost:8000'
+paths:
+  /api/devices:
+    get:
+      summary: "Display a listing of the user's devices."
+      operationId: displayAListingOfTheUsersDevices
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {  }
+                properties: {  }
+      tags:
+        - Devices
+    post:
+      summary: 'Store a newly created device for the authenticated user.'
+      operationId: storeANewlyCreatedDeviceForTheAuthenticatedUser
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Devices
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                alarm_code:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: qyglpfirscihxxvyyuo
+                  nullable: true
+                longitude:
+                  type: number
+                  description: 'Must be between -180 and 180.'
+                  example: -180
+                  nullable: true
+                latitude:
+                  type: number
+                  description: 'Must be between -90 and 90.'
+                  example: -89
+                  nullable: true
+                maps_link:
+                  type: string
+                  description: 'Must not be greater than 2083 characters.'
+                  example: iwyljgcushr
+                  nullable: true
+                phone_number:
+                  type: string
+                  description: 'Must not be greater than 15 characters.'
+                  example: tfsloayxf
+                  nullable: false
+                battery_percentage:
+                  type: integer
+                  description: 'Must be between 0 and 100.'
+                  example: 0
+                  nullable: true
+              required:
+                - phone_number
+  '/api/devices/{id}':
+    get:
+      summary: 'Display the specified device for the authenticated user.'
+      operationId: displayTheSpecifiedDeviceForTheAuthenticatedUser
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Devices
+    put:
+      summary: 'Update the specified device for the authenticated user.'
+      operationId: updateTheSpecifiedDeviceForTheAuthenticatedUser
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Devices
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                alarm_code:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: nuzgt
+                  nullable: true
+                longitude:
+                  type: number
+                  description: 'Must be between -180 and 180.'
+                  example: -180
+                  nullable: true
+                latitude:
+                  type: number
+                  description: 'Must be between -90 and 90.'
+                  example: -90
+                  nullable: true
+                maps_link:
+                  type: string
+                  description: 'Must not be greater than 2083 characters.'
+                  example: yuxxkdggvzngd
+                  nullable: true
+                phone_number:
+                  type: string
+                  description: 'Must not be greater than 15 characters.'
+                  example: siekyjhqxacf
+                  nullable: true
+                battery_percentage:
+                  type: integer
+                  description: 'Must be between 0 and 100.'
+                  example: 1
+                  nullable: true
+    delete:
+      summary: 'Remove the specified device for the authenticated user.'
+      operationId: removeTheSpecifiedDeviceForTheAuthenticatedUser
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Devices
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the device.'
+        example: a
+        required: true
+        schema:
+          type: string
+  /api/user:
+    get:
+      summary: ''
+      operationId: getApiUser
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+tags:
+  -
+    name: Devices
+    description: ''
+  -
+    name: Endpoints
+    description: ''
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: 'You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.'
+security:
+  -
+    default: []

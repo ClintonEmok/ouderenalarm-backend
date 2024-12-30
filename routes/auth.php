@@ -12,10 +12,6 @@ Route::post('/register', [RegisteredUserController::class, 'store'])
     ->middleware('guest')
     ->name('register');
 
-Route::post('/login', [AuthenticatedSessionController::class, 'store'])
-    ->middleware('guest')
-    ->name('login');
-
 Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
     ->middleware('guest')
     ->name('password.email');
@@ -32,6 +28,22 @@ Route::post('/email/verification-notification', [EmailVerificationNotificationCo
     ->middleware(['auth', 'throttle:6,1'])
     ->name('verification.send');
 
-Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-    ->middleware('auth')
-    ->name('logout');
+// 🛠️ SPA Login (Session-based)
+Route::post('/login', [AuthenticatedSessionController::class, 'loginSession'])
+    ->middleware(['guest:web']) // Ensure the user is not already logged in
+    ->name('login.session');
+
+// 🛠️ API Login (Token-based)
+Route::post('/api/login', [AuthenticatedSessionController::class, 'loginToken'])
+    ->middleware(['guest:sanctum']) // Ensure the token is for Sanctum
+    ->name('login.token');
+
+// 🛠️ SPA Logout (Session-based)
+Route::post('/logout', [AuthenticatedSessionController::class, 'logoutSession'])
+    ->middleware(['auth:web']) // Only authenticated session users can logout
+    ->name('logout.session');
+
+// 🛠️ API Logout (Token-based)
+Route::post('/api/logout', [AuthenticatedSessionController::class, 'logoutToken'])
+    ->middleware(['auth:sanctum']) // Only authenticated token users can logout
+    ->name('logout.token');

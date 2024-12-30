@@ -9,23 +9,41 @@ use Illuminate\Http\Request;
 class DeviceController extends Controller
 {
     /**
-     * Display a listing of the devices.
+     * Display a listing of the user's devices.
+     *
+     * @group Devices
+     * @authenticated
+     *
+     * **List All Devices for Authenticated User**
+     *
+     * This endpoint retrieves a list of all devices that belong to the authenticated user.
+     *
+     * @response 200
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
-        $devices = Device::all();
+        $devices = $request->user()->devices()->get();
         return DeviceResource::collection($devices);
     }
 
     /**
-     * Store a newly created device in storage.
+     * Store a newly created device for the authenticated user.
+     *
+     * @group Devices
+     * @authenticated
+     *
+     * **Create Device**
+     *
+     * This endpoint creates a new device for the authenticated user.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \App\Http\Resources\DeviceResource
      */
     public function store(Request $request)
     {
-
-
         $validatedData = $request->validate([
-            'user_id' => 'required|exists:users,id',
             'alarm_code' => 'nullable|string|max:20',
             'longitude' => 'nullable|numeric|between:-180,180',
             'latitude' => 'nullable|numeric|between:-90,90',
@@ -34,17 +52,30 @@ class DeviceController extends Controller
             'battery_percentage' => 'nullable|integer|between:0,100',
         ]);
 
+        // Ensure the device belongs to the authenticated user
+        $validatedData['user_id'] = $request->user()->id;
+
         $device = Device::create($validatedData);
 
         return new DeviceResource($device);
     }
 
     /**
-     * Display the specified device.
+     * Display the specified device for the authenticated user.
+     *
+     * @group Devices
+     * @authenticated
+     *
+     * **Get Device**
+     *
+     * This endpoint retrieves a specific device by ID, but only if it belongs to the authenticated user.
+     *
+     * @param int $id
+     * @return \App\Http\Resources\DeviceResource|\Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        $device = Device::find($id);
+        $device = $request->user()->devices()->find($id);
 
         if (!$device) {
             return response()->json([
@@ -57,11 +88,22 @@ class DeviceController extends Controller
     }
 
     /**
-     * Update the specified device in storage.
+     * Update the specified device for the authenticated user.
+     *
+     * @group Devices
+     * @authenticated
+     *
+     * **Update Device**
+     *
+     * This endpoint updates a device for the authenticated user.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \App\Http\Resources\DeviceResource|\Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
     {
-        $device = Device::find($id);
+        $device = $request->user()->devices()->find($id);
 
         if (!$device) {
             return response()->json([
@@ -71,12 +113,11 @@ class DeviceController extends Controller
         }
 
         $validatedData = $request->validate([
-            'user_id' => 'sometimes|exists:users,id',
             'alarm_code' => 'nullable|string|max:20',
-            'longitude' => 'sometimes|nullable|numeric|between:-180,180',
-            'latitude' => 'sometimes|nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
+            'latitude' => 'nullable|numeric|between:-90,90',
             'maps_link' => 'nullable|string|max:2083',
-            'phone_number' => 'sometimes|nullable|string|max:15',
+            'phone_number' => 'nullable|string|max:15',
             'battery_percentage' => 'nullable|integer|between:0,100',
         ]);
 
@@ -86,11 +127,21 @@ class DeviceController extends Controller
     }
 
     /**
-     * Remove the specified device from storage.
+     * Remove the specified device for the authenticated user.
+     *
+     * @group Devices
+     * @authenticated
+     *
+     * **Delete Device**
+     *
+     * This endpoint deletes a device, but only if it belongs to the authenticated user.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        $device = Device::find($id);
+        $device = $request->user()->devices()->find($id);
 
         if (!$device) {
             return response()->json([
