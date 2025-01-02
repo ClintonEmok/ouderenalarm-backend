@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CaregiverResource;
 use App\Mail\CaregiverInvitationMailable;
 use App\Models\User;
 use App\Models\CaregiverInvitation;
@@ -48,7 +49,7 @@ class CaregiverController extends Controller
         ]);
 
         // Send the invitation email
-        Mail::to($request->email)->send(new CaregiverInvitationMailable($token, $patient->name));
+        Mail::to($request->email)->send(new CaregiverInvitationMailable($token, $patient->name, $request->email));
 
         return response()->json(['message' => 'Invitation sent successfully'], 200);
     }
@@ -61,6 +62,7 @@ class CaregiverController extends Controller
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
+            'name' => 'required',
             'password' => 'nullable|min:8|confirmed', // Password is only required for new accounts
         ]);
 
@@ -76,17 +78,23 @@ class CaregiverController extends Controller
         // Check if a user exists with the provided email
         $caregiver = User::firstWhere('email', $request->email);
 
+        // If no user exists, handle the creation flow
         if (!$caregiver) {
-            // Validate that password is provided if creating a new account
             if (empty($request->password)) {
                 return response()->json(['message' => 'Password is required for new accounts.'], 400);
             }
 
-            // Create a new caregiver account
+            // Create a new caregiver account (we need to add name)
             $caregiver = User::create([
                 'email' => $request->email,
+                'name' => $request->name,
                 'password' => Hash::make($request->password),
             ]);
+        } elseif ($request->user()) {
+            // If authenticated, check if the logged-in user matches the invitation
+            if ($request->user()->id !== $caregiver->id) {
+                return response()->json(['message' => 'Unauthorized to accept this invitation.'], 403);
+            }
         }
 
         // Check if the caregiver is already linked to the patient
@@ -123,6 +131,6 @@ class CaregiverController extends Controller
             ->where('patient_id', $user->id)
             ->get();
 
-        return response()->json($caregivers, 200);
+        return CaregiverResource::collection($caregivers);
     }
 }

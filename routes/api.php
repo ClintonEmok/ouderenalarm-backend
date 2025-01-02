@@ -14,10 +14,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/user', [UserController::class, 'update']); // Update user info
     Route::put('/user/password', [UserController::class, 'updatePassword']); // Update user password
     Route::delete('/user', [UserController::class, 'destroy']); // Delete user account
-    Route::post('/caregiver/invite', [CaregiverController::class, 'invite'])->name('caregiver.invite');
-    Route::post('/caregiver/accept', [CaregiverController::class, 'accept'])->name('caregiver.accept');
+    Route::post('/caregivers/invite', [CaregiverController::class, 'invite'])->name('caregiver.invite');
+    Route::post('/caregivers/accept', [CaregiverController::class, 'accept'])->name('caregiver.accept');
     // Route to list caregivers for a user
-    Route::get('/caregiver', [CaregiverController::class, 'index'])->name('caregiver.index');
+    Route::get('/caregivers', [CaregiverController::class, 'index'])->name('caregiver.index');
 
     // Optional: Route to remove a caregiver relationship
     Route::delete('/caregiver/{caregiverId}', [CaregiverController::class, 'remove'])->name('caregiver.remove');
