@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DeviceResource;
+use App\Models\Device;
 use App\Models\User;
 use App\Models\CaregiverPatient;
 use Illuminate\Http\Request;
@@ -33,7 +35,17 @@ class CaregiverPatientController extends Controller
         ]);
     }
 
-    public function destroy($id)
+    public function getPatientDevices(Request $request)
+    {
+        $caregiver = $request->user(); // Authenticated caregiver
+
+        // Fetch devices for all associated patients
+        $devices = Device::whereIn('user_id', $caregiver->patients->pluck('id'))->get();
+
+        return DeviceResource::collection($devices);
+    }
+
+    public function remove($id)
     {
         $caregiverPatient = CaregiverPatient::where('caregiver_id', $id)
             ->where('patient_id', auth()->id())

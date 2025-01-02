@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\DeviceController;
 use \App\Http\Controllers\UserController;
 use \App\Http\Controllers\CaregiverController;
+use \App\Http\Controllers\CaregiverPatientController;
 
 
 
@@ -20,7 +21,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/caregivers', [CaregiverController::class, 'index'])->name('caregiver.index');
 
     // Optional: Route to remove a caregiver relationship
-    Route::delete('/caregiver/{caregiverId}', [CaregiverController::class, 'remove'])->name('caregiver.remove');
+    Route::delete('/caregivers/{caregiverId}', [CaregiverPatientController::class, 'remove'])->name('caregiver.remove');
+    Route::get('/caregivers/patient-devices', [CaregiverPatientController::class, 'getPatientDevices']);
 });
 
 
