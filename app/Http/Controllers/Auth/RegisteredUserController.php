@@ -114,23 +114,6 @@ class RegisteredUserController extends Controller
                 throw new Exception('Failed to create the user.');
             }
 
-            $country = Country::firstOrCreate(['name' => $validatedData['country']]);
-
-            $city = City::firstOrCreate([
-                'name' => $validatedData['city'],
-                'country_id' => $country->id
-            ]);
-
-            $address = Address::firstOrCreate([
-                'street_name' => $validatedData['street'],
-                'house_number' => $validatedData['house_number'],
-                'postal_code' => $validatedData['postal_code'],
-                'city_id' => $city->id,
-                'country_id' => $country->id
-            ]);
-
-            $user->addresses()->attach($address->id, ['type' => "shipping"]);
-
             DB::commit();
 
             event(new Registered($user));
@@ -138,7 +121,7 @@ class RegisteredUserController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'User registered successfully',
-                'user' => $user->load('addresses')
+                'user' => $user
             ], 201);
 
         } catch (Exception $e) {
