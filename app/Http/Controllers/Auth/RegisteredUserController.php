@@ -93,11 +93,6 @@ class RegisteredUserController extends Controller
                 'email' => ['required', 'email', 'unique:users,email'],
                 'password' => ['required', 'min:8', 'confirmed'],
                 'phone_number' =>['nullable', 'string'],
-                'street' => ['required', 'string', 'max:255'],
-                'house_number' => ['required', 'string', 'max:255'],
-                'postal_code' => ['required', 'string', 'max:20'],
-                'city' => ['required', 'string', 'max:100'],
-                'country' => ['required', 'string', 'max:100'],
             ]);
 
             DB::beginTransaction();
