@@ -133,4 +133,6 @@ class CaregiverController extends Controller
 
         return CaregiverResource::collection($caregivers);
     }
+
+//    TODO: Fetch invitations
 }
