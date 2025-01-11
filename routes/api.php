@@ -11,7 +11,7 @@ use \App\Http\Controllers\UserDeviceController;
 
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::apiResource('devices', DeviceController::class);
+//    Route::apiResource('devices', DeviceController::class);
     Route::get('/user', [UserController::class, 'show']); // Get user info
     Route::put('/user', [UserController::class, 'update']); // Update user info
     Route::put('/user/password', [UserController::class, 'updatePassword']); // Update user password
