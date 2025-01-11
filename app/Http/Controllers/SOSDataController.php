@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Device;
 
+//TODO: handle extra cases
 class SOSDataController extends Controller
 {
     /**
