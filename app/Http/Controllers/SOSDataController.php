@@ -51,23 +51,22 @@ class SOSDataController extends Controller
         $imeiHex = substr($body, 6, $deviceIdLength * 2);  // IMEI hex string starts at offset 6
         Log::info("IMEI hex data: " . $imeiHex);
 
-        $deviceId = '';  // Initialize empty string for IMEI
+        $deviceImei = '';  // Initialize empty string for IMEI
 
         // Convert hex IMEI to ASCII characters
         for ($i = 0; $i < strlen($imeiHex); $i += 2) {
-            $deviceId .= chr(hexdec(substr($imeiHex, $i, 2)));  // Convert each hex pair to ASCII
+            $deviceImei .= chr(hexdec(substr($imeiHex, $i, 2)));  // Convert each hex pair to ASCII
         }
 
-        Log::info("Extracted IMEI: " . $deviceId);
+        Log::info("Extracted IMEI: " . $deviceImei);
 
-        // Check if the device exists
-        $device = Device::where('imei', $deviceId)->first();
-        if (!$device) {
-            Log::error("Device with IMEI $deviceId not found");
-            return response()->json(['error' => 'Device not registered'], 404);
-        }
 
-        Log::info("Device found: {$device->nickname}");
+        // Check if the device exists, if not, create it
+        $device = Device::firstOrCreate(
+            ['imei' => $deviceImei],
+        );
+
+        Log::info("Device found or created: {$device->imei}");
 
         // Handle different commands based on command code
         switch ($command) {
