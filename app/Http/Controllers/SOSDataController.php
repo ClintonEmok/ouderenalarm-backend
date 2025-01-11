@@ -13,41 +13,63 @@ class SOSDataController extends Controller
      */
     public function receiveData(Request $request)
     {
-        $rawData = $request->input('data');
+        $rawData = $request->input('data');  // Binary data from the device
         $hexData = bin2hex($rawData);  // Convert binary to hex for logging/debugging
         Log::info("Received raw data: " . $hexData);
 
-        // Parse message according to documentation
+        // Parse message components
         $header = substr($hexData, 0, 2); // Should be "AB"
         $properties = substr($hexData, 2, 2);
         $length = hexdec(substr($hexData, 4, 4));  // Length of message body
         $checksum = substr($hexData, 8, 4);  // Checksum for validation
         $sequenceId = substr($hexData, 12, 4);  // Sequence ID
-        $body = substr($hexData, 16);  // Message body
+        $body = substr($hexData, 16);  // Message body starts after 16 hex characters (8 bytes)
 
+        // Validate header
         if ($header !== "ab") {
+            Log::error("Invalid header: $header");
             return response()->json(['error' => 'Invalid header'], 400);
         }
 
-        // Calculate CRC16 checksum for validation
-        $calculatedCrc = $this->calculateCRC(substr($hexData, 16));
-        if (strtoupper($checksum) !== strtoupper($calculatedCrc)) {
-            Log::warning("Invalid checksum. Expected: $checksum, Calculated: $calculatedCrc");
+        // Calculate CRC16 checksum for validation (calculate from sequence ID onwards)
+        $crcBody = substr($hexData, 12);  // Sequence ID to the end
+        $calculatedCrc = $this->calculateCRC(hex2bin($crcBody));
+
+        // Swap the bytes of the calculated CRC to match little-endian format
+        $calculatedCrcSwapped = substr($calculatedCrc, 2, 2) . substr($calculatedCrc, 0, 2);
+
+        if (strtoupper($checksum) !== strtoupper($calculatedCrcSwapped)) {
+            Log::warning("Invalid checksum. Expected: $checksum, Calculated: $calculatedCrcSwapped");
             return response()->json(['error' => 'Checksum mismatch'], 400);
         }
 
-        // Parse command and key-value pairs
-        $command = substr($body, 0, 2);  // 1st byte of body
-        $deviceIdKey = substr($body, 2, 2);
-        $deviceIdLength = hexdec(substr($body, 4, 2));
-        $deviceId = hex2bin(substr($body, 6, $deviceIdLength * 2));  // Device IMEI
+        // Parse the IMEI
+        $command = substr($body, 0, 2);  // Command (1st byte of the body)
+        $deviceIdLength = hexdec(substr($body, 2, 2));  // Key indicating IMEI
+        $deviceIdKey = substr($body, 4, 2);  // Length of the IMEI (in bytes)
+        Log::info("Device ID key: $deviceIdKey, length: $deviceIdLength");
+        $imeiHex = substr($body, 6, $deviceIdLength * 2);  // IMEI hex string starts at offset 6
+        Log::info("IMEI hex data: " . $imeiHex);
 
+        $deviceId = '';  // Initialize empty string for IMEI
+
+        // Convert hex IMEI to ASCII characters
+        for ($i = 0; $i < strlen($imeiHex); $i += 2) {
+            $deviceId .= chr(hexdec(substr($imeiHex, $i, 2)));  // Convert each hex pair to ASCII
+        }
+
+        Log::info("Extracted IMEI: " . $deviceId);
+
+        // Check if the device exists
         $device = Device::where('imei', $deviceId)->first();
         if (!$device) {
             Log::error("Device with IMEI $deviceId not found");
             return response()->json(['error' => 'Device not registered'], 404);
         }
 
+        Log::info("Device found: {$device->nickname}");
+
+        // Handle different commands based on command code
         switch ($command) {
             case '20':  // GPS Location
                 $this->handleGPSLocation($device, $body);
@@ -64,8 +86,9 @@ class SOSDataController extends Controller
         }
 
         // Send ACK if requested
-        if (hexdec($properties) & 0x10) {  // ACK flag check
+        if (hexdec($properties) & 0x10) {  // Check ACK flag
             $ackResponse = $this->generateACK($sequenceId);
+            Log::info("Sending ACK response...");
             return response($ackResponse, 200)->header('Content-Type', 'application/octet-stream');
         }
 
@@ -123,22 +146,18 @@ class SOSDataController extends Controller
     /**
      * Calculate CRC16 checksum for message body.
      */
-    private function calculateCRC($data)
-    {
-        $crc = 0xFFFF;  // Initial CRC value
-        $polynomial = 0x1021;  // Standard CRC16 polynomial
+    private function calculateCRC($data) {
+        $crc = 0x0000;  // Initial CRC value
+        $size = strlen($data);  // Size of the data in bytes
 
-        for ($i = 0; $i < strlen($data); $i += 2) {
-            $byte = hexdec(substr($data, $i, 2));
-            $crc ^= ($byte << 8);
-            for ($j = 0; $j < 8; $j++) {
-                if ($crc & 0x8000) {
-                    $crc = ($crc << 1) ^ $polynomial;
-                } else {
-                    $crc <<= 1;
-                }
-            }
-            $crc &= 0xFFFF;  // Mask to 16 bits
+        for ($i = 0; $i < $size; $i++) {
+            $byte = ord($data[$i]);  // Convert character to byte (ASCII value)
+            $crc = (($crc >> 8) & 0xFF) | (($crc & 0xFF) << 8);
+            $crc ^= $byte;
+            $crc ^= ($crc & 0xFF) >> 4;
+            $crc ^= ($crc << 8) << 4;
+            $crc ^= (($crc & 0xFF) << 4) << 1;
+            $crc &= 0xFFFF;  // Keep only 16 bits
         }
 
         return strtoupper(str_pad(dechex($crc), 4, '0', STR_PAD_LEFT));
