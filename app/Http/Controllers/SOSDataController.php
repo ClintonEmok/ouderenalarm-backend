@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Device;
 
-//TODO: handle extra cases
 class SOSDataController extends Controller
 {
     /**
@@ -14,124 +13,155 @@ class SOSDataController extends Controller
      */
     public function receiveData(Request $request)
     {
-        $rawData = $request->input('data');  // Binary data from the device
-        $hexData = bin2hex($rawData);  // Convert binary to hex for logging/debugging
-        Log::info("Received raw data: " . $hexData);
+        try {
+            $rawData = $request->input('data');  // Binary data from the device
+            if (!$rawData) {
+                return response()->json(['error' => 'No data provided'], 400);
+            }
 
-        // Parse message components
-        $header = substr($hexData, 0, 2); // Should be "AB"
-        $properties = substr($hexData, 2, 2);
-        $length = hexdec(substr($hexData, 4, 4));  // Length of message body
-        $checksum = substr($hexData, 8, 4);  // Checksum for validation
-        $sequenceId = substr($hexData, 12, 4);  // Sequence ID
-        $body = substr($hexData, 16);  // Message body starts after 16 hex characters (8 bytes)
+            $hexData = bin2hex($rawData);  // Convert binary to hex for logging/debugging
+            Log::info("Received raw data: " . $hexData);
 
-        // Validate header
-        if ($header !== "ab") {
-            Log::error("Invalid header: $header");
-            return response()->json(['error' => 'Invalid header'], 400);
+            if (strlen($hexData) < 16) {
+                return response()->json(['error' => 'Message too short'], 400);
+            }
+
+            $header = substr($hexData, 0, 2); // Should be "AB"
+            $properties = substr($hexData, 2, 2);
+            $lengthHex = substr($hexData, 4, 4);
+            $length = hexdec(substr($lengthHex, 2, 2) . substr($lengthHex, 0, 2));
+            $checksum = substr($hexData, 8, 4);  // Checksum for validation
+            $sequenceId = substr($hexData, 12, 4);  // Sequence ID
+            $body = substr($hexData, 16);  // Message body starts after 16 hex characters (8 bytes)
+
+            if (strtolower($header) !== "ab") {
+                Log::error("Invalid header: $header");
+                return response()->json(['error' => 'Invalid header'], 400);
+            }
+
+            if ($length !== strlen($body) / 2) {
+                Log::error("Invalid body length: Expected $length, Actual " . strlen($body) / 2);
+                return response()->json(['error' => 'Length mismatch'], 400);
+            }
+
+            $calculatedCrc = $this->calculateCRC(hex2bin(substr($hexData, 12)));
+            $calculatedCrcSwapped = bin2hex(strrev(hex2bin($calculatedCrc)));
+
+            Log::info("Calculated crc: $calculatedCrcSwapped");
+            Log::info($checksum) ;
+            if (strtoupper($checksum) !== strtoupper($calculatedCrcSwapped)) {
+                Log::warning("Invalid checksum. Expected: $checksum, Calculated: $calculatedCrcSwapped");
+                return response()->json(['error' => 'Checksum mismatch'], 400);
+            }
+
+            // Extract IMEI (first key in the body)
+            $command = substr($body, 0, 2);  // Command (1st byte of the body)
+            $deviceIdLength = hexdec(substr($body, 2, 2));  // Length of the IMEI
+            $deviceIdKey = substr($body, 4, 2);  // Key indicating IMEI (should be 01 for IMEI)
+            $imeiHex = substr($body, 6, $deviceIdLength * 2);  // IMEI hex string starts at offset 6
+            $deviceImei = $this->parseHexToAscii($imeiHex);
+            Log::info("Extracted IMEI: $deviceImei");
+
+            $device = Device::firstOrCreate(['imei' => $deviceImei]);
+            Log::info("Device found or created: {$device->imei}");
+
+            // Iterate over multiple keys
+            $offset = 6 + $deviceIdLength * 2;
+            while ($offset < strlen($body)) {
+                $keyLength = hexdec(substr($body, $offset, 2));  // Length of the key value
+                $key = substr($body, $offset + 2, 2);  // Key ID
+                $value = substr($body, $offset + 4, $keyLength * 2);  // Value corresponding to the key
+
+                Log::info("Key: $key, Length: $keyLength, Value: $value");
+
+                // Handle the key based on its type
+                switch ($key) {
+                    case '01':  // IMEI (already handled)
+                        Log::info("IMEI already processed.");
+                        break;
+                    case '02':  // Alarm Code
+                        $this->handleAlarmCode($device, $value);
+                        break;
+                    case '20':  // GPS Location
+                        $this->handleGPSLocation($device, $value);
+                        break;
+                    case '24':  // General Status
+                        $this->handleGeneralStatus($device, $value);
+                        break;
+                    case '25':  // Call Records
+                        $this->handleCallRecord($device, $value);
+                        break;
+                    default:
+                        Log::warning("Unknown key received: $key");
+                        break;
+                }
+
+                // Move to the next key
+                $offset += 4 + $keyLength * 2;  // 4 bytes for length+key + key value length
+            }
+
+            if (hexdec($properties) & 0x10) {  // Check ACK flag
+                $ackResponse = $this->generateACK($sequenceId);
+                Log::info("Sending ACK response...");
+                return response($ackResponse, 200)->header('Content-Type', 'application/octet-stream');
+            }
+
+            return response()->json(['message' => 'Data processed successfully']);
+        } catch (\Exception $e) {
+            Log::error("Exception occurred: " . $e->getMessage());
+            return response()->json(['error' => 'Internal server error'], 500);
         }
-
-        // Calculate CRC16 checksum for validation (calculate from sequence ID onwards)
-        $crcBody = substr($hexData, 12);  // Sequence ID to the end
-        $calculatedCrc = $this->calculateCRC(hex2bin($crcBody));
-
-        // Swap the bytes of the calculated CRC to match little-endian format
-        $calculatedCrcSwapped = substr($calculatedCrc, 2, 2) . substr($calculatedCrc, 0, 2);
-
-        if (strtoupper($checksum) !== strtoupper($calculatedCrcSwapped)) {
-            Log::warning("Invalid checksum. Expected: $checksum, Calculated: $calculatedCrcSwapped");
-            return response()->json(['error' => 'Checksum mismatch'], 400);
-        }
-
-        // Parse the IMEI
-        $command = substr($body, 0, 2);  // Command (1st byte of the body)
-        $deviceIdLength = hexdec(substr($body, 2, 2));  // Key indicating IMEI
-        $deviceIdKey = substr($body, 4, 2);  // Length of the IMEI (in bytes)
-        Log::info("Device ID key: $deviceIdKey, length: $deviceIdLength");
-        $imeiHex = substr($body, 6, $deviceIdLength * 2);  // IMEI hex string starts at offset 6
-        Log::info("IMEI hex data: " . $imeiHex);
-
-        $deviceImei = '';  // Initialize empty string for IMEI
-
-        // Convert hex IMEI to ASCII characters
-        for ($i = 0; $i < strlen($imeiHex); $i += 2) {
-            $deviceImei .= chr(hexdec(substr($imeiHex, $i, 2)));  // Convert each hex pair to ASCII
-        }
-
-        Log::info("Extracted IMEI: " . $deviceImei);
-
-
-        // Check if the device exists, if not, create it
-        $device = Device::firstOrCreate(
-            ['imei' => $deviceImei],
-        );
-
-        Log::info("Device found or created: {$device->imei}");
-
-        // Handle different commands based on command code
-        switch ($command) {
-            case '20':  // GPS Location
-                $this->handleGPSLocation($device, $body);
-                break;
-            case '24':  // General Status
-                $this->handleGeneralStatus($device, $body);
-                break;
-            case '25':  // Call Records
-                $this->handleCallRecord($device, $body);
-                break;
-            default:
-                Log::warning("Unknown command received: $command");
-                return response()->json(['message' => 'Unknown command'], 400);
-        }
-
-        // Send ACK if requested
-        if (hexdec($properties) & 0x10) {  // Check ACK flag
-            $ackResponse = $this->generateACK($sequenceId);
-            Log::info("Sending ACK response...");
-            return response($ackResponse, 200)->header('Content-Type', 'application/octet-stream');
-        }
-
-        return response()->json(['message' => 'Data processed successfully']);
     }
 
     /**
-     * Handle GPS Location command (0x20).
+     * Handle GPS Location (Key 0x20).
      */
-    private function handleGPSLocation($device, $body)
+    private function handleGPSLocation($device, $value)
     {
-        $latitude = $this->parseSignedDecimal(substr($body, 6, 8));
-        $longitude = $this->parseSignedDecimal(substr($body, 14, 8));
-        $speed = hexdec(substr($body, 22, 4));  // Speed in KM/H
-        $direction = hexdec(substr($body, 26, 4));  // Direction in degrees
-        $altitude = hexdec(substr($body, 30, 4));  // Altitude in meters
+        $latitude = $this->parseSignedDecimal(substr($value, 0, 8));
+        $longitude = $this->parseSignedDecimal(substr($value, 8, 8));
+        $speed = hexdec(substr($value, 16, 4));  // Speed in KM/H
+        $direction = hexdec(substr($value, 20, 4));  // Direction in degrees
+        $altitude = hexdec(substr($value, 24, 4));  // Altitude in meters
 
         Log::info("Device {$device->imei} GPS Location: Lat: $latitude, Lon: $longitude, Speed: $speed km/h, Altitude: $altitude m");
     }
 
     /**
-     * Handle General Status command (0x24).
+     * Handle Alarm Code (Key 0x02).
      */
-    private function handleGeneralStatus($device, $body)
+    private function handleAlarmCode($device, $value)
     {
-        $timestamp = hexdec(substr($body, 6, 8));
-        $batteryLevel = hexdec(substr($body, 22, 2));
-        Log::info("Device {$device->imei} General Status: Battery: $batteryLevel%, Timestamp: $timestamp");
+        $timestampHex = substr($value, 0, 8);
+        $timestamp = hexdec($timestampHex);
+        $alarmDetails = substr($value, 8);  // The remaining bytes are the alarm flags
+
+        Log::info("Device {$device->imei} Alarm: Timestamp: " . gmdate("Y-m-d H:i:s", $timestamp) . ", Details: $alarmDetails");
     }
 
     /**
-     * Handle Call Record command (0x25).
+     * Handle General Status (Key 0x24).
      */
-    private function handleCallRecord($device, $body)
+    private function handleGeneralStatus($device, $value)
     {
-        $timestamp = hexdec(substr($body, 6, 8));
-        $callStatus = substr($body, 14, 2);
-        $phoneNumber = $this->parsePhoneNumber(substr($body, 16));
-        Log::info("Device {$device->imei} Call Record: Call Status: $callStatus, Phone Number: $phoneNumber");
+        $timestamp = hexdec(substr($value, 0, 8));
+        $batteryLevel = hexdec(substr($value, 16, 2));
+        Log::info("Device {$device->imei} General Status: Battery: $batteryLevel%, Timestamp: " . gmdate("Y-m-d H:i:s", $timestamp));
     }
 
     /**
-     * Generate ACK response for received data.
+     * Handle Call Record (Key 0x25).
+     */
+    private function handleCallRecord($device, $value)
+    {
+        $timestamp = hexdec(substr($value, 0, 8));
+        $callStatus = substr($value, 8, 2);
+        $phoneNumber = $this->parsePhoneNumber(substr($value, 10));
+        Log::info("Device {$device->imei} Call Record: Call Status: $callStatus, Phone Number: $phoneNumber, Timestamp: " . gmdate("Y-m-d H:i:s", $timestamp));
+    }
+
+    /**
+     * Generate ACK response.
      */
     private function generateACK($sequenceId)
     {
@@ -144,36 +174,15 @@ class SOSDataController extends Controller
     }
 
     /**
-     * Calculate CRC16 checksum for message body.
+     * Convert hex to ASCII string.
      */
-    private function calculateCRC($data) {
-        $crc = 0x0000;  // Initial CRC value
-        $size = strlen($data);  // Size of the data in bytes
-
-        for ($i = 0; $i < $size; $i++) {
-            $byte = ord($data[$i]);  // Convert character to byte (ASCII value)
-            $crc = (($crc >> 8) & 0xFF) | (($crc & 0xFF) << 8);
-            $crc ^= $byte;
-            $crc ^= ($crc & 0xFF) >> 4;
-            $crc ^= ($crc << 8) << 4;
-            $crc ^= (($crc & 0xFF) << 4) << 1;
-            $crc &= 0xFFFF;  // Keep only 16 bits
-        }
-
-        return strtoupper(str_pad(dechex($crc), 4, '0', STR_PAD_LEFT));
-    }
-
-    /**
-     * Parse phone number from hex to readable format.
-     */
-    private function parsePhoneNumber($hexString)
+    private function parseHexToAscii($hexString)
     {
-        $phoneNumber = '';
+        $ascii = '';
         for ($i = 0; $i < strlen($hexString); $i += 2) {
-            $asciiChar = chr(hexdec(substr($hexString, $i, 2)));
-            $phoneNumber .= $asciiChar;
+            $ascii .= chr(hexdec(substr($hexString, $i, 2)));
         }
-        return $phoneNumber;
+        return $ascii;
     }
 
     /**
@@ -187,4 +196,27 @@ class SOSDataController extends Controller
         }
         return $int / 10000000.0;  // Convert to decimal degrees
     }
+    /**
+     * Calculate CRC16 checksum for message body.
+     */
+    private function calculateCRC($data) {
+        $crc = 0x0000;  // Initial CRC value
+        $size = strlen($data);  // Size of the data in bytes
+
+        for ($i = 0; $i < $size; $i++) {
+            $byte = ord($data[$i]);  // Convert character to byte (ASCII value)
+            error_log(sprintf("Byte %d: %02X", $i, $byte));  // Debug: log each byte
+            $crc = (($crc >> 8) & 0xFF) | (($crc & 0xFF) << 8);
+            $crc ^= $byte;
+            $crc ^= ($crc & 0xFF) >> 4;
+            $crc ^= ($crc << 8) << 4;
+            $crc ^= (($crc & 0xFF) << 4) << 1;
+            $crc &= 0xFFFF;  // Keep only 16 bits
+        }
+
+        $hexCrc = strtoupper(str_pad(dechex($crc), 4, '0', STR_PAD_LEFT));
+        error_log("Calculated CRC: " . $hexCrc);  // Log the calculated CRC
+        return $hexCrc;
+    }
+
 }
