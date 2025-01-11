@@ -26,7 +26,7 @@ class SOSDataController extends Controller
                 return response()->json(['error' => 'Message too short'], 400);
             }
 
-            $header = substr($hexData, 0, 2); // Should be "AB"
+            $header = substr($hexData, 0, 2);  // Should be "AB"
             $properties = substr($hexData, 2, 2);
             $lengthHex = substr($hexData, 4, 4);
             $length = hexdec(substr($lengthHex, 2, 2) . substr($lengthHex, 0, 2));
@@ -44,37 +44,38 @@ class SOSDataController extends Controller
                 return response()->json(['error' => 'Length mismatch'], 400);
             }
 
-            $calculatedCrc = $this->calculateCRC(hex2bin(substr($hexData, 12)));
-            $calculatedCrcSwapped = bin2hex(strrev(hex2bin($calculatedCrc)));
+            $calculatedCrc = $this->calculateCRC(hex2bin(substr($hexData, 16)));  // Calculate CRC for body
+            $calculatedCrcSwapped = bin2hex(strrev(hex2bin($calculatedCrc)));  // Swap bytes for little-endian format
 
-            Log::info("Calculated crc: $calculatedCrcSwapped");
-            Log::info($checksum) ;
+            Log::info("Calculated CRC: $calculatedCrcSwapped");
+            Log::info("Received checksum: $checksum");
             if (strtoupper($checksum) !== strtoupper($calculatedCrcSwapped)) {
                 Log::warning("Invalid checksum. Expected: $checksum, Calculated: $calculatedCrcSwapped");
                 return response()->json(['error' => 'Checksum mismatch'], 400);
             }
 
             // Extract IMEI (first key in the body)
-            $command = substr($body, 0, 2);  // Command (1st byte of the body)
+            $command = substr($body, 0, 2);  // Command (1 byte)
             $deviceIdLength = hexdec(substr($body, 2, 2));  // Length of the IMEI
             $deviceIdKey = substr($body, 4, 2);  // Key indicating IMEI (should be 01 for IMEI)
-            $imeiHex = substr($body, 6, $deviceIdLength * 2);  // IMEI hex string starts at offset 6
-            $deviceImei = $this->parseHexToAscii($imeiHex);
+            $imeiHex = substr($body, 6, $deviceIdLength * 2);  // IMEI hex string
+            $deviceImei = $this->parseHexToAscii($imeiHex);  // Convert IMEI to ASCII
             Log::info("Extracted IMEI: $deviceImei");
 
             $device = Device::firstOrCreate(['imei' => $deviceImei]);
             Log::info("Device found or created: {$device->imei}");
 
-            // Iterate over multiple keys
-            $offset = 6 + $deviceIdLength * 2;
+            // Iterate over the remaining keys
+            $offset = 4 + $deviceIdLength * 2;  // Start after IMEI key-value pair
             while ($offset < strlen($body)) {
+                Log::info("Current Offset: $offset, Next Key-Value Hex: " . substr($body, $offset, 10));
                 $keyLength = hexdec(substr($body, $offset, 2));  // Length of the key value
                 $key = substr($body, $offset + 2, 2);  // Key ID
-                $value = substr($body, $offset + 4, $keyLength * 2);  // Value corresponding to the key
+                $value = $keyLength > 1 ? substr($body, $offset + 4, $keyLength * 2) : null;  // Key value or NULL if length is 1
 
-                Log::info("Key: $key, Length: $keyLength, Value: $value");
+                Log::info("Key: $key, Length: $keyLength, Value: " . ($value ?? 'NULL'));
 
-                // Handle the key based on its type
+                // Handle keys based on their types
                 switch ($key) {
                     case '01':  // IMEI (already handled)
                         Log::info("IMEI already processed.");
@@ -96,8 +97,8 @@ class SOSDataController extends Controller
                         break;
                 }
 
-                // Move to the next key
-                $offset += 4 + $keyLength * 2;  // 4 bytes for length+key + key value length
+                // Move to the next key-value pair
+                $offset += 4 + ($keyLength * 2);  // 4 bytes for key length + key + value length
             }
 
             if (hexdec($properties) & 0x10) {  // Check ACK flag
@@ -196,16 +197,17 @@ class SOSDataController extends Controller
         }
         return $int / 10000000.0;  // Convert to decimal degrees
     }
+
     /**
      * Calculate CRC16 checksum for message body.
      */
-    private function calculateCRC($data) {
+    private function calculateCRC($data)
+    {
         $crc = 0x0000;  // Initial CRC value
         $size = strlen($data);  // Size of the data in bytes
 
         for ($i = 0; $i < $size; $i++) {
             $byte = ord($data[$i]);  // Convert character to byte (ASCII value)
-            error_log(sprintf("Byte %d: %02X", $i, $byte));  // Debug: log each byte
             $crc = (($crc >> 8) & 0xFF) | (($crc & 0xFF) << 8);
             $crc ^= $byte;
             $crc ^= ($crc & 0xFF) >> 4;
@@ -214,9 +216,18 @@ class SOSDataController extends Controller
             $crc &= 0xFFFF;  // Keep only 16 bits
         }
 
-        $hexCrc = strtoupper(str_pad(dechex($crc), 4, '0', STR_PAD_LEFT));
-        error_log("Calculated CRC: " . $hexCrc);  // Log the calculated CRC
-        return $hexCrc;
+        return strtoupper(str_pad(dechex($crc), 4, '0', STR_PAD_LEFT));
     }
-
+    /**
+     * Parse phone number from hex to readable format.
+     */
+    private function parsePhoneNumber($hexString)
+    {
+        $phoneNumber = '';
+        for ($i = 0; $i < strlen($hexString); $i += 2) {
+            $asciiChar = chr(hexdec(substr($hexString, $i, 2)));
+            $phoneNumber .= $asciiChar;
+        }
+        return $phoneNumber;
+    }
 }
