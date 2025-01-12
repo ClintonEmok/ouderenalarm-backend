@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DeviceAlarm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Device;
@@ -135,10 +136,47 @@ class SOSDataController extends Controller
     {
         $timestampHex = substr($value, 0, 8);
         $timestamp = hexdec($timestampHex);
-        $alarmDetails = substr($value, 8);  // The remaining bytes are the alarm flags
+        $alarmDetails = substr($value, 8);
 
-        Log::info("Device {$device->imei} Alarm: Timestamp: " . gmdate("Y-m-d H:i:s", $timestamp) . ", Details: $alarmDetails");
+        $alarmBinary = str_pad(base_convert($alarmDetails, 16, 2), 32, '0', STR_PAD_LEFT);
+
+        $alarmData = [
+            'device_id' => $device->id,
+            'triggered_at' => $timestamp === 0 ? now() : gmdate("Y-m-d H:i:s", $timestamp),
+            'battery_low_alert' => $alarmBinary[31 - 0] === '1',
+            'over_speed_alert' => $alarmBinary[31 - 1] === '1',
+            'fall_down_alert' => $alarmBinary[31 - 2] === '1',
+            'welfare_alert' => $alarmBinary[31 - 3] === '1',
+            'geo_1_alert' => $alarmBinary[31 - 4] === '1',
+            'geo_2_alert' => $alarmBinary[31 - 5] === '1',
+            'geo_3_alert' => $alarmBinary[31 - 6] === '1',
+            'geo_4_alert' => $alarmBinary[31 - 7] === '1',
+            'power_off_alert' => $alarmBinary[31 - 8] === '1',
+            'power_on_alert' => $alarmBinary[31 - 9] === '1',
+            'motion_alert' => $alarmBinary[31 - 10] === '1',
+            'no_motion_alert' => $alarmBinary[31 - 11] === '1',
+            'sos_alert' => $alarmBinary[31 - 12] === '1',
+            'side_call_button_1' => $alarmBinary[31 - 13] === '1',
+            'side_call_button_2' => $alarmBinary[31 - 14] === '1',
+            'battery_charging_start' => $alarmBinary[31 - 15] === '1',
+            'no_charging' => $alarmBinary[31 - 16] === '1',
+            'sos_ending' => $alarmBinary[31 - 17] === '1',
+            'amber_alert' => $alarmBinary[31 - 18] === '1',
+            'welfare_alert_ending' => $alarmBinary[31 - 19] === '1',
+            'fall_down_ending' => $alarmBinary[31 - 20] === '1',
+            'one_day_upload' => $alarmBinary[31 - 22] === '1',
+            'beacon_absence' => $alarmBinary[31 - 23] === '1',
+            'bark_detection' => $alarmBinary[31 - 24] === '1',
+            'ble_disconnected' => $alarmBinary[31 - 30] === '1',
+            'watch_taken_away' => $alarmBinary[31 - 31] === '1',
+        ];
+
+        // Store in the database
+        DeviceAlarm::create($alarmData);
+
+        Log::info("Device {$device->imei} Alarm recorded: " . gmdate("Y-m-d H:i:s", $timestamp));
     }
+
 
     /**
      * Handle General Status (Key 0x24).

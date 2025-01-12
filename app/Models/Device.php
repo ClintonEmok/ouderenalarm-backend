@@ -13,4 +13,9 @@ class Device extends Model
     {
         return $this->belongsTo(User::class);
     }
+    // A device can have many alarms record
+    public function alarms()
+    {
+        return $this->hasMany(DeviceAlarm::class);
+    }
 }
