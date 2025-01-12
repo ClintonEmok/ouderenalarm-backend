@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DeviceAlarm;
+use App\Models\GPSLocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Device;
@@ -118,15 +119,35 @@ class SOSDataController extends Controller
     /**
      * Handle GPS Location (Key 0x20).
      */
-    private function handleGPSLocation($device, $value)
+    private function handleGPSLocation($body, $deviceId)
     {
-        $latitude = $this->parseSignedDecimal(substr($value, 0, 8));
-        $longitude = $this->parseSignedDecimal(substr($value, 8, 8));
-        $speed = hexdec(substr($value, 16, 4));  // Speed in KM/H
-        $direction = hexdec(substr($value, 20, 4));  // Direction in degrees
-        $altitude = hexdec(substr($value, 24, 4));  // Altitude in meters
+        // Parsing the GPS location data
+        $latitude = $this->parseSignedDecimal(substr($body, 6, 8));  // 4 bytes for latitude
+        $longitude = $this->parseSignedDecimal(substr($body, 14, 8));  // 4 bytes for longitude
+        $speed = hexdec(substr($body, 22, 4));  // 2 bytes for speed in KM/H
+        $direction = hexdec(substr($body, 26, 4));  // 2 bytes for direction in degrees
+        $altitude = hexdec(substr($body, 30, 4));  // 2 bytes for altitude in meters
 
-        Log::info("Device {$device->imei} GPS Location: Lat: $latitude, Lon: $longitude, Speed: $speed km/h, Altitude: $altitude m");
+        // Additional data if needed
+        $accuracy = hexdec(substr($body, 34, 4)) / 10;  // Horizontal positioning accuracy
+        $mileage = hexdec(substr($body, 38, 8));  // 4 bytes for mileage in meters
+        $satellites = hexdec(substr($body, 46, 2));  // 1 byte for number of satellites
+
+        // Logging for debugging
+        Log::info("GPS Location: Lat: $latitude, Lon: $longitude, Speed: $speed km/h, Direction: $direction, Altitude: $altitude m, Satellites: $satellites");
+
+        // Store GPS location in the database
+        GPSLocation::create([
+            'device_id' => $deviceId,
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+            'speed' => $speed,
+            'direction' => $direction,
+            'altitude' => $altitude,
+            'horizontal_accuracy' => $accuracy,
+            'mileage' => $mileage,
+            'satellites' => $satellites,
+        ]);
     }
 
     /**

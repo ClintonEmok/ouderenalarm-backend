@@ -18,4 +18,9 @@ class Device extends Model
     {
         return $this->hasMany(DeviceAlarm::class);
     }
+
+    public function gpsLocations()
+    {
+        return $this->hasMany(GPSLocation::class);
+    }
 }
