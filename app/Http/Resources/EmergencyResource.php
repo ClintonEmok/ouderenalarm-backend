@@ -31,7 +31,6 @@ class EmergencyResource extends JsonResource
             ],
             'user' => [
                 'name' => $user->name,
-                'age' => now()->diffInYears($user->birthdate),
                 'address' => $user->address,
             ],
             'caregivers' => $user->caregivers->map(function ($caregiver) {

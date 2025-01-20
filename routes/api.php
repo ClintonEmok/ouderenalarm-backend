@@ -27,9 +27,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Optional: Route to remove a caregiver relationship
     Route::delete('/caregivers/{caregiverId}', [CaregiverPatientController::class, 'remove'])->name('caregiver.remove');
     Route::get('/caregivers/patient-devices', [CaregiverPatientController::class, 'getPatientDevices']);
-    Route::get('/emergency/{id}', [\App\Http\Controllers\EmergencyController::class, 'show'])->name('emergency.details');
+
 });
 
-
+Route::get('/emergency/{id}', [\App\Http\Controllers\EmergencyController::class, 'show'])->name('emergency.details');
 
 

@@ -10,6 +10,35 @@ class DeviceAlarm extends Model
 {
     protected $guarded = [];
 
+    protected $casts = [
+        'battery_low_alert' => 'boolean',
+        'over_speed_alert' => 'boolean',
+        'fall_down_alert' => 'boolean',
+        'welfare_alert' => 'boolean',
+        'geo_1_alert' => 'boolean',
+        'geo_2_alert' => 'boolean',
+        'geo_3_alert' => 'boolean',
+        'geo_4_alert' => 'boolean',
+        'power_off_alert' => 'boolean',
+        'power_on_alert' => 'boolean',
+        'motion_alert' => 'boolean',
+        'no_motion_alert' => 'boolean',
+        'sos_alert' => 'boolean',
+        'side_call_button_1' => 'boolean',
+        'side_call_button_2' => 'boolean',
+        'battery_charging_start' => 'boolean',
+        'no_charging' => 'boolean',
+        'sos_ending' => 'boolean',
+        'amber_alert' => 'boolean',
+        'welfare_alert_ending' => 'boolean',
+        'fall_down_ending' => 'boolean',
+        'one_day_upload' => 'boolean',
+        'beacon_absence' => 'boolean',
+        'bark_detection' => 'boolean',
+        'ble_disconnected' => 'boolean',
+        'watch_taken_away' => 'boolean',
+    ];
+
 
     public function device()
     {
