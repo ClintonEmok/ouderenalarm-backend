@@ -28,13 +28,13 @@ class SOSDataController extends Controller
                 return response()->json(['error' => 'Message too short'], 400);
             }
 
-            $header = substr($hexData, 0, 2);  // Should be "AB"
-            $properties = substr($hexData, 2, 2);
-            $lengthHex = substr($hexData, 4, 4);
-            $length = hexdec(substr($lengthHex, 2, 2) . substr($lengthHex, 0, 2));
-            $checksum = substr($hexData, 8, 4);  // Checksum for validation
-            $sequenceId = substr($hexData, 12, 4);  // Sequence ID
-            $body = substr($hexData, 16);  // Message body starts after 16 hex characters (8 bytes)
+            $header = mb_substr($hexData, 0, 2);  // Should be "AB"
+            $properties = mb_substr($hexData, 2, 2);
+            $lengthHex = mb_substr($hexData, 4, 4);
+            $length = hexdec(mb_substr($lengthHex, 2, 2) . mb_substr($lengthHex, 0, 2));
+            $checksum = mb_substr($hexData, 8, 4);  // Checksum for validation
+            $sequenceId = mb_substr($hexData, 12, 4);  // Sequence ID
+            $body = mb_substr($hexData, 16);  // Message body starts after 16 hex characters (8 bytes)
 
             if (strtolower($header) !== "ab") {
                 Log::error("Invalid header: $header");
@@ -46,7 +46,7 @@ class SOSDataController extends Controller
                 return response()->json(['error' => 'Length mismatch'], 400);
             }
 
-            $calculatedCrc = $this->calculateCRC(hex2bin(substr($hexData, 16)));  // Calculate CRC for body
+            $calculatedCrc = $this->calculateCRC(hex2bin(mb_substr($hexData, 16)));  // Calculate CRC for body
             $calculatedCrcSwapped = bin2hex(strrev(hex2bin($calculatedCrc)));  // Swap bytes for little-endian format
 
             Log::info("Calculated CRC: $calculatedCrcSwapped");
@@ -57,10 +57,10 @@ class SOSDataController extends Controller
             }
 
             // Extract IMEI (first key in the body)
-            $command = substr($body, 0, 2);  // Command (1 byte)
-            $deviceIdLength = hexdec(substr($body, 2, 2));  // Length of the IMEI
-            $deviceIdKey = substr($body, 4, 2);  // Key indicating IMEI (should be 01 for IMEI)
-            $imeiHex = substr($body, 6, $deviceIdLength * 2);  // IMEI hex string
+            $command = mb_substr($body, 0, 2);  // Command (1 byte)
+            $deviceIdLength = hexdec(mb_substr($body, 2, 2));  // Length of the IMEI
+            $deviceIdKey = mb_substr($body, 4, 2);  // Key indicating IMEI (should be 01 for IMEI)
+            $imeiHex = mb_substr($body, 6, $deviceIdLength * 2);  // IMEI hex string
             $deviceImei = $this->parseHexToAscii($imeiHex);  // Convert IMEI to ASCII
             Log::info("Extracted IMEI: $deviceImei");
 
@@ -70,10 +70,10 @@ class SOSDataController extends Controller
             // Iterate over the remaining keys
             $offset = 4 + $deviceIdLength * 2;  // Start after IMEI key-value pair
             while ($offset < strlen($body)) {
-                Log::info("Current Offset: $offset, Next Key-Value Hex: " . substr($body, $offset, 10));
-                $keyLength = hexdec(substr($body, $offset, 2));  // Length of the key value
-                $key = substr($body, $offset + 2, 2);  // Key ID
-                $value = $keyLength > 1 ? substr($body, $offset + 4, $keyLength * 2) : null;  // Key value or NULL if length is 1
+                Log::info("Current Offset: $offset, Next Key-Value Hex: " . mb_substr($body, $offset, 10));
+                $keyLength = hexdec(mb_substr($body, $offset, 2));  // Length of the key value
+                $key = mb_substr($body, $offset + 2, 2);  // Key ID
+                $value = $keyLength > 1 ? mb_substr($body, $offset + 4, $keyLength * 2) : null;  // Key value or NULL if length is 1
 
                 Log::info("Key: $key, Length: $keyLength, Value: " . ($value ?? 'NULL'));
 
@@ -90,9 +90,6 @@ class SOSDataController extends Controller
                         break;
                     case '24':  // General Status
                         $this->handleGeneralStatus($device, $value);
-                        break;
-                    case '25':  // Call Records
-                        $this->handleCallRecord($device, $value);
                         break;
                     default:
                         Log::warning("Unknown key received: $key");
@@ -122,16 +119,16 @@ class SOSDataController extends Controller
     private function handleGPSLocation($body, $deviceId)
     {
         // Parsing the GPS location data
-        $latitude = $this->parseSignedDecimal(substr($body, 6, 8));  // 4 bytes for latitude
-        $longitude = $this->parseSignedDecimal(substr($body, 14, 8));  // 4 bytes for longitude
-        $speed = hexdec(substr($body, 22, 4));  // 2 bytes for speed in KM/H
-        $direction = hexdec(substr($body, 26, 4));  // 2 bytes for direction in degrees
-        $altitude = hexdec(substr($body, 30, 4));  // 2 bytes for altitude in meters
+        $latitude = $this->parseSignedDecimal(mb_substr($body, 6, 8));  // 4 bytes for latitude
+        $longitude = $this->parseSignedDecimal(mb_substr($body, 14, 8));  // 4 bytes for longitude
+        $speed = hexdec(mb_substr($body, 22, 4));  // 2 bytes for speed in KM/H
+        $direction = hexdec(mb_substr($body, 26, 4));  // 2 bytes for direction in degrees
+        $altitude = hexdec(mb_substr($body, 30, 4));  // 2 bytes for altitude in meters
 
         // Additional data if needed
-        $accuracy = hexdec(substr($body, 34, 4)) / 10;  // Horizontal positioning accuracy
-        $mileage = hexdec(substr($body, 38, 8));  // 4 bytes for mileage in meters
-        $satellites = hexdec(substr($body, 46, 2));  // 1 byte for number of satellites
+        $accuracy = hexdec(mb_substr($body, 34, 4)) / 10;  // Horizontal positioning accuracy
+        $mileage = hexdec(mb_substr($body, 38, 8));  // 4 bytes for mileage in meters
+        $satellites = hexdec(mb_substr($body, 46, 2));  // 1 byte for number of satellites
 
         // Logging for debugging
         Log::info("GPS Location: Lat: $latitude, Lon: $longitude, Speed: $speed km/h, Direction: $direction, Altitude: $altitude m, Satellites: $satellites");
@@ -155,9 +152,9 @@ class SOSDataController extends Controller
      */
     private function handleAlarmCode($device, $value)
     {
-        $timestampHex = substr($value, 0, 8);
+        $timestampHex = mb_substr($value, 0, 8);
         $timestamp = hexdec($timestampHex);
-        $alarmDetails = substr($value, 8);
+        $alarmDetails = mb_substr($value, 8);
 
         $alarmBinary = str_pad(base_convert($alarmDetails, 16, 2), 32, '0', STR_PAD_LEFT);
 
@@ -204,8 +201,8 @@ class SOSDataController extends Controller
      */
     private function handleGeneralStatus($device, $value)
     {
-        $timestamp = hexdec(substr($value, 0, 8));
-        $batteryLevel = hexdec(substr($value, 16, 2));
+        $timestamp = hexdec(mb_substr($value, 0, 8));
+        $batteryLevel = hexdec(mb_substr($value, 16, 2));
         Log::info("Device {$device->imei} General Status: Battery: $batteryLevel%, Timestamp: " . gmdate("Y-m-d H:i:s", $timestamp));
     }
 
@@ -214,9 +211,9 @@ class SOSDataController extends Controller
      */
     private function handleCallRecord($device, $value)
     {
-        $timestamp = hexdec(substr($value, 0, 8));
-        $callStatus = substr($value, 8, 2);
-        $phoneNumber = $this->parsePhoneNumber(substr($value, 10));
+        $timestamp = hexdec(mb_substr($value, 0, 8));
+        $callStatus = mb_substr($value, 8, 2);
+        $phoneNumber = $this->parsePhoneNumber(mb_substr($value, 10));
         Log::info("Device {$device->imei} Call Record: Call Status: $callStatus, Phone Number: $phoneNumber, Timestamp: " . gmdate("Y-m-d H:i:s", $timestamp));
     }
 
@@ -240,7 +237,7 @@ class SOSDataController extends Controller
     {
         $ascii = '';
         for ($i = 0; $i < strlen($hexString); $i += 2) {
-            $ascii .= chr(hexdec(substr($hexString, $i, 2)));
+            $ascii .= chr(hexdec(mb_substr($hexString, $i, 2)));
         }
         return $ascii;
     }
@@ -284,7 +281,7 @@ class SOSDataController extends Controller
     {
         $phoneNumber = '';
         for ($i = 0; $i < strlen($hexString); $i += 2) {
-            $asciiChar = chr(hexdec(substr($hexString, $i, 2)));
+            $asciiChar = chr(hexdec(mb_substr($hexString, $i, 2)));
             $phoneNumber .= $asciiChar;
         }
         return $phoneNumber;
