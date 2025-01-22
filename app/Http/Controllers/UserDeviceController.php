@@ -12,6 +12,7 @@ class UserDeviceController extends Controller
     /**
      * Attach a device to the authenticated user using a phone number.
      */
+//    TODO: Change phone number to device id
     public function addDevice(Request $request)
     {
         $request->validate([
