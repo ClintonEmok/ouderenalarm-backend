@@ -10,7 +10,8 @@
         "laravel/framework": "^11.31",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
-        "rinvex/countries": "^9.0"
+        "rinvex/countries": "^9.0",
+        "ext-sockets": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

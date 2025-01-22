@@ -12,16 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('devices', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->string('alarm_code')->nullable();
-            $table->decimal('longitude', 10, 8)->nullable();
-            $table->decimal('latitude', 10, 8)->nullable();
-            $table->string('maps_link')->nullable();
-            $table->string('phone_number');
-            $table->tinyInteger('battery_percentage')->unsigned()->nullable()->default(100);
-            $table->timestamps();
-
+            $table->id(); // Primary key
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null'); // Foreign key to users table
+            $table->string('imei')->unique(); // Unique IMEI identifier
+            $table->string('nickname')->nullable(); // Optional nickname for the device
+            $table->string('ip_address')->nullable(); // Last known IP address
+            $table->integer('port')->nullable(); // Port for communication
+            $table->string('phone_number')->nullable(); // Nullable phone number
+            $table->string('status')->default('active'); // Status of the device
+            $table->timestamps(); // Timestamps (created_at, updated_at)
         });
     }
 

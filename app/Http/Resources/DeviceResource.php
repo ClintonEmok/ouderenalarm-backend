@@ -16,17 +16,15 @@ class DeviceResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
-            'alarm_code' => $this->alarm_code,
-            'location' => [
-                'longitude' => $this->longitude,
-                'latitude' => $this->latitude
-            ],
-            'maps_link' => $this->maps_link,
+            'imei' => $this->imei,
+            'nickname' => $this->nickname,
+            'ip_address' => $this->ip_address,
+            'port' => $this->port,
             'phone_number' => $this->phone_number,
-            'battery_percentage' => $this->battery_percentage,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'status' => $this->status,
+            'user_id' => $this->user_id,
+            'created_at' => $this->created_at->toDateTimeString(),
+            'updated_at' => $this->updated_at->toDateTimeString(),
             'user' => new UserResource($this->whenLoaded('user')) // Use a UserResource if needed
         ];
     }
