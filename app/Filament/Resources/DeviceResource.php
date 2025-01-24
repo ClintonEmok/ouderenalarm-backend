@@ -12,6 +12,9 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
+use Ysfkaya\FilamentPhoneInput\Infolists\PhoneEntry;
+use Ysfkaya\FilamentPhoneInput\PhoneInputNumberType;
 
 class DeviceResource extends Resource
 {
@@ -26,7 +29,7 @@ class DeviceResource extends Resource
                 Forms\Components\TextInput::make('imei')
                 ->label('imei')->readOnlyOn(['edit']),
                 Forms\Components\TextInput::make('nickname'),
-                Forms\Components\TextInput::make('phone_number')
+                PhoneInput::make('phone_number'),
 
             ]);
     }
