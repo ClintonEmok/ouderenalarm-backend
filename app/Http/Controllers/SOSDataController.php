@@ -116,26 +116,32 @@ class SOSDataController extends Controller
     /**
      * Handle GPS Location (Key 0x20).
      */
-    private function handleGPSLocation($body, $deviceId)
+    private function handleGPSLocation($device, $body)
     {
         // Parsing the GPS location data
-        $latitude = $this->parseSignedDecimal(mb_substr($body, 6, 8));  // 4 bytes for latitude
-        $longitude = $this->parseSignedDecimal(mb_substr($body, 14, 8));  // 4 bytes for longitude
-        $speed = hexdec(mb_substr($body, 22, 4));  // 2 bytes for speed in KM/H
-        $direction = hexdec(mb_substr($body, 26, 4));  // 2 bytes for direction in degrees
-        $altitude = hexdec(mb_substr($body, 30, 4));  // 2 bytes for altitude in meters
+        $latitude = $this->parseSignedDecimal($this->littleEndianHexDec(mb_substr($body, 0, 8)));  // 4 bytes for latitude
 
-        // Additional data if needed
-        $accuracy = hexdec(mb_substr($body, 34, 4)) / 10;  // Horizontal positioning accuracy
-        $mileage = hexdec(mb_substr($body, 38, 8));  // 4 bytes for mileage in meters
-        $satellites = hexdec(mb_substr($body, 46, 2));  // 1 byte for number of satellites
+        $longitude = $this->parseSignedDecimal($this->littleEndianHexDec(mb_substr($body, 8, 8)));  // 4 bytes for longitude
+
+        $speed = $this->littleEndianHexDec(mb_substr($body, 16, 4));  // 2 bytes for speed in KM/H
+
+        $direction = $this->littleEndianHexDec(mb_substr($body, 20, 4));  // 2 bytes for direction in degrees
+
+        $altitude = $this->littleEndianHexDec(mb_substr($body, 24, 4));  // 2 bytes for altitude in meters
+
+        $accuracy = $this->littleEndianHexDec(mb_substr($body, 28, 4));  // Horizontal positioning accuracy
+
+        $mileage = $this->littleEndianHexDec(mb_substr($body, 32, 8));  // 4 bytes for mileage in meters
+
+        $satellites = $this->littleEndianHexDec(mb_substr($body, 40, 2));  // 1 byte for number of satellites
+
 
         // Logging for debugging
-        Log::info("GPS Location: Lat: $latitude, Lon: $longitude, Speed: $speed km/h, Direction: $direction, Altitude: $altitude m, Satellites: $satellites");
+        Log::info("GPS Location: Lat: $latitude, Lon: $longitude, Speed: $speed km/h, Direction: $direction, Altitude: $altitude m, Accuracy: $accuracy, Mileage: $mileage m, Satellites: $satellites");
 
         // Store GPS location in the database
         GPSLocation::create([
-            'device_id' => $deviceId,
+            'device_id' => $device->id,
             'latitude' => $latitude,
             'longitude' => $longitude,
             'speed' => $speed,
@@ -285,5 +291,15 @@ class SOSDataController extends Controller
             $phoneNumber .= $asciiChar;
         }
         return $phoneNumber;
+    }
+    private function littleEndianHexDec($hex) {
+        // Split hex string into 2-character chunks (bytes)
+        $bytes = str_split($hex, 2);
+        // Reverse the order of bytes
+        $reversedBytes = array_reverse($bytes);
+        // Join bytes back into a hex string
+        $reversedHex = implode("", $reversedBytes);
+        // Convert the reversed hex string to decimal
+        return hexdec($reversedHex);
     }
 }
