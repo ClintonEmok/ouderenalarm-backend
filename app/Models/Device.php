@@ -23,4 +23,23 @@ class Device extends Model
     {
         return $this->hasMany(GPSLocation::class);
     }
+
+    public function generalStatuses()
+    {
+        return $this->hasMany(GeneralStatus::class);
+    }
+
+    /**
+     * Get the latest non-expired emergency link.
+     */
+    public function latestEmergencyLink()
+    {
+        return $this->alarms()
+            ->whereHas('emergencyLink', function ($query) {
+                $query->where('expires_at', '>', now()); // Filter non-expired links
+            })
+            ->with('emergencyLink') // Eager load the emergency link
+            ->orderBy('triggered_at', 'desc') // Order by most recent alarm
+            ->first()?->emergencyLink; // Return the associated EmergencyLink
+    }
 }
