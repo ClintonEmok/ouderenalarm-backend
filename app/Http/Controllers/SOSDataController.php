@@ -73,7 +73,7 @@ class SOSDataController extends Controller
                 Log::info("Current Offset: $offset, Next Key-Value Hex: " . mb_substr($body, $offset, 10));
                 $keyLength = hexdec(mb_substr($body, $offset, 2));  // Length of the key value
                 $key = mb_substr($body, $offset + 2, 2);  // Key ID
-                $value = $keyLength > 1 ? mb_substr($body, $offset + 4, $keyLength * 2) : null;  // Key value or NULL if length is 1
+                $value = $keyLength > 1 ? mb_substr($body, $offset + 4, ($keyLength * 2)-2) : null;  // Key value or NULL if length is 1
 
                 Log::info("Key: $key, Length: $keyLength, Value: " . ($value ?? 'NULL'));
 
