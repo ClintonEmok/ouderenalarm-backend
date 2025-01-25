@@ -121,9 +121,10 @@ class SOSDataController extends Controller
     private function handleGPSLocation($device, $body)
     {
         // Parsing the GPS location data
-        $latitude = $this->parseSignedDecimal($this->littleEndianHexDec(mb_substr($body, 0, 8)));  // 4 bytes for latitude
 
-        $longitude = $this->parseSignedDecimal($this->littleEndianHexDec(mb_substr($body, 8, 8)));  // 4 bytes for longitude
+        $latitude = $this->littleEndianHexDec(mb_substr($body, 0, 8)) /  10000000.0;  // 4 bytes for latitude
+
+        $longitude = $this->littleEndianHexDec(mb_substr($body, 8, 8)) / 10000000.0;  // 4 bytes for longitude
 
         $speed = $this->littleEndianHexDec(mb_substr($body, 16, 4));  // 2 bytes for speed in KM/H
 
