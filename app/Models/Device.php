@@ -42,4 +42,9 @@ class Device extends Model
             ->orderBy('triggered_at', 'desc') // Order by most recent alarm
             ->first()?->emergencyLink; // Return the associated EmergencyLink
     }
+
+    public function latestLocation()
+    {
+        return $this->hasOne(GpsLocation::class)->latestOfMany();
+    }
 }
