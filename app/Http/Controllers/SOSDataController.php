@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DeviceAlarm;
+use App\Models\GeneralStatus;
 use App\Models\GPSLocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -97,7 +98,8 @@ class SOSDataController extends Controller
                 }
 
                 // Move to the next key-value pair
-                $offset += 4 + ($keyLength * 2);  // 4 bytes for key length + key + value length
+//                TODO: update
+                $offset += 2 + ($keyLength * 2);  // 4 bytes for key length + key + value length
             }
 
             if (hexdec($properties) & 0x10) {  // Check ACK flag
@@ -207,9 +209,89 @@ class SOSDataController extends Controller
      */
     private function handleGeneralStatus($device, $value)
     {
-        $timestamp = hexdec(mb_substr($value, 0, 8));
-        $batteryLevel = hexdec(mb_substr($value, 16, 2));
-        Log::info("Device {$device->imei} General Status: Battery: $batteryLevel%, Timestamp: " . gmdate("Y-m-d H:i:s", $timestamp));
+        $timestamp = hexdec(substr($value, 0, 8));
+        $status = hexdec(substr($value, 8, 8));  // 4 bytes for Status
+        $status2 = hexdec(substr($value, 24, 8));  // 4 bytes for Status2
+
+        // Decode status bits
+        $gps = ($status & (1 << 0)) !== 0;
+        $wifiSource = ($status & (1 << 1)) !== 0;
+        $cellTower = ($status & (1 << 2)) !== 0;
+        $bleLocation = ($status & (1 << 3)) !== 0;
+        $inCharging = ($status & (1 << 4)) !== 0;
+        $fullyCharged = ($status & (1 << 5)) !== 0;
+        $reboot = ($status & (1 << 6)) !== 0;
+        $historicalData = ($status & (1 << 7)) !== 0;
+        $agpsDataValid = ($status & (1 << 8)) !== 0;
+        $motion = ($status & (1 << 9)) !== 0;
+        $smartLocating = ($status & (1 << 10)) !== 0;
+        $beaconLocation = ($status & (1 << 11)) !== 0;
+        $bleConnected = ($status & (1 << 12)) !== 0;
+        $fallDownAllow = ($status & (1 << 13)) !== 0;
+        $homeWifiLocation = ($status & (1 << 14)) !== 0;
+        $indoorOutdoorLocation = ($status & (1 << 15)) !== 0;
+
+        // Decode status2 bits
+        $networkTypeBits = $status2 & 0b00000000000000000000000000000111; // Bits 0-2
+        $mobileNetworkType = ['No service', '2G', '3G', '4G'][$networkTypeBits] ?? null;
+        $workMode = ($status2 >> 16) & 0b111; // Bits 16-18
+        $cellSignalStrength = ($status2 >> 19) & 0b11111; // Bits 19-23
+        $batteryDescription = ($status2 >> 24) & 0xFF; // Bits 24-31
+
+
+        Log::info("Timestamp: " . gmdate("Y-m-d H:i:s", $timestamp));
+        Log::info("Status Bits:");
+        Log::info("  GPS: " . ($gps ? 'Enabled' : 'Disabled'));
+        Log::info("  WiFi Source: " . ($wifiSource ? 'Enabled' : 'Disabled'));
+        Log::info("  Cell Tower: " . ($cellTower ? 'Enabled' : 'Disabled'));
+        Log::info("  BLE Location: " . ($bleLocation ? 'Enabled' : 'Disabled'));
+        Log::info("  In Charging: " . ($inCharging ? 'Yes' : 'No'));
+        Log::info("  Fully Charged: " . ($fullyCharged ? 'Yes' : 'No'));
+        Log::info("  Reboot: " . ($reboot ? 'Yes' : 'No'));
+        Log::info("  Historical Data: " . ($historicalData ? 'Yes' : 'No'));
+        Log::info("  AGPS Data Valid: " . ($agpsDataValid ? 'Yes' : 'No'));
+        Log::info("  Motion: " . ($motion ? 'Detected' : 'Not Detected'));
+        Log::info("  Smart Locating: " . ($smartLocating ? 'Enabled' : 'Disabled'));
+        Log::info("  Beacon Location: " . ($beaconLocation ? 'Enabled' : 'Disabled'));
+        Log::info("  BLE Connected: " . ($bleConnected ? 'Yes' : 'No'));
+        Log::info("  Fall Down Allow: " . ($fallDownAllow ? 'Yes' : 'No'));
+        Log::info("  Home WiFi Location: " . ($homeWifiLocation ? 'Yes' : 'No'));
+        Log::info("  Indoor/Outdoor Location: " . ($indoorOutdoorLocation ? 'Indoor' : 'Outdoor'));
+
+        Log::info("Status2 Bits:");
+        Log::info("  Mobile Network Type: $mobileNetworkType");
+        Log::info("  Work Mode: $workMode");
+        Log::info("  Cell Signal Strength: $cellSignalStrength");
+        Log::info("  Battery Description: $batteryDescription");
+        Log::info("General Status for Device {$device->imei} saved successfully.");
+        // Save to database
+        GeneralStatus::create([
+            'device_id' => $device->id,
+            'status_time' => gmdate("Y-m-d H:i:s", $timestamp),
+            'gps' => $gps,
+            'wifi_source' => $wifiSource,
+            'cell_tower' => $cellTower,
+            'ble_location' => $bleLocation,
+            'in_charging' => $inCharging,
+            'fully_charged' => $fullyCharged,
+            'reboot' => $reboot,
+            'historical_data' => $historicalData,
+            'agps_data_valid' => $agpsDataValid,
+            'motion' => $motion,
+            'smart_locating' => $smartLocating,
+            'beacon_location' => $beaconLocation,
+            'ble_connected' => $bleConnected,
+            'fall_down_allow' => $fallDownAllow,
+            'home_wifi_location' => $homeWifiLocation,
+            'indoor_outdoor_location' => $indoorOutdoorLocation,
+            'mobile_network_type' => $mobileNetworkType,
+            'work_mode' => $workMode,
+            'cell_signal_strength' => $cellSignalStrength,
+            'battery_level' => $batteryDescription,
+        ]);
+
+        // Logging all decoded fields
+
     }
 
     /**
