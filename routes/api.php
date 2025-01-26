@@ -18,7 +18,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/user', [UserController::class, 'destroy']); // Delete user account
     Route::post('/user/add-device', [\App\Http\Controllers\UserDeviceController::class, 'addDevice']); // Add a device
     Route::get('/user/devices', [UserDeviceController::class, 'listDevices']); // List user devices
-    Route::delete('/user/remove-device/{deviceId}', [UserDeviceController::class, 'removeDevice']); // Remove a device
+    Route::delete('/user/devices/{deviceId}', [UserDeviceController::class, 'removeDevice']); // Remove a device
+    Route::put('/user/devices/{deviceId}', [UserDeviceController::class, 'updateDevice']);
     Route::post('/caregivers/invite', [CaregiverController::class, 'invite'])->name('caregiver.invite');
     Route::post('/caregivers/accept', [CaregiverController::class, 'accept'])->name('caregiver.accept');
     // Route to list caregivers for a user
