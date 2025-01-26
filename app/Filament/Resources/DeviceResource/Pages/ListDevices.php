@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources\DeviceResource\Pages;
 
+use App\Filament\Imports\DeviceImporter;
 use App\Filament\Resources\DeviceResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+
 
 class ListDevices extends ListRecords
 {
@@ -14,6 +16,8 @@ class ListDevices extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
+            Actions\ImportAction::make()
+                ->importer(DeviceImporter::class)
         ];
     }
 }
