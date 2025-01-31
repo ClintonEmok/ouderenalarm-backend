@@ -37,6 +37,11 @@ class EmergencyResource extends JsonResource
                     'email' => $caregiver->email,
                 ];
             }),
+            'caregivers_on_the_way' => $this->caregiversOnTheWay->map(fn ($caregiver) => [
+                'id' => $caregiver->id,
+                'name' => $caregiver->name,
+                'phone' => $caregiver->phone_number,
+            ]),
         ];
     }
 }

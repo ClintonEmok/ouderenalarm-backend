@@ -7,6 +7,7 @@ use \App\Http\Controllers\UserController;
 use \App\Http\Controllers\CaregiverController;
 use \App\Http\Controllers\CaregiverPatientController;
 use \App\Http\Controllers\UserDeviceController;
+use \App\Http\Controllers\EmergencyController;
 
 
 
@@ -32,5 +33,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::get('/emergency/{id}', [\App\Http\Controllers\EmergencyController::class, 'show'])->name('emergency.details');
-
+Route::post('/emergency-link/{emergencyLink}/caregiver-on-the-way', [EmergencyController::class, 'addCaregiverOnTheWay']);
+Route::delete('/emergency-link/{emergencyLink}/caregiver-on-the-way', [EmergencyController::class, 'removeCaregiverOnTheWay']);
 
