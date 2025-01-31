@@ -19,11 +19,8 @@ class EmergencyResource extends JsonResource
         $user = $device->user;
 
         return [
-            'device' => [
-                'id' => $device->id,
-                'imei' => $device->imei,
-                'phone_number' => $device->phone_number,
-            ],
+            'device' => new DeviceResource($device),
+
             'triggered_at' => $this->deviceAlarm->triggered_at,
             'alerts' => [
                 'fall_down_alert' => $this->deviceAlarm->fall_down_alert,
