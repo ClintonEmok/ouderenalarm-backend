@@ -268,7 +268,6 @@ class SOSDataController extends Controller
         // Save to database
         GeneralStatus::create([
             'device_id' => $device->id,
-            'status_time' => gmdate("Y-m-d H:i:s", $timestamp),
             'gps' => $gps,
             'wifi_source' => $wifiSource,
             'cell_tower' => $cellTower,
