@@ -32,6 +32,7 @@ class EmergencyResource extends JsonResource
             ],
             'caregivers' => $user->caregivers->map(function ($caregiver) {
                 return [
+                    'id' => $caregiver->id,
                     'name' => $caregiver->name,
                     'phone' => $caregiver->phone_number,
                     'email' => $caregiver->email,

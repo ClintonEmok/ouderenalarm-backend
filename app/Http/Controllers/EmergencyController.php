@@ -24,13 +24,21 @@ class EmergencyController extends Controller
 
         return new EmergencyResource($emergencyLink);
     }
-
-
-    public function addCaregiverOnTheWay(Request $request, EmergencyLink $emergencyLink)
+    /**
+     * Add a caregiver to the emergency using the unique code.
+     */
+    public function addCaregiverOnTheWay(Request $request, $code)
     {
         $request->validate([
             'user_id' => 'required|exists:users,id', // Validate caregiver user
         ]);
+
+        // Find emergency using the unique code
+        $emergencyLink = EmergencyLink::where('link', 'like', "%/{$code}")->first();
+
+        if (!$emergencyLink || $emergencyLink->isExpired()) {
+            return response()->json(['error' => 'This emergency is expired or invalid.'], 404);
+        }
 
         $user = User::findOrFail($request->user_id);
 
@@ -45,11 +53,21 @@ class EmergencyController extends Controller
         ]);
     }
 
-    public function removeCaregiverOnTheWay(Request $request, EmergencyLink $emergencyLink)
+    /**
+     * Remove a caregiver from the emergency using the unique code.
+     */
+    public function removeCaregiverOnTheWay(Request $request, $code)
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
         ]);
+
+        // Find emergency using the unique code
+        $emergencyLink = EmergencyLink::where('link', 'like', "%/{$code}")->first();
+
+        if (!$emergencyLink || $emergencyLink->isExpired()) {
+            return response()->json(['error' => 'This emergency is expired or invalid.'], 404);
+        }
 
         $user = User::findOrFail($request->user_id);
 
