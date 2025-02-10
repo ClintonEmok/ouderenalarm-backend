@@ -165,37 +165,42 @@ class SOSDataController extends Controller
         $timestamp = hexdec($timestampHex);
         $alarmDetails = mb_substr($value, 8);
 
+        // Convert HEX to 32-bit binary and ensure it's correctly padded
         $alarmBinary = str_pad(base_convert($alarmDetails, 16, 2), 32, '0', STR_PAD_LEFT);
+
+        // Debugging: Log the binary value to verify bit positions
+        Log::info("Device {$device->imei} Alarm Binary: " . $alarmBinary);
 
         $alarmData = [
             'device_id' => $device->id,
-            'triggered_at' => $timestamp === 0 ? now() : gmdate("Y-m-d H:i:s", $timestamp),
-            'battery_low_alert' => $alarmBinary[31 - 0] === '1',
-            'over_speed_alert' => $alarmBinary[31 - 1] === '1',
-            'fall_down_alert' => $alarmBinary[31 - 2] === '1',
-            'welfare_alert' => $alarmBinary[31 - 3] === '1',
-            'geo_1_alert' => $alarmBinary[31 - 4] === '1',
-            'geo_2_alert' => $alarmBinary[31 - 5] === '1',
-            'geo_3_alert' => $alarmBinary[31 - 6] === '1',
-            'geo_4_alert' => $alarmBinary[31 - 7] === '1',
-            'power_off_alert' => $alarmBinary[31 - 8] === '1',
-            'power_on_alert' => $alarmBinary[31 - 9] === '1',
-            'motion_alert' => $alarmBinary[31 - 10] === '1',
-            'no_motion_alert' => $alarmBinary[31 - 11] === '1',
-            'sos_alert' => $alarmBinary[31 - 12] === '1',
-            'side_call_button_1' => $alarmBinary[31 - 13] === '1',
-            'side_call_button_2' => $alarmBinary[31 - 14] === '1',
-            'battery_charging_start' => $alarmBinary[31 - 15] === '1',
-            'no_charging' => $alarmBinary[31 - 16] === '1',
-            'sos_ending' => $alarmBinary[31 - 17] === '1',
-            'amber_alert' => $alarmBinary[31 - 18] === '1',
-            'welfare_alert_ending' => $alarmBinary[31 - 19] === '1',
-            'fall_down_ending' => $alarmBinary[31 - 20] === '1',
-            'one_day_upload' => $alarmBinary[31 - 22] === '1',
-            'beacon_absence' => $alarmBinary[31 - 23] === '1',
-            'bark_detection' => $alarmBinary[31 - 24] === '1',
-            'ble_disconnected' => $alarmBinary[31 - 30] === '1',
-            'watch_taken_away' => $alarmBinary[31 - 31] === '1',
+            'triggered_at' => "2024-01-01 00:00:00",
+            // Direct indexing (bit 0 = rightmost, bit 31 = leftmost)
+            'battery_low_alert'      => $alarmBinary[0] === '1',
+            'over_speed_alert'       => $alarmBinary[1] === '1',
+            'fall_down_alert'        => $alarmBinary[2] === '1',
+            'welfare_alert'          => $alarmBinary[3] === '1',
+            'geo_1_alert'            => $alarmBinary[4] === '1',
+            'geo_2_alert'            => $alarmBinary[5] === '1',
+            'geo_3_alert'            => $alarmBinary[6] === '1',
+            'geo_4_alert'            => $alarmBinary[7] === '1',
+            'power_off_alert'        => $alarmBinary[8] === '1',
+            'power_on_alert'         => $alarmBinary[9] === '1',
+            'motion_alert'           => $alarmBinary[10] === '1',
+            'no_motion_alert'        => $alarmBinary[11] === '1',
+            'sos_alert'              => $alarmBinary[12] === '1',  // **Fixed: Directly using index 12**
+            'side_call_button_1'     => $alarmBinary[13] === '1',
+            'side_call_button_2'     => $alarmBinary[14] === '1',
+            'battery_charging_start' => $alarmBinary[15] === '1',
+            'no_charging'            => $alarmBinary[16] === '1',
+            'sos_ending'             => $alarmBinary[17] === '1',
+            'amber_alert'            => $alarmBinary[18] === '1',
+            'welfare_alert_ending'   => $alarmBinary[19] === '1',
+            'fall_down_ending'       => $alarmBinary[20] === '1',
+            'one_day_upload'         => $alarmBinary[22] === '1',
+            'beacon_absence'         => $alarmBinary[23] === '1',
+            'bark_detection'         => $alarmBinary[24] === '1',
+            'ble_disconnected'       => $alarmBinary[30] === '1',
+            'watch_taken_away'       => $alarmBinary[31] === '1',
         ];
 
         // Store in the database
@@ -203,7 +208,6 @@ class SOSDataController extends Controller
 
         Log::info("Device {$device->imei} Alarm recorded: " . gmdate("Y-m-d H:i:s", $timestamp));
     }
-
 
     /**
      * Handle General Status (Key 0x24).
@@ -268,6 +272,7 @@ class SOSDataController extends Controller
         // Save to database
         GeneralStatus::create([
             'device_id' => $device->id,
+            'status_time' => null,
             'gps' => $gps,
             'wifi_source' => $wifiSource,
             'cell_tower' => $cellTower,
