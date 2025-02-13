@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('general_statuses', function (Blueprint $table) {
-            $table->string('new_column')->nullable(); // Example: Adding a new column
+            $table->string('status_time')->nullable()->change();
         });
     }
 
