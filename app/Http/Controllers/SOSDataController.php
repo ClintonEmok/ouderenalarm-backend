@@ -165,8 +165,9 @@ class SOSDataController extends Controller
         $timestamp = hexdec($timestampHex);
         $alarmDetails = mb_substr($value, 8);
 
-        // Convert HEX to 32-bit binary and ensure it's correctly padded
-        $alarmBinary = str_pad(base_convert($alarmDetails, 16, 2), 32, '0', STR_PAD_LEFT);
+        // Convert HEX to 32-bit binary and ensure it's correctly padded (little-endian)
+        $alarmDetailsReversed = implode('', array_reverse(str_split($alarmDetails, 2))); // Reverse byte order
+        $alarmBinary = str_pad(base_convert($alarmDetailsReversed, 16, 2), 32, '0', STR_PAD_LEFT);
 
         // Debugging: Log the binary value to verify bit positions
         Log::info("Device {$device->imei} Alarm Binary: " . $alarmBinary);
