@@ -229,90 +229,63 @@ class SOSDataController extends Controller
      */
     private function handleGeneralStatus($device, $value)
     {
-        $timestamp = hexdec(substr($value, 0, 8));
-        $status = hexdec(substr($value, 8, 8));  // 4 bytes for Status
-        $status2 = hexdec(substr($value, 24, 8));  // 4 bytes for Status2
+        // Convert little-endian hex to big-endian for correct parsing
+        $timestampHex = substr($value, 0, 8);
+        $timestamp = hexdec(implode('', array_reverse(str_split($timestampHex, 2))));
 
-        // Decode status bits
-        $gps = ($status & (1 << 0)) !== 0;
-        $wifiSource = ($status & (1 << 1)) !== 0;
-        $cellTower = ($status & (1 << 2)) !== 0;
-        $bleLocation = ($status & (1 << 3)) !== 0;
-        $inCharging = ($status & (1 << 4)) !== 0;
-        $fullyCharged = ($status & (1 << 5)) !== 0;
-        $reboot = ($status & (1 << 6)) !== 0;
-        $historicalData = ($status & (1 << 7)) !== 0;
-        $agpsDataValid = ($status & (1 << 8)) !== 0;
-        $motion = ($status & (1 << 9)) !== 0;
-        $smartLocating = ($status & (1 << 10)) !== 0;
-        $beaconLocation = ($status & (1 << 11)) !== 0;
-        $bleConnected = ($status & (1 << 12)) !== 0;
-        $fallDownAllow = ($status & (1 << 13)) !== 0;
-        $homeWifiLocation = ($status & (1 << 14)) !== 0;
-        $indoorOutdoorLocation = ($status & (1 << 15)) !== 0;
+        $statusHex = substr($value, 8, 8);
+        $statusBin = str_pad(base_convert(implode('', array_reverse(str_split($statusHex, 2))), 16, 2), 32, '0', STR_PAD_LEFT);
+
+        $status2Hex = substr($value, 16, 8);
+        $status2Bin = str_pad(base_convert(implode('', array_reverse(str_split($status2Hex, 2))), 16, 2), 32, '0', STR_PAD_LEFT);
+
+        // Decode status bits from binary representation
+        $decodedStatus = [
+            'gps' => $statusBin[31] === '1',
+            'wifi_source' => $statusBin[30] === '1',
+            'cell_tower' => $statusBin[29] === '1',
+            'ble_location' => $statusBin[28] === '1',
+            'in_charging' => $statusBin[27] === '1',
+            'fully_charged' => $statusBin[26] === '1',
+            'reboot' => $statusBin[25] === '1',
+            'historical_data' => $statusBin[24] === '1',
+            'agps_data_valid' => $statusBin[23] === '1',
+            'motion' => $statusBin[22] === '1',
+            'smart_locating' => $statusBin[21] === '1',
+            'beacon_location' => $statusBin[20] === '1',
+            'ble_connected' => $statusBin[19] === '1',
+            'fall_down_allow' => $statusBin[18] === '1',
+            'home_wifi_location' => $statusBin[17] === '1',
+            'indoor_outdoor_location' => $statusBin[16] === '1',
+            'work_mode' => bindec(substr($statusBin, 13, 3)), // Bits 16-18
+            'cell_signal_strength' => bindec(substr($statusBin, 8, 5)), // Bits 19-23
+            'battery_level' => bindec(substr($statusBin, 0, 8)), // Bits 24-31
+        ];
 
         // Decode status2 bits
-        $networkTypeBits = $status2 & 0b00000000000000000000000000000111; // Bits 0-2
-        $mobileNetworkType = ['No service', '2G', '3G', '4G'][$networkTypeBits] ?? null;
-        $workMode = ($status2 >> 16) & 0b111; // Bits 16-18
-        $cellSignalStrength = ($status2 >> 19) & 0b11111; // Bits 19-23
-        $batteryDescription = ($status2 >> 24) & 0xFF; // Bits 24-31
+        $networkTypeBits = bindec(substr($status2Bin, 29, 3)); // Bits 0-2
+        $networkTypes = ['No service', '2G', '3G', '4G'];
+        $mobileNetworkType = $networkTypes[$networkTypeBits] ?? 'Unknown';
 
-
-        Log::info("Timestamp: " . gmdate("Y-m-d H:i:s", $timestamp));
-        Log::info("Status Bits:");
-        Log::info("  GPS: " . ($gps ? 'Enabled' : 'Disabled'));
-        Log::info("  WiFi Source: " . ($wifiSource ? 'Enabled' : 'Disabled'));
-        Log::info("  Cell Tower: " . ($cellTower ? 'Enabled' : 'Disabled'));
-        Log::info("  BLE Location: " . ($bleLocation ? 'Enabled' : 'Disabled'));
-        Log::info("  In Charging: " . ($inCharging ? 'Yes' : 'No'));
-        Log::info("  Fully Charged: " . ($fullyCharged ? 'Yes' : 'No'));
-        Log::info("  Reboot: " . ($reboot ? 'Yes' : 'No'));
-        Log::info("  Historical Data: " . ($historicalData ? 'Yes' : 'No'));
-        Log::info("  AGPS Data Valid: " . ($agpsDataValid ? 'Yes' : 'No'));
-        Log::info("  Motion: " . ($motion ? 'Detected' : 'Not Detected'));
-        Log::info("  Smart Locating: " . ($smartLocating ? 'Enabled' : 'Disabled'));
-        Log::info("  Beacon Location: " . ($beaconLocation ? 'Enabled' : 'Disabled'));
-        Log::info("  BLE Connected: " . ($bleConnected ? 'Yes' : 'No'));
-        Log::info("  Fall Down Allow: " . ($fallDownAllow ? 'Yes' : 'No'));
-        Log::info("  Home WiFi Location: " . ($homeWifiLocation ? 'Yes' : 'No'));
-        Log::info("  Indoor/Outdoor Location: " . ($indoorOutdoorLocation ? 'Indoor' : 'Outdoor'));
-
-        Log::info("Status2 Bits:");
-        Log::info("  Mobile Network Type: $mobileNetworkType");
-        Log::info("  Work Mode: $workMode");
-        Log::info("  Cell Signal Strength: $cellSignalStrength");
-        Log::info("  Battery Description: $batteryDescription");
-        Log::info("General Status for Device {$device->imei} saved successfully.");
-        // Save to database
-        GeneralStatus::create([
-            'device_id' => $device->id,
-            'status_time' => null,
-            'gps' => $gps,
-            'wifi_source' => $wifiSource,
-            'cell_tower' => $cellTower,
-            'ble_location' => $bleLocation,
-            'in_charging' => $inCharging,
-            'fully_charged' => $fullyCharged,
-            'reboot' => $reboot,
-            'historical_data' => $historicalData,
-            'agps_data_valid' => $agpsDataValid,
-            'motion' => $motion,
-            'smart_locating' => $smartLocating,
-            'beacon_location' => $beaconLocation,
-            'ble_connected' => $bleConnected,
-            'fall_down_allow' => $fallDownAllow,
-            'home_wifi_location' => $homeWifiLocation,
-            'indoor_outdoor_location' => $indoorOutdoorLocation,
+        $decodedStatus2 = [
             'mobile_network_type' => $mobileNetworkType,
-            'work_mode' => $workMode,
-            'cell_signal_strength' => $cellSignalStrength,
-            'battery_level' => $batteryDescription,
-        ]);
+        ];
 
-        // Logging all decoded fields
+        // Log details
+        Log::info("Timestamp: " . gmdate("Y-m-d H:i:s", $timestamp));
+        Log::info("Status Bits (Binary): " . $statusBin);
+        Log::info("Decoded Status:", $decodedStatus);
+        Log::info("Status2 Bits (Binary): " . $status2Bin);
+        Log::info("Decoded Status2:", $decodedStatus2);
+        Log::info("General Status for Device {$device->imei} saved successfully.");
 
+        // Save to database
+        GeneralStatus::create(array_merge([
+            'device_id' => $device->id,
+            'status_time' => gmdate("Y-m-d H:i:s", $timestamp),
+        ], $decodedStatus, $decodedStatus2));
     }
+
 
     /**
      * Handle Call Record (Key 0x25).
