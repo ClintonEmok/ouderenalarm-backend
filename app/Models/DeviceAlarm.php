@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\SIAEncoder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -62,11 +63,42 @@ class DeviceAlarm extends Model
 
         static::created(function ($alarm) {
             if ($alarm->fall_down_alert || $alarm->sos_alert) {
-                $alarm->createEmergencyLink();
+                $emergencyLink = $alarm->createEmergencyLink();
+
+                // Send SIA message
+                $encoder = new SIAEncoder();
+                $eventCode = 'QA'; // Emergency alarm
+                $accountId = '1234';
+                $extraInfo = $emergencyLink->link; // URL from emergency link
+
+                $encryptedMessage = $encoder->encodeMessage($eventCode, $accountId, $extraInfo);
+
+                // Send to monitoring server
+                self::sendToMonitoringServer($encryptedMessage);
+
+                Log::info("Sent SIA emergency alarm for Alarm {$alarm->id} with URL: {$extraInfo}");
             } else {
                 Log::info("Alarm {$alarm->id} did not trigger an emergency link as no critical alerts were detected.");
             }
         });
+    }
+
+    protected static function sendToMonitoringServer(string $message)
+    {
+        $host = 'monitoring.server.com';
+        $port = 5050;
+
+        $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+        if (!$socket || !socket_connect($socket, $host, $port)) {
+            Log::error('SIA message send failed: ' . socket_strerror(socket_last_error()));
+            return;
+        }
+
+        socket_write($socket, $message, strlen($message));
+        $response = socket_read($socket, 2048);
+        socket_close($socket);
+
+        Log::info("Monitoring server response: {$response}");
     }
 
     /**
