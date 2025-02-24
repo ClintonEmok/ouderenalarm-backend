@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-class SIAEncoder
+class SiaEncoderService
 {
     private $currentSequence = 1;
 

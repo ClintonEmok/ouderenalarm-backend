@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Services\SIAEncoder;
+use App\Services\SiaEncoderService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -66,7 +66,7 @@ class DeviceAlarm extends Model
                 $emergencyLink = $alarm->createEmergencyLink();
 
                 // Send SIA message
-                $encoder = new SIAEncoder();
+                $encoder = new SiaEncoderService();
                 $eventCode = 'QA'; // Emergency alarm
                 $accountId = '1234';
                 $extraInfo = $emergencyLink->link; // URL from emergency link
@@ -85,8 +85,8 @@ class DeviceAlarm extends Model
 
     protected static function sendToMonitoringServer(string $message)
     {
-        $host = 'monitoring.server.com';
-        $port = 5050;
+        $host = config('app.meldkamer_server');
+        $port = config('app.meldkamer_port');
 
         $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
         if (!$socket || !socket_connect($socket, $host, $port)) {

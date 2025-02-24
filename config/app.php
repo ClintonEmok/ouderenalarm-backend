@@ -126,5 +126,6 @@ return [
 
     'meldkamer_server' => env('APP_MELDKAMER_SERVER', 'http://localhost'),
     'meldkamer_port' => env('APP_MELDKAMER_PORT', 8388),
+    'meldkamer_account' => env('APP_MELDKAMER_ACCOUNT', ''),
 
 ];
