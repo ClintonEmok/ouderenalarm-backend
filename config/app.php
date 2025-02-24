@@ -124,4 +124,7 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'meldkamer_server' => env('APP_MELDKAMER_SERVER', 'http://localhost'),
+    'meldkamer_port' => env('APP_MELDKAMER_PORT', 8388),
+
 ];
