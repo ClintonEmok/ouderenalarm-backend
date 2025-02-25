@@ -32,6 +32,14 @@ class DeviceResource extends Resource
                 Forms\Components\TextInput::make('imei')
                 ->label('imei')->readOnlyOn(['edit']),
                 PhoneInput::make('phone_number')->label("Telefoonnummer"),
+                Map::make("location")->afterStateHydrated(function ($state, $record, Forms\Set $set): void {
+                    $set('location', [
+                        'lat' => $record->latestLocation->latitude,
+                        'lng' => $record->latestLocation->longitude,
+                    ]);
+                }) ->draggable(false)->showMyLocationButton(false)
+                    ->clickable(false)->label('Locatie')
+                    ->columnSpanFull()
 
             ]);
     }
@@ -55,6 +63,7 @@ class DeviceResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -68,6 +77,7 @@ class DeviceResource extends Resource
     {
         return [
             //
+//            RelationManagers\GpsLocationsRelationManager::class
         ];
     }
 
@@ -75,6 +85,7 @@ class DeviceResource extends Resource
     {
         return [
             'index' => Pages\ListDevices::route('/'),
+            'view' => Pages\ViewDevice::route('/{record}'),
             'create' => Pages\CreateDevice::route('/create'),
             'edit' => Pages\EditDevice::route('/{record}/edit'),
         ];
