@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DeviceResource\Pages;
 use App\Filament\Resources\DeviceResource\RelationManagers;
 use App\Models\Device;
+use Dotswan\MapPicker\Fields\Map;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -31,6 +32,9 @@ class DeviceResource extends Resource
                 Forms\Components\TextInput::make('imei')
                 ->label('imei')->readOnlyOn(['edit']),
                 PhoneInput::make('phone_number')->label("Telefoonnummer"),
+                Map::make("latestLocation.location")->defaultLocation(latitude: 40.4168, longitude: -3.7038)->afterStateHydrated(function ($state, $record, Forms\Set $set): void {
+                    $set('location', ['lat' => $record?->latitude, 'lng' => $record?->longitude]);
+                })
 
             ]);
     }
@@ -47,6 +51,7 @@ class DeviceResource extends Resource
                 ->dateTime(),
                 Tables\Columns\TextColumn::make('updated_at')->label("Bijgewerkt Op")
                 ->dateTime(),
+
             ])
             ->filters([
                 //
