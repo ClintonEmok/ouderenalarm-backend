@@ -16,7 +16,7 @@ class ListDevices extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
-            Actions\ImportAction::make()
+            Actions\ImportAction::make()->label('Apparaten importeren')
                 ->importer(DeviceImporter::class)
         ];
     }

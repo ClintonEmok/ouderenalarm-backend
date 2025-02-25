@@ -19,6 +19,8 @@ use Ysfkaya\FilamentPhoneInput\PhoneInputNumberType;
 class DeviceResource extends Resource
 {
     protected static ?string $model = Device::class;
+    protected static ?string $modelLabel = 'Apparaat';
+    protected static ?string $pluralLabel = 'Apparaten';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -28,8 +30,7 @@ class DeviceResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('imei')
                 ->label('imei')->readOnlyOn(['edit']),
-                Forms\Components\TextInput::make('nickname'),
-                PhoneInput::make('phone_number'),
+                PhoneInput::make('phone_number')->label("Telefoonnummer"),
 
             ]);
     }
@@ -41,11 +42,10 @@ class DeviceResource extends Resource
                 //
 
                 Tables\Columns\TextColumn::make('imei'),
-                Tables\Columns\TextColumn::make('nickname'),
-                Tables\Columns\TextColumn::make('phone_number'),
-                Tables\Columns\TextColumn::make('created_at')
+                Tables\Columns\TextColumn::make('phone_number')->label("Telefoonnummer"),
+                Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op")
                 ->dateTime(),
-                Tables\Columns\TextColumn::make('updated_at')
+                Tables\Columns\TextColumn::make('updated_at')->label("Bijgewerkt Op")
                 ->dateTime(),
             ])
             ->filters([

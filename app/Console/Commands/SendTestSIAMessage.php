@@ -16,10 +16,10 @@ class SendTestSIAMessage extends Command
         $encoder = new SiaEncoderService();
 
         $eventCode = 'RX'; // 'RX' is often used for manual test reports
-        $accountId = config("app.meldkamer_account"); // Replace with your test account ID
+        $accountId = 1498; // Replace with your test account ID
         $extraInfo = 'https://ouderen-alarmering.nl/'; // Test URL
 
-        $encryptedMessage = $encoder->generateNullMessage($accountId);
+        $encryptedMessage = $encoder->encodeMessage($eventCode, $accountId, $extraInfo);
 
         // Send to monitoring server
         $this->sendToMonitoringServer($encryptedMessage);
@@ -43,9 +43,9 @@ class SendTestSIAMessage extends Command
 
 
         socket_write($socket, $message, strlen($message));
-        $response = socket_read($socket, 2048);
+//        $response = socket_read($socket, 2048);
         socket_close($socket);
 
-        Log::info("Monitoring server response: {$response}");
+//        Log::info("Monitoring server response: {$response}");
     }
 }

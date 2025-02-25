@@ -18,7 +18,7 @@ class DeviceImporter extends Importer
                 ->requiredMapping()
                 ->rules(['required', 'max:255']),
 
-            ImportColumn::make('phone_number')
+            ImportColumn::make('phone_number')->label("Telefoonnummer")
                 ->rules(['max:255']),
 
         ];
@@ -36,10 +36,10 @@ class DeviceImporter extends Importer
 
     public static function getCompletedNotificationBody(Import $import): string
     {
-        $body = 'Your device import has completed and ' . number_format($import->successful_rows) . ' ' . str('row')->plural($import->successful_rows) . ' imported.';
+        $body = 'Importeren van jouw apparaten is geslaagd en ' . number_format($import->successful_rows) . ' ' . str('row')->plural($import->successful_rows) . ' zijn geimporteerd.';
 
         if ($failedRowsCount = $import->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to import.';
+            $body .= ' ' . number_format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' niet gelukt om te importeren';
         }
 
         return $body;
