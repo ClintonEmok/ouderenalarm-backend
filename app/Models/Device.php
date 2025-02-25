@@ -45,6 +45,6 @@ class Device extends Model
 
     public function latestLocation()
     {
-        return $this->hasOne(GpsLocation::class)->latestOfMany();
+        return $this->hasOne(GPSLocation::class)->latestOfMany();
     }
 }
