@@ -15,8 +15,8 @@ class SendTestSIAMessage extends Command
     {
         $encoder = new SiaEncoderService();
 
-        $eventCode = 'RX'; // 'RX' is often used for manual test reports
-        $accountId = 1498; // Replace with your test account ID
+        $eventCode = 'QA'; // 'RX' is often used for manual test reports
+        $accountId = 3203; // Replace with your test account ID
         $extraInfo = 'https://ouderen-alarmering.nl/'; // Test URL
 
         $encryptedMessage = $encoder->encodeMessage($eventCode, $accountId, $extraInfo);

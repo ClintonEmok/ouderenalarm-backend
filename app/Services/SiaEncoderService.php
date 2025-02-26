@@ -9,7 +9,7 @@ class SiaEncoderService
     /**
      * Encode a SIA message.
      */
-    public function encodeMessage(string $eventCode, string $accountId, string $data): string
+    public function encodeMessage(string $eventCode, string $accountId, string $data, bool $encrypt = false): string
     {
         if (!preg_match('/^[A-Z]{2}$/', $eventCode)) {
             throw new \InvalidArgumentException('Invalid event code format.');
@@ -24,7 +24,12 @@ class SiaEncoderService
         $crc = $this->calculateCRC($messageData);
 
         $message = "<LF>{$crc}<0LLL>*SIA-DCS{$sequence}R0000L0000#{$accountId}[{$this->padData($messageData)}]{$timestamp}<CR>";
-        return $this->encryptMessage($message);
+        if($encrypt){
+            return $this->encryptMessage($message);
+        }
+
+
+        return $message;
     }
 
     /**
