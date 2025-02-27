@@ -95,10 +95,10 @@ class DeviceAlarm extends Model
         }
 
         socket_write($socket, $message, strlen($message));
-        $response = socket_read($socket, 2048);
+//        $response = socket_read($socket, 2048);
         socket_close($socket);
 
-        Log::info("Monitoring server response: {$response}");
+//        Log::info("Monitoring server response: {$response}");
     }
 
     /**
@@ -110,11 +110,14 @@ class DeviceAlarm extends Model
         $uniqueCode = Str::uuid(); // Generate a unique identifier
         $link = "{$nextJsUrl}/emergency/{$uniqueCode}";
 
-        $this->emergencyLink()->create([
+        // Create and store the emergency link
+        $emergencyLink = $this->emergencyLink()->create([
             'link' => $link,
             'expires_at' => now()->addHours(24), // Set expiration to 24 hours
         ]);
 
         Log::info("Emergency link generated for alarm {$this->id}: {$link}");
+
+        return $emergencyLink; // Return the created emergency link
     }
 }
