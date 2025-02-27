@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\ProcessEmergencyAlarm;
 use App\Services\SiaEncoderService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
@@ -63,22 +64,7 @@ class DeviceAlarm extends Model
 
         static::created(function ($alarm) {
             if ($alarm->fall_down_alert || $alarm->sos_alert) {
-                $emergencyLink = $alarm->createEmergencyLink();
-
-                // Send SIA message
-                $encoder = new SiaEncoderService();
-                $eventCode = 'QA'; // Emergency alarm
-                $accountId = '1234';
-                $extraInfo = $emergencyLink->link; // URL from emergency link
-
-                $encryptedMessage = $encoder->encodeMessage($eventCode, $accountId, $extraInfo);
-
-                // Send to monitoring server
-                self::sendToMonitoringServer($encryptedMessage);
-
-                Log::info("Sent SIA emergency alarm for Alarm {$alarm->id} with URL: {$extraInfo}");
-            } else {
-                Log::info("Alarm {$alarm->id} did not trigger an emergency link as no critical alerts were detected.");
+                ProcessEmergencyAlarm::dispatch($alarm);
             }
         });
     }
