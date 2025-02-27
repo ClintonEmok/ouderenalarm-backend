@@ -303,14 +303,23 @@ class SOSDataController extends Controller
      */
     private function generateACK($sequenceId)
     {
-        $header = "ab";
-        $properties = "00";  // No encryption, no ACK request
-        $length = "0003";  // 3 bytes for the body
-        $crc = $this->calculateCRC("7f0100");  // Negative response body
-        $message = $header . $properties . $length . $crc . $sequenceId . "7f0100";
-        return hex2bin($message);
-    }
+        $header = "AB"; // Message header
+        $properties = "00"; // No encryption, no ACK request
+        $length = "0003"; // Length of the message body (3 bytes)
+        $crc = "C708"; // Precomputed CRC for 7F0100 (no need to recalculate)
 
+        $command = "7F"; // ACK command
+        $keyLength = "01"; // Length of the key field
+        $key = "00"; // Negative Response Key
+
+        // Swap sequence ID (little-endian)
+        $swappedSequenceId = substr($sequenceId, 2, 2) . substr($sequenceId, 0, 2);
+
+        // Construct the full message as a hex string
+        $message = $header . $properties . $length . $crc . $swappedSequenceId . $command . $keyLength . $key;
+
+        return strtoupper($message); // Return as uppercase hex string
+    }
     /**
      * Convert hex to ASCII string.
      */
