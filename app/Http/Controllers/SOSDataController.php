@@ -306,7 +306,9 @@ class SOSDataController extends Controller
         $header = "AB"; // Message header
         $properties = "00"; // No encryption, no ACK request
         $length = "0003"; // Length of the message body (3 bytes)
-        $crc = "C708"; // Precomputed CRC for 7F0100 (no need to recalculate)
+        $lengthSwapped = "0300";
+         $crc = "C708"; // Precomputed CRC for 7F0100 (no need to recalculate)
+        $crcSwapped = "08C7";
 
         $command = "7F"; // ACK command
         $keyLength = "01"; // Length of the key field
@@ -315,8 +317,10 @@ class SOSDataController extends Controller
         // Swap sequence ID (little-endian)
         $swappedSequenceId = substr($sequenceId, 2, 2) . substr($sequenceId, 0, 2);
 
+
+
         // Construct the full message as a hex string
-        $message = $header . $properties . $length . $crc . $swappedSequenceId . $command . $keyLength . $key;
+        $message = $header . $properties . $lengthSwapped . $crcSwapped . $swappedSequenceId . $command . $keyLength . $key;
 
         return strtoupper($message); // Return as uppercase hex string
     }
