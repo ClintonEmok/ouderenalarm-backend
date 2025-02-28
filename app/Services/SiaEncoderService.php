@@ -23,7 +23,7 @@ class SiaEncoderService
         $messageData = "#{$accountId}|{$eventCode}|{$data}";
         $crc = $this->calculateCRC($messageData);
 
-        $message = "<LF>{$crc}<0LLL>*SIA-DCS{$sequence}R0000L0000#{$accountId}[{$this->padData($messageData)}]{$timestamp}<CR>";
+        $message = "<LF>{$crc}<0LLL>SIA-DCS{$sequence}R0000L0000#{$accountId}[{$this->padData($messageData)}]{$timestamp}<CR>";
         if($encrypt){
             return $this->encryptMessage($message);
         }

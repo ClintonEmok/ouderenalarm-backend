@@ -92,7 +92,7 @@ class DeviceAlarm extends Model
      */
     public function createEmergencyLink()
     {
-        $nextJsUrl = env('FRONTEND_URL', 'https://default-nextjs-url.com');
+        $nextJsUrl = config('app.frontend_url', 'https://default-nextjs-url.com');
         $uniqueCode = Str::uuid(); // Generate a unique identifier
         $link = "{$nextJsUrl}/emergency/{$uniqueCode}";
 

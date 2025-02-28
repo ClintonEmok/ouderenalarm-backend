@@ -46,6 +46,6 @@ class ProcessEmergencyAlarm implements ShouldQueue
             SendSiaMessage::dispatch($encryptedMessage);
 
             Log::info("Queued SIA emergency alarm for Alarm {$this->alarm->id} with URL: {$extraInfo}");
-      
+
     }
 }
