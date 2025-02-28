@@ -322,7 +322,7 @@ class SOSDataController extends Controller
         // Construct the full message as a hex string
         $message = $header . $properties . $lengthSwapped . $crcSwapped . $sequenceId . $command . $keyLength . $key;
 
-        return strtoupper($message); // Return as uppercase hex string
+        return strtolower($message); // Return as uppercase hex string
     }
     /**
      * Convert hex to ASCII string.
