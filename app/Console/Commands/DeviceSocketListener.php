@@ -55,9 +55,18 @@ class DeviceSocketListener extends Command
             $response = $sosDataController->receiveData($request);
 
             // Send acknowledgment if applicable
-            if ($response->status() === 200 && $response->content()) {
-                socket_write($client, $response->content());  // Send ACK or NAK response
-                Log::info("Acknowledgment sent to device");
+            if (!empty($response)) {
+                $ackResponse = trim($response); // Ensure no extra spaces or newlines
+
+                // Write to the socket
+                $bytesWritten = socket_write($client, $ackResponse, strlen($ackResponse));
+
+                // Check if the write operation was successful
+                if ($bytesWritten === false) {
+                    Log::error("Failed to send acknowledgment to device: " . socket_strerror(socket_last_error($client)));
+                } else {
+                    Log::info("Acknowledgment sent to device: $ackResponse");
+                }
             }
 
             socket_close($client);  // Close the client connection after processing
