@@ -105,7 +105,7 @@ class SOSDataController extends Controller
             if (hexdec($properties) & 0x10) {  // Check ACK flag
                 $ackResponse = $this->generateACK($sequenceId);
                 Log::info("Sending ACK response... " . $ackResponse);
-                return $ackResponse;
+                return strtoupper($ackResponse);
             }
 
             return response()->json(['message' => 'Data processed successfully']);
