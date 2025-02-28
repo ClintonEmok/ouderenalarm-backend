@@ -28,6 +28,8 @@ class SendSiaMessage implements ShouldQueue
      */
     public function handle()
     {
+        $message = base64_decode($this->message); // Convert back to raw message
+
         $host = config('app.meldkamer_server');
         $port = config('app.meldkamer_port');
 
@@ -37,9 +39,9 @@ class SendSiaMessage implements ShouldQueue
             return;
         }
 
-        socket_write($socket, $this->message, strlen($this->message));
+        socket_write($socket, $message, strlen($message));
         socket_close($socket);
 
-        Log::info("Successfully sent SIA message: {$this->message}");
+        Log::info("Successfully sent SIA message.");
     }
 }

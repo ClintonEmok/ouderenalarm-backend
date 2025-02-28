@@ -40,9 +40,10 @@ class ProcessEmergencyAlarm implements ShouldQueue
             $accountId = '1234';
             $extraInfo = $emergencyLink->link; // Emergency link
 
-            $encryptedMessage = $encoder->encodeMessage($eventCode, $accountId, $extraInfo);
+//            $encryptedMessage = $encoder->encodeMessage($eventCode, $accountId, $extraInfo);
 
             // Dispatch SendSiaMessage job
+            $encryptedMessage = base64_encode($encoder->encodeMessage($eventCode, $accountId, $extraInfo));
             SendSiaMessage::dispatch($encryptedMessage);
 
             Log::info("Queued SIA emergency alarm for Alarm {$this->alarm->id} with URL: {$extraInfo}");
