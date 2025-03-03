@@ -21,13 +21,20 @@ class SiaEncoderService
         $sequence = $this->getNextSequence();
         $timestamp = gmdate('_H:i:s,m-d-Y');
         $messageData = "#{$accountId}|{$eventCode}|{$data}";
-        $crc = $this->calculateCRC($messageData);
 
-        $message = "<LF>{$crc}<0LLL>SIA-DCS{$sequence}R0000L0000#{$accountId}[{$messageData}]{$timestamp}<CR>";
+        // Compute CRC for the message body
+        $crc = $this->calculateCRC("SIA-DCS{$sequence}R0000L0000#{$accountId}[{$messageData}]{$timestamp}");
+
+        // Compute message length in HEX (excluding <LF>, <CRC>, and <CR>)
+        $lengthHex = strtoupper(str_pad(dechex(strlen("SIA-DCS{$sequence}R0000L0000#{$accountId}[{$messageData}]{$timestamp}")), 4, '0', STR_PAD_LEFT));
+
+        // Properly format the message with LF and CR as raw binary
+        $message = chr(10) . "{$crc}{$lengthHex}SIA-DCS{$sequence}R0000L0000#{$accountId}[{$messageData}]{$timestamp}" . chr(13);
 
         return $encrypt ? $this->encryptMessage($message) : $message;
     }
 
+    
     /**
      * Get the next sequence number, resetting after 9999.
      */
