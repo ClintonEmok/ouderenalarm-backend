@@ -41,7 +41,7 @@ class SendTestSIAMessage extends Command
         }
 
 
-
+        Log::info("Bericht". $message);
         socket_write($socket, $message, strlen($message));
 //        $response = socket_read($socket, 2048);
         socket_close($socket);

@@ -23,13 +23,9 @@ class SiaEncoderService
         $messageData = "#{$accountId}|{$eventCode}|{$data}";
         $crc = $this->calculateCRC($messageData);
 
-        $message = "<LF>{$crc}<0LLL>SIA-DCS{$sequence}R0000L0000#{$accountId}[{$this->padData($messageData)}]{$timestamp}<CR>";
-        if($encrypt){
-            return $this->encryptMessage($message);
-        }
+        $message = "<LF>{$crc}<0LLL>SIA-DCS{$sequence}R0000L0000#{$accountId}[{$messageData}]{$timestamp}<CR>";
 
-
-        return $message;
+        return $encrypt ? $this->encryptMessage($message) : $message;
     }
 
     /**
@@ -52,23 +48,6 @@ class SiaEncoderService
             $crc += ord($message[$i]);
         }
         return strtoupper(str_pad(dechex($crc & 0xFFFF), 4, '0', STR_PAD_LEFT));
-    }
-
-    /**
-     * Pad data to ensure it is a multiple of 16 bytes.
-     */
-    private function padData(string $data): string
-    {
-        $padLength = 16 - (strlen($data) % 16);
-        $padData = '';
-        for ($i = 0; $i < $padLength; $i++) {
-            $char = chr(random_int(0, 255));
-            // Exclude specific ASCII characters
-            if (!in_array($char, ['|', '[', ']'])) {
-                $padData .= $char;
-            }
-        }
-        return $padData . '|'; // Add pad termination character
     }
 
     /**
@@ -114,15 +93,10 @@ class SiaEncoderService
      */
     public function parseAcknowledgment(string $response): array
     {
-        $type = substr($response, 0, 3); // Extract ACK type
-        $sequence = substr($response, 3, 4); // Extract sequence number
-        $timestamp = substr($response, -20); // Extract timestamp if applicable
-
         return [
-            'type' => $type,
-            'sequence' => $sequence,
-            'timestamp' => $timestamp,
+            'type' => substr($response, 0, 3),
+            'sequence' => substr($response, 3, 4),
+            'timestamp' => substr($response, -20),
         ];
     }
 }
-
