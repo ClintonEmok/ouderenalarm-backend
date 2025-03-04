@@ -34,7 +34,7 @@ class SiaEncoderService
         return $encrypt ? $this->encryptMessage($message) : $message;
     }
 
-    
+
     /**
      * Get the next sequence number, resetting after 9999.
      */
