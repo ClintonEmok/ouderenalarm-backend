@@ -172,14 +172,20 @@ class SOSDataController extends Controller
         $alarmCodeHex = mb_substr($value, 0, 8);
         $alarmCode = hexdec(implode('', array_reverse(str_split($alarmCodeHex, 2))));
         Log::info("Alarm code: $alarmCode");
-        $alarmBinary = str_pad(decbin($alarmCode), 32, '0',STR_PAD_LEFT);
+        $alarmBinary = str_pad(decbin($alarmCode), 32, '0', STR_PAD_LEFT);
         Log::info("Alarm Binary: $alarmBinary");
-
 
         // Extract the 4-byte UTC Timestamp (Bytes 3-6) and convert from little-endian to decimal
         $timestampHex = mb_substr($value, 8, 8);
         $timestamp = hexdec(implode('', array_reverse(str_split($timestampHex, 2))));
         $triggeredAt = $timestamp > 0 ? gmdate("Y-m-d H:i:s", $timestamp) : null;
+
+        // Check if the timestamp is within the last 5 minutes
+        $currentTimestamp = time();
+        if ($timestamp <= 0 || ($currentTimestamp - $timestamp) > 300) {
+            Log::warning("Device {$device->imei} Alarm ignored due to old timestamp: " . ($triggeredAt ?? "Invalid Timestamp"));
+            return;
+        }
 
         // Debugging: Verify extracted values
         Log::info("Device {$device->imei} Alarm UTC Timestamp: " . ($triggeredAt ?? "Invalid Timestamp"));
@@ -223,6 +229,7 @@ class SOSDataController extends Controller
         // Log confirmation
         Log::info("Device {$device->imei} Alarm recorded at: " . ($triggeredAt ?? "Unknown Time"));
     }
+
 
     /**
      * Handle General Status (Key 0x24).
