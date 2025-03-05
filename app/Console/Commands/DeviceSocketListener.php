@@ -78,7 +78,6 @@ class DeviceSocketListener extends Command
 
                 $hexData = bin2hex($data);  // Convert binary data to hex for parsing
                 Log::info("Received raw data: " . $hexData);
-                Log::info("Data " . $data );
 
                 // Process data using SOSDataController
                 $sosDataController = new SOSDataController();
