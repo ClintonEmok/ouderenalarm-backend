@@ -23,7 +23,7 @@ class SOSDataController extends Controller
             }
 
             $hexData = bin2hex($rawData);  // Convert binary to hex for logging/debugging
-            Log::info("Received raw data: " . $hexData);
+            Log::info("Received raw data (converted to hex): " . $hexData);
 
             if (strlen($hexData) < 16) {
                 return response()->json(['error' => 'Message too short'], 400);
