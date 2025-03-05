@@ -87,18 +87,18 @@ class DeviceSocketListener extends Command
 
                 // Ensure response is valid before sending ACK
                 if (!empty($response)) {
-                    Log::info("Raw HEX ACK: " . $response);
+                    Log::info("Raw HEX ACK (before conversion): " . $response);
 
-                    // Convert HEX string to binary
-                    $binaryAck = hex2bin($response);
+                    // Convert HEX to raw string
+                    $ackResponse = pack('H*', $response);
 
-                    // Send ACK
-                    $bytesWritten = socket_write($client, $binaryAck, strlen($binaryAck));
+                    // Send ACK as a raw string
+                    $bytesWritten = socket_write($client, $ackResponse, strlen($ackResponse));
 
                     if ($bytesWritten === false) {
                         Log::error("Failed to send ACK to device: " . socket_strerror(socket_last_error($client)));
                     } else {
-                        Log::info("ACK successfully sent $binaryAck | Bytes written: $bytesWritten");
+                        Log::info("ACK successfully sent as raw string: $ackResponse | Bytes written: $bytesWritten");
                     }
                 }
 
