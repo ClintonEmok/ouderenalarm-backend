@@ -95,6 +95,9 @@ class DeviceSocketListener extends Command
                         Log::info("ACK sent to device: $ackResponse");
                     }
                 }
+
+                // Close the socket immediately after sending ACK
+                break;
             }
         } catch (\Exception $e) {
             Log::error("Error handling device connection: " . $e->getMessage());
