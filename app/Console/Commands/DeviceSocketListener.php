@@ -68,6 +68,8 @@ class DeviceSocketListener extends Command
             while (true) {
                 // Read data from the device
                 $data = socket_read($client, 2048);
+                $encoding = mb_detect_encoding($data, ["ASCII", "UTF-8", "ISO-8859-1", "Windows-1252"], true);
+                Log::info("Detected encoding: " . $encoding);
 
                 if ($data === false || empty($data)) {
                     Log::warning("Device disconnected or sent empty data.");
