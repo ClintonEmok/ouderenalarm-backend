@@ -29,7 +29,7 @@ class SiaEncoderService
         $lengthHex = strtoupper(str_pad(dechex(strlen("SIA-DCS{$sequence}R0000L0000#{$accountId}[{$messageData}]{$timestamp}")), 4, '0', STR_PAD_LEFT));
 
         // Properly format the message with LF and CR as raw binary
-        $message = chr(10) . "{$crc}{$lengthHex}SIA-DCS{$sequence}R0000L0000#{$accountId}[{$messageData}]{$timestamp}" . chr(13);
+        $message = chr(10) . "{$crc}{$lengthHex}SIA-DCS{$sequence}R0000L0000#{$accountId}[{$messageData}]{$timestamp}";
 
         return $encrypt ? $this->encryptMessage($message) : $message;
     }

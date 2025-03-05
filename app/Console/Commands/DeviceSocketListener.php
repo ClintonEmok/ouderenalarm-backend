@@ -73,7 +73,7 @@ class DeviceSocketListener extends Command
                     Log::warning("Device disconnected or sent empty data.");
                     break;  // Exit the loop and close the connection
                 }
-                
+
                 // Process data using SOSDataController
                 $sosDataController = new SOSDataController();
                 $request = new \Illuminate\Http\Request(['data' => $data]);

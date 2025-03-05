@@ -32,20 +32,24 @@ class SendTestSIAMessage extends Command
         $host = config('app.meldkamer_server');
         $port = config('app.meldkamer_port');
 
+        Log::info("Connecting to: {$host}:{$port}");
 
-        Log::info($host . ":" . $port);
+        // Ensure message is correctly formatted according to SIA DC-09
+        $formattedMessage = $message . "\r\n"; // DC-09 messages often require CRLF (\r\n)
+
         $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
         if (!$socket || !socket_connect($socket, $host, $port)) {
-            Log::error('SIA test message send failed: ' . socket_strerror(socket_last_error()));
+            Log::error('SIA message send failed: ' . socket_strerror(socket_last_error()));
             return;
         }
 
+        Log::info("Sending SIA DC-09 message: " . $formattedMessage);
+        socket_write($socket, $formattedMessage, strlen($formattedMessage));
 
-        Log::info("Bericht". $message);
-        socket_write($socket, $message, strlen($message));
-//        $response = socket_read($socket, 2048);
+        // Read response if needed
+        $response = socket_read($socket, 2048);
+        Log::info("Monitoring server response: {$response}");
+
         socket_close($socket);
-
-//        Log::info("Monitoring server response: {$response}");
     }
 }
