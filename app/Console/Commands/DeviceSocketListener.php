@@ -85,22 +85,19 @@ class DeviceSocketListener extends Command
 
                 // Ensure response is valid before sending ACK
                 if (!empty($response)) {
-                    // Convert response to HEX and uppercase (if needed)
-                    $ackHex = strtoupper(trim(bin2hex($response)));
+                    Log::info("Raw HEX ACK: " . $response);
 
-                    // Convert HEX to binary before sending
-                    $binaryAck = hex2bin($ackHex);
+                    // Convert HEX string to binary
+                    $binaryAck = hex2bin($response);
 
-                    // Send ACK to device
+                    // Send ACK
                     $bytesWritten = socket_write($client, $binaryAck, strlen($binaryAck));
 
                     if ($bytesWritten === false) {
                         Log::error("Failed to send ACK to device: " . socket_strerror(socket_last_error($client)));
                     } else {
-                        Log::info("ACK sent to device (HEX): $ackHex | Bytes written: $bytesWritten");
+                        Log::info("ACK successfully sent | Bytes written: $bytesWritten");
                     }
-                } else {
-                    Log::warning("No ACK sent: Empty response received.");
                 }
 
                 // Close the socket immediately after sending ACK
