@@ -74,26 +74,33 @@ class DeviceSocketListener extends Command
                     break;  // Exit the loop and close the connection
                 }
 
-                $hexData = bin2hex($data);  // Convert binary data to hex for parsing
-                Log::info("Received raw data: " . $hexData);
+                // Convert binary data to HEX for logging & processing
+                $hexData = bin2hex($data);
+                Log::info("Received raw HEX data: " . $hexData);
 
                 // Process data using SOSDataController
                 $sosDataController = new SOSDataController();
                 $request = new \Illuminate\Http\Request(['data' => $data]);
                 $response = $sosDataController->receiveData($request);
 
-                // Send acknowledgment if applicable
+                // Ensure response is valid before sending ACK
                 if (!empty($response)) {
-                    $ackResponse = strtoupper(trim($response));  // Ensure proper formatting
+                    // Convert response to HEX and uppercase (if needed)
+                    $ackHex = strtoupper(trim(bin2hex($response)));
 
-                    // Write to the socket
-                    $bytesWritten = socket_write($client, $ackResponse, strlen($ackResponse));
+                    // Convert HEX to binary before sending
+                    $binaryAck = hex2bin($ackHex);
+
+                    // Send ACK to device
+                    $bytesWritten = socket_write($client, $binaryAck, strlen($binaryAck));
 
                     if ($bytesWritten === false) {
                         Log::error("Failed to send ACK to device: " . socket_strerror(socket_last_error($client)));
                     } else {
-                        Log::info("ACK sent to device: $ackResponse");
+                        Log::info("ACK sent to device (HEX): $ackHex | Bytes written: $bytesWritten");
                     }
+                } else {
+                    Log::warning("No ACK sent: Empty response received.");
                 }
 
                 // Close the socket immediately after sending ACK
