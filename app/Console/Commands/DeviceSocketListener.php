@@ -98,7 +98,7 @@ class DeviceSocketListener extends Command
                     if ($bytesWritten === false) {
                         Log::error("Failed to send ACK to device: " . socket_strerror(socket_last_error($client)));
                     } else {
-                        Log::info("ACK successfully sent | Bytes written: $bytesWritten");
+                        Log::info("ACK successfully sent $binaryAck | Bytes written: $bytesWritten");
                     }
                 }
 
