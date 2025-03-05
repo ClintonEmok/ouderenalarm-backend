@@ -76,6 +76,9 @@ class DeviceSocketListener extends Command
                     break;  // Exit the loop and close the connection
                 }
 
+                // Convert binary data to HEX for logging & processing
+                $hexData = bin2hex($data);
+                Log::info("Received raw HEX data: " . $hexData);
                 $hexData = bin2hex($data);  // Convert binary data to hex for parsing
                 Log::info("Received raw data: " . $hexData);
 
@@ -84,17 +87,20 @@ class DeviceSocketListener extends Command
                 $request = new \Illuminate\Http\Request(['data' => $data]);
                 $response = $sosDataController->receiveData($request);
 
-                // Send acknowledgment if applicable
+                // Ensure response is valid before sending ACK
                 if (!empty($response)) {
-                    $ackResponse = strtoupper(trim($response));  // Ensure proper formatting
+                    Log::info("HEX Response Before Sending: " . $response);
 
-                    // Write to the socket
+                    // Convert HEX-encoded string to raw binary string
+                    $ackResponse = pack('H*', $response);
+
+                    // Send ACK as a raw string
                     $bytesWritten = socket_write($client, $ackResponse, strlen($ackResponse));
 
                     if ($bytesWritten === false) {
                         Log::error("Failed to send ACK to device: " . socket_strerror(socket_last_error($client)));
                     } else {
-                        Log::info("ACK sent to device: $ackResponse");
+                        Log::info("ACK successfully sent $ackResponse | Bytes written: $bytesWritten");
                     }
                 }
 
