@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use Crc16\Crc16;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -77,14 +78,17 @@ class SendSiaMessageJob implements ShouldQueue
         $messageContent = "\"SIA-DCS\"{$sequence}L0#{$accountId}[{$messageBody}]";
 
         // Calculate CRC for the message content
-        $crc = $this->calculateCRC($messageContent);
+        $result = Crc16::IBM($messageContent);
+        $crcHex = dechex($result);
+
+
 
         // Calculate message length in hex (length of messageContent only)
         $length = strlen($messageContent);
         $lengthHex = strtoupper(str_pad(dechex($length), 4, '0', STR_PAD_LEFT));
 
         // Assemble full message: <LF> <CRC><LENGTH><messageContent><CR>
-        $finalMessage = chr(0x0A) . "{$crc}{$lengthHex}{$messageContent}" . chr(0x0D);
+        $finalMessage = chr(0x0A) . "{$crcHex}{$lengthHex}{$messageContent}" . chr(0x0D);
 
         // Encrypt if requested
         return $encrypt ? $this->encryptMessage($finalMessage) : $finalMessage;
@@ -105,17 +109,21 @@ class SendSiaMessageJob implements ShouldQueue
      */
     private function calculateCRC($data)
     {
-        $crc = 0x0000;  // Initial CRC value
-        $size = strlen($data);  // Size of the data in bytes
+        $crc = 0x0000;
+        $poly = 0x8005;
 
-        for ($i = 0; $i < $size; $i++) {
-            $byte = ord($data[$i]);  // Convert character to byte (ASCII value)
-            $crc = (($crc >> 8) & 0xFF) | (($crc & 0xFF) << 8);
+        $bytes = unpack('C*', $data);
+
+        foreach ($bytes as $byte) {
             $crc ^= $byte;
-            $crc ^= ($crc & 0xFF) >> 4;
-            $crc ^= ($crc << 8) << 4;
-            $crc ^= (($crc & 0xFF) << 4) << 1;
-            $crc &= 0xFFFF;  // Keep only 16 bits
+            for ($i = 0; $i < 8; $i++) {
+                if ($crc & 0x0001) {
+                    $crc = ($crc >> 1) ^ $poly;
+                } else {
+                    $crc >>= 1;
+                }
+            }
+            $crc &= 0xFFFF; // Keep it 16-bit
         }
 
         return strtoupper(str_pad(dechex($crc), 4, '0', STR_PAD_LEFT));
