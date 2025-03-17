@@ -47,7 +47,7 @@ class SendSiaMessageJob implements ShouldQueue
         // Log response
         Log::info("SIA Message Sent: " . bin2hex($message));
         Log::info("SIA Message Sent: " . $message);
-        Log::info("Response: " . bin2hex($response));
+        Log::info("Response: " . $response);
     }
 
     /**∂

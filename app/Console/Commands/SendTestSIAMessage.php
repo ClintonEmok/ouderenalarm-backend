@@ -30,7 +30,6 @@ class SendTestSIAMessage extends Command
         $port = config('app.meldkamer_port');
         $account = "3203";
         $eventCode = "QA";
-        $encryptionKey = "your-encryption-key-here"; // Set to null if not needed
 
         SendSiaMessageJob::dispatch($server, $port, $account, $eventCode);
     }
