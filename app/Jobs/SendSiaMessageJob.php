@@ -136,36 +136,71 @@ class SendSiaMessageJob implements ShouldQueue
     /**
      * Send the message via TCP in binary mode.
      */
-    private function sendMessage(string $message)
+    private function sendMessage(string $message, string $protocol = 'tcp')
     {
         Log::info("Server {$this->server}");
         Log::info("Port {$this->port}");
-        $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+        Log::info("Protocol {$protocol}");
+
+        if ($protocol === 'udp') {
+            $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+        } elseif ($protocol === 'tcp') {
+            $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+        } else {
+            Log::error("Invalid protocol specified: {$protocol}");
+            return false;
+        }
+
         if (!$socket) {
-            Log::error("Unable to create UDP socket: " . socket_strerror(socket_last_error()));
+            Log::error("Unable to create socket: " . socket_strerror(socket_last_error()));
             return false;
         }
 
-        // Send the UDP message
-        $sent = socket_sendto($socket, $message, strlen($message), 0, $this->server, $this->port);
-        if ($sent === false) {
-            Log::error("Failed to send UDP message: " . socket_strerror(socket_last_error($socket)));
-            socket_close($socket);
-            return false;
+        if ($protocol === 'tcp') {
+            // For TCP, you need to connect first
+            if (!socket_connect($socket, $this->server, $this->port)) {
+                Log::error("Unable to connect TCP socket: " . socket_strerror(socket_last_error($socket)));
+                socket_close($socket);
+                return false;
+            }
+
+            // Send TCP message
+            $sent = socket_write($socket, $message, strlen($message));
+            if ($sent === false) {
+                Log::error("Failed to send TCP message: " . socket_strerror(socket_last_error($socket)));
+                socket_close($socket);
+                return false;
+            }
+        } else {
+            // Send UDP message
+            $sent = socket_sendto($socket, $message, strlen($message), 0, $this->server, $this->port);
+            if ($sent === false) {
+                Log::error("Failed to send UDP message: " . socket_strerror(socket_last_error($socket)));
+                socket_close($socket);
+                return false;
+            }
         }
 
-        // Optional: Set timeout to wait for a response (some servers respond, others don't)
+        // Set timeout
         socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, ["sec" => 5, "usec" => 0]);
 
-        // Receive response (if any)
+        // Receive response
         $response = '';
-        $from = '';
-        $port = 0;
-        $bytesReceived = socket_recvfrom($socket, $response, 1024, 0, $from, $port);
+        $bytesReceived = false;
 
-        if ($bytesReceived === false) {
-            Log::warning("No response received or timeout reached.");
-            $response = false; // Or null, depending on how you want to handle
+        if ($protocol === 'tcp') {
+            $response = socket_read($socket, 1024, PHP_BINARY_READ);
+            if ($response === false) {
+                Log::warning("No response received or timeout reached on TCP.");
+            }
+        } else {
+            $from = '';
+            $port = 0;
+            $bytesReceived = socket_recvfrom($socket, $response, 1024, 0, $from, $port);
+            if ($bytesReceived === false) {
+                Log::warning("No response received or timeout reached on UDP.");
+                $response = false;
+            }
         }
 
         socket_close($socket);
