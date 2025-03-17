@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\SendSiaMessageJob;
 use App\Services\SiaEncoderService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -13,18 +14,25 @@ class SendTestSIAMessage extends Command
 
     public function handle()
     {
-        $encoder = new SiaEncoderService();
+//        $encoder = new SiaEncoderService();
+//
+//        $eventCode = 'QA'; // 'RX' is often used for manual test reports
+//        $accountId = 3203; // Replace with your test account ID
+//        $extraInfo = 'https://ouderen-alarmering.nl/'; // Test URL
+//
+//        $encryptedMessage = $encoder->encodeMessage($eventCode, $accountId, $extraInfo);
+//
+//        // Send to monitoring server
+//        $this->sendToMonitoringServer($encryptedMessage);
+//
+//        Log::info("Test SIA message sent for account {$accountId}");
+        $server = config('app.meldkamer_server');
+        $port = config('app.meldkamer_port');
+        $account = "3203";
+        $eventCode = "QA";
+        $encryptionKey = "your-encryption-key-here"; // Set to null if not needed
 
-        $eventCode = 'QA'; // 'RX' is often used for manual test reports
-        $accountId = 3203; // Replace with your test account ID
-        $extraInfo = 'https://ouderen-alarmering.nl/'; // Test URL
-
-        $encryptedMessage = $encoder->encodeMessage($eventCode, $accountId, $extraInfo);
-
-        // Send to monitoring server
-        $this->sendToMonitoringServer($encryptedMessage);
-
-        Log::info("Test SIA message sent for account {$accountId}");
+        SendSiaMessageJob::dispatch($server, $port, $account, $eventCode);
     }
 
     private function sendToMonitoringServer(string $message)

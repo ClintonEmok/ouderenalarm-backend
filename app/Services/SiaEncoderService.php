@@ -11,27 +11,40 @@ class SiaEncoderService
      */
     public function encodeMessage(string $eventCode, string $accountId, string $data, bool $encrypt = false): string
     {
+        // Validate event code (2 uppercase letters)
         if (!preg_match('/^[A-Z]{2}$/', $eventCode)) {
-            throw new \InvalidArgumentException('Invalid event code format.');
+            throw new \InvalidArgumentException('Invalid event code format. Must be two uppercase letters.');
         }
+
+        // Validate account ID (alphanumeric)
         if (!preg_match('/^[A-Za-z0-9]+$/', $accountId)) {
             throw new \InvalidArgumentException('Invalid account ID format.');
         }
 
-        $sequence = $this->getNextSequence();
+        // Generate sequence number (4 digits, padded if needed)
+        $sequence = str_pad($this->getNextSequence(), 4, '0', STR_PAD_LEFT);
+
+        // Create timestamp in required SIA format
         $timestamp = gmdate('_H:i:s,m-d-Y');
-        $messageData = "#{$accountId}|{$eventCode}|{$data}";
 
-        // Compute CRC for the message body
-        $crc = $this->calculateCRC("SIA-DCS{$sequence}R0000L0000#{$accountId}[{$messageData}]{$timestamp}");
+        // Prepare message body (inside the square brackets)
+        $messageBody = "#{$accountId}|{$eventCode}|{$data}";
 
-        // Compute message length in HEX (excluding <LF>, <CRC>, and <CR>)
-        $lengthHex = strtoupper(str_pad(dechex(strlen("SIA-DCS{$sequence}R0000L0000#{$accountId}[{$messageData}]{$timestamp}")), 4, '0', STR_PAD_LEFT));
+        // Assemble full message content (excluding LF, CRC, and CR)
+        $messageContent = "SIA-DCS{$sequence}R0000L0000#{$accountId}[{$messageBody}]{$timestamp}";
 
-        // Properly format the message with LF and CR as raw binary
-        $message = chr(10) . "{$crc}{$lengthHex}SIA-DCS{$sequence}R0000L0000#{$accountId}[{$messageData}]{$timestamp}";
+        // Calculate CRC for the message content
+        $crc = $this->calculateCRC($messageContent);
 
-        return $encrypt ? $this->encryptMessage($message) : $message;
+        // Calculate message length in hex (length of messageContent only)
+        $length = strlen($messageContent);
+        $lengthHex = strtoupper(str_pad(dechex($length), 4, '0', STR_PAD_LEFT));
+
+        // Assemble full message: <LF> <CRC><LENGTH><messageContent><CR>
+        $finalMessage = chr(0x0A) . "{$crc}{$lengthHex}{$messageContent}" . chr(0x0D);
+
+        // Encrypt if requested
+        return $encrypt ? $this->encryptMessage($finalMessage) : $finalMessage;
     }
 
 
