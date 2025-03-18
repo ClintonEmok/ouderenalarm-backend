@@ -56,7 +56,7 @@ class SendSiaMessageJob implements ShouldQueue
     public function encodeMessage(string $eventCode, string $accountId, string $data, bool $encrypt = false): string
     {
         // Validate event code (2 uppercase letters)
-        if (!preg_match('/^[A-Z]{2}$/', $eventCode)) {
+        if (!preg_match('/^[A-Z]{2,3}$/', $eventCode)) {
             throw new \InvalidArgumentException('Invalid event code format. Must be two uppercase letters.');
         }
 
