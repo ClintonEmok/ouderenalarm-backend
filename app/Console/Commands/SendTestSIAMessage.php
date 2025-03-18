@@ -29,7 +29,7 @@ class SendTestSIAMessage extends Command
         $server = config('app.meldkamer_server');
         $port = config('app.meldkamer_port');
         $account = "3203";
-        $eventCode = "MA";
+        $eventCode = "NQA";
 
         SendSiaMessageJob::dispatch($server, $port, $account, $eventCode);
     }
