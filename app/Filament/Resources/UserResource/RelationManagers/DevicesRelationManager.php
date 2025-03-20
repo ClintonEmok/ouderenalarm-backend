@@ -51,6 +51,6 @@ class DevicesRelationManager extends RelationManager
                 Tables\Actions\BulkActionGroup::make([
                    Tables\Actions\DetachBulkAction::make()
                 ]),
-            ]);
+            ])->inverseRelationship('user');
     }
 }
