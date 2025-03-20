@@ -42,14 +42,14 @@ class DevicesRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make()
+                Tables\Actions\AssociateAction::make()
             ])
             ->actions([
-                Tables\Actions\DetachAction::make(),
+                Tables\Actions\DissociateAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                   Tables\Actions\DetachBulkAction::make()
+                   Tables\Actions\DissociateBulkAction::make()
                 ]),
             ])->inverseRelationship('user');
     }
