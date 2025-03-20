@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [config("frontend_url", "")],
+    'allowed_origins' => [config("frontend_url", "https://ouderen-alarmering.nl")],
 
     'allowed_origins_patterns' => [],
 
