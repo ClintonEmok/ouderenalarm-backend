@@ -32,15 +32,21 @@ class DeviceResource extends Resource
                 Forms\Components\TextInput::make('imei')
                 ->label('imei')->readOnlyOn(['edit']),
                 PhoneInput::make('phone_number')->label("Telefoonnummer"),
-                Map::make("location")->afterStateHydrated(function ($state, $record, Forms\Set $set): void {
-                    $set('location', [
-                        'lat' => $record->latestLocation->latitude,
-                        'lng' => $record->latestLocation->longitude,
-                    ]);
-                }) ->draggable(false)->showMyLocationButton(false)
-                    ->clickable(false)->label('Locatie')
+                Map::make("location")
+                    ->afterStateHydrated(function ($state, $record, Forms\Set $set): void {
+                        if ($record->latestLocation) {
+                            $set('location', [
+                                'lat' => $record->latestLocation->latitude,
+                                'lng' => $record->latestLocation->longitude,
+                            ]);
+                        }
+                    })
+                    ->visible(fn ($record) => $record->latestLocation !== null)
+                    ->draggable(false)
+                    ->showMyLocationButton(false)
+                    ->clickable(false)
+                    ->label('Locatie')
                     ->columnSpanFull()
-
             ]);
     }
 
@@ -52,6 +58,7 @@ class DeviceResource extends Resource
 
                 Tables\Columns\TextColumn::make('imei'),
                 Tables\Columns\TextColumn::make('phone_number')->label("Telefoonnummer"),
+                Tables\Columns\TextColumn::make('user.name')->label("Gebruiker"),
                 Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op")
 
                 ->dateTime(),

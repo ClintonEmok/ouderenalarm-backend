@@ -18,7 +18,7 @@ class SendTestSIAMessage extends Command
 //
 //        $eventCode = 'QA'; // 'RX' is often used for manual test reports
 //        $accountId = 3203; // Replace with your test account ID
-//        $extraInfo = 'https://ouderen-alarmering.nl/'; // Test URL
+        $extraInfo = 'https://ouderen-alarmering.nl/'; // Test URL
 //
 //        $encryptedMessage = $encoder->encodeMessage($eventCode, $accountId, $extraInfo);
 //
@@ -31,7 +31,7 @@ class SendTestSIAMessage extends Command
         $account = "3203";
         $eventCode = "NQA";
 
-        SendSiaMessageJob::dispatch($server, $port, $account, $eventCode);
+        SendSiaMessageJob::dispatch($server, $port, $account, $eventCode, $extraInfo);
     }
 
     private function sendToMonitoringServer(string $message)

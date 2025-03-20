@@ -31,22 +31,27 @@ class ProcessEmergencyAlarm implements ShouldQueue
      */
     public function handle()
     {
+        $emergencyLink = $this->alarm->createEmergencyLink();
 
-            $emergencyLink = $this->alarm->createEmergencyLink();
+        // Determine event code based on alarm flags
+        if ($this->alarm->fall_down_alert) {
+            $eventCode = 'NMA';
+        } elseif ($this->alarm->sos_alert) {
+            $eventCode = 'NQA';
+        } else {
+            // Optional: Set a default or log unexpected case
+            Log::warning("Unknown alarm type for Alarm {$this->alarm->id}");
+            return;
+        }
 
-            // Encode SIA message
-            $encoder = new SiaEncoderService();
-            $eventCode = 'QA'; // Emergency alarm
-            $accountId = '1234';
-            $extraInfo = $emergencyLink->link; // Emergency link
+        // Send SIA message
+        $server = config('app.meldkamer_server');
+        $port = config('app.meldkamer_port');
+        $account = "3203";
+        $extraInfo = $emergencyLink->link;
 
-//            $encryptedMessage = $encoder->encodeMessage($eventCode, $accountId, $extraInfo);
+        SendSiaMessageJob::dispatch($server, $port, $account, $eventCode, $extraInfo);
 
-            // Dispatch SendSiaMessage job
-            $encryptedMessage = base64_encode($encoder->encodeMessage($eventCode, $accountId, $extraInfo));
-            SendSiaMessage::dispatch($encryptedMessage);
-
-            Log::info("Queued SIA emergency alarm for Alarm {$this->alarm->id} with URL: {$extraInfo}");
-
+        Log::info("Queued SIA {$eventCode} alarm for Alarm {$this->alarm->id} with URL: {$extraInfo}");
     }
 }

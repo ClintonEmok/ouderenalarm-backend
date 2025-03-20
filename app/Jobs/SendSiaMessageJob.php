@@ -72,7 +72,7 @@ class SendSiaMessageJob implements ShouldQueue
         $timestamp = gmdate('_H:i:s,m-d-Y');
 
         // Message body inside brackets (starts with account ID, event code, data)
-        $messageBody = "#{$accountId}|{$eventCode}{$data}";
+        $messageBody = "#{$accountId}|{$eventCode}|{$data}";
 
         // Full message content (including quotes around SIA-DCS)
         $messageContent = "\"SIA-DCS\"{$sequence}L0#{$accountId}[{$messageBody}]";

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\UserResource\RelationManagers\DevicesRelationManager;
 use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
@@ -145,5 +146,10 @@ class UserResource extends Resource
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
+    }
+
+    public static function getRelations(): array
+    {
+        return [DevicesRelationManager::class];
     }
 }
