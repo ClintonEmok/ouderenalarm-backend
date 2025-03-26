@@ -5,12 +5,16 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DeviceAlarmResource\Pages;
 use App\Filament\Resources\DeviceAlarmResource\RelationManagers;
 use App\Models\DeviceAlarm;
+use Dotswan\MapPicker\Fields\Map;
+use Dotswan\MapPicker\Infolists\MapEntry;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -32,10 +36,25 @@ class DeviceAlarmResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
-            Section::make("KlantenDetails")->collapsible(),
+            Section::make("KlantenDetails")->schema([
+                TextEntry::make("device.user.name")->label("Naam"),
+                TextEntry::make("device.phone_number")->label("Telefoonnummer")
+            ])->collapsible(),
             Section::make("ContactPersonen")->collapsible(),
-//            Add map entry
-            Section::make("Kaart")->collapsible(),
+            Section::make("Kaart")->schema([
+                MapEntry::make("location")
+                    ->state(fn ($record) => [
+                        'lat' => $record->latestLocation->latitude,
+                        'lng' => $record->latestLocation->longitude,
+                        'geojson' => $record?->geojson ? json_decode($record->geojson) : null
+                    ])
+                    ->visible(fn ($record) => $record->latestLocation !== null)
+                    ->draggable(false)
+                    ->showMyLocationButton(false)
+                    ->clickable(false)
+                    ->label('Locatie')
+                    ->columnSpanFull()
+            ])->collapsible(),
             Section::make("Historie van meldingen")->collapsible(),
         ]);
     }
@@ -44,6 +63,8 @@ class DeviceAlarmResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make("device.imei"),
+                TextColumn::make("device.phone_number")->label("Telefoonnummer")
                 //
             ])
             ->filters([
