@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class DeviceAlarmResource extends Resource
 {
     protected static ?string $model = DeviceAlarm::class;
+    protected static ?string $modelLabel = 'Melding';
+    protected static ?string $pluralLabel = 'Noodmelding';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

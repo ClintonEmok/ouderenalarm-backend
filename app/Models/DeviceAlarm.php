@@ -47,6 +47,11 @@ class DeviceAlarm extends Model
         return $this->belongsTo(Device::class);
     }
 
+    public function notes()
+    {
+        return $this->hasMany(AlarmNote::class);
+    }
+
     /**
      * Define a relationship with EmergencyLink.
      */

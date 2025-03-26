@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\UserResource\RelationManagers\CaregiversRelationManager;
 use App\Filament\Resources\UserResource\RelationManagers\DevicesRelationManager;
 use Filament\Forms;
 use App\Models\User;
@@ -150,6 +151,8 @@ class UserResource extends Resource
 
     public static function getRelations(): array
     {
-        return [DevicesRelationManager::class];
+        return [DevicesRelationManager::class,
+            CaregiversRelationManager::class
+        ];
     }
 }
