@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\DeviceAlarmResource\Pages;
 use App\Filament\Resources\DeviceAlarmResource\RelationManagers;
+use App\Filament\Resources\DeviceAlarmResource\Widgets\RecentDeviceAlarmsWidget;
 use App\Models\DeviceAlarm;
 use Dotswan\MapPicker\Fields\Map;
 use Dotswan\MapPicker\Infolists\MapEntry;
@@ -42,7 +43,7 @@ class DeviceAlarmResource extends Resource
                 TextEntry::make("device.user.name")->label("Naam"),
                 TextEntry::make("device.phone_number")->label("Telefoonnummer")
             ])->collapsible(),
-            Section::make("ContactPersonen")->collapsible(),
+            Section::make("Contactpersonen")->collapsible(),
             Section::make("Kaart")->schema([
                 MapEntry::make("location")
                     ->state(fn ($record) => [
@@ -58,7 +59,6 @@ class DeviceAlarmResource extends Resource
                     ->columnSpanFull(),
                 TextEntry::make("nolocation")->placeholder("Geen locatie gevonden")->label("")
             ])->collapsible(),
-            Section::make("Historie van meldingen")->collapsible(),
         ]);
     }
 
@@ -98,6 +98,13 @@ class DeviceAlarmResource extends Resource
             'create' => Pages\CreateDeviceAlarm::route('/create'),
             'view' => Pages\ViewDeviceAlarm::route('/{record}'),
 //            'edit' => Pages\EditDeviceAlarm::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+       return [
+            RecentDeviceAlarmsWidget::class
         ];
     }
 }

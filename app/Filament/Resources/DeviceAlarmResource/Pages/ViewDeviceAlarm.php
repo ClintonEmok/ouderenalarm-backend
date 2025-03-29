@@ -16,4 +16,11 @@ class ViewDeviceAlarm extends ViewRecord
 //            Actions\EditAction::make(),
         ];
     }
+
+    protected function getFooterWidgets(): array
+    {
+        return [
+            DeviceAlarmResource\Widgets\RecentDeviceAlarmsWidget::class
+        ];
+    }
 }
