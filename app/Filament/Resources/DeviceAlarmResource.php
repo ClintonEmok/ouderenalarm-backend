@@ -38,7 +38,7 @@ class DeviceAlarmResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
-            Section::make("KlantenDetails")->schema([
+            Section::make("Klantendetails")->schema([
                 TextEntry::make("device.user.name")->label("Naam"),
                 TextEntry::make("device.phone_number")->label("Telefoonnummer")
             ])->collapsible(),
@@ -55,7 +55,8 @@ class DeviceAlarmResource extends Resource
                     ->showMyLocationButton(false)
                     ->clickable(false)
                     ->label('Locatie')
-                    ->columnSpanFull()
+                    ->columnSpanFull(),
+                TextEntry::make("nolocation")->placeholder("Geen locatie gevonden")->label("")
             ])->collapsible(),
             Section::make("Historie van meldingen")->collapsible(),
         ]);
@@ -86,7 +87,7 @@ class DeviceAlarmResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\NotesRelationManager::class
         ];
     }
 
@@ -96,7 +97,7 @@ class DeviceAlarmResource extends Resource
             'index' => Pages\ListDeviceAlarms::route('/'),
             'create' => Pages\CreateDeviceAlarm::route('/create'),
             'view' => Pages\ViewDeviceAlarm::route('/{record}'),
-            'edit' => Pages\EditDeviceAlarm::route('/{record}/edit'),
+//            'edit' => Pages\EditDeviceAlarm::route('/{record}/edit'),
         ];
     }
 }
