@@ -60,6 +60,12 @@ class DeviceAlarm extends Model
         return $this->hasOne(EmergencyLink::class);
     }
 
+    public function caregiverStatuses()
+    {
+        return $this->belongsToMany(User::class, 'caregiver_device_alarm')
+            ->withPivot('status')
+            ->withTimestamps();
+    }
     /**
      * Boot the model to handle events.
      */
@@ -71,6 +77,11 @@ class DeviceAlarm extends Model
             if ($alarm->fall_down_alert || $alarm->sos_alert) {
                 ProcessEmergencyAlarm::dispatch($alarm);
             }
+            $patient = $alarm->device->user;
+            $caregivers = $patient->caregivers;
+
+            // Attach each caregiver to the alarm with default status
+            $alarm->caregiverStatuses()->syncWithoutDetaching($caregivers->pluck('id')->toArray());
         });
     }
 

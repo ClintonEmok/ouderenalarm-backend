@@ -87,7 +87,8 @@ class DeviceAlarmResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\NotesRelationManager::class
+            RelationManagers\NotesRelationManager::class,
+            RelationManagers\CaregiverStatusesRelationManager::class
         ];
     }
 

@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class NotesRelationManager extends RelationManager
 {
     protected static string $relationship = 'notes';
+    protected static ?string $title = 'Notities';
+
     public function isReadOnly(): bool
     {
         return false;
@@ -32,6 +34,8 @@ class NotesRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('note')
+            ->modelLabel("notitie")
+            ->pluralModelLabel("notities")
             ->columns([
                 Tables\Columns\TextColumn::make('note'),
             ])

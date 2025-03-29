@@ -20,7 +20,7 @@ class ViewDeviceAlarm extends ViewRecord
     protected function getFooterWidgets(): array
     {
         return [
-            DeviceAlarmResource\Widgets\RecentDeviceAlarmsWidget::class
+            DeviceAlarmResource\Widgets\RecentDeviceAlarmsWidget::class,
         ];
     }
 }
