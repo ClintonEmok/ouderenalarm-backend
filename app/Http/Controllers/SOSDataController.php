@@ -65,7 +65,7 @@ class SOSDataController extends Controller
             $deviceImei = $this->parseHexToAscii($imeiHex);  // Convert IMEI to ASCII
             Log::info("Extracted IMEI: $deviceImei");
 
-            $device = Device::firstOrCreate(['imei' => $deviceImei]);
+            $device = Device::firstOrCreate(['imei' => trim($deviceImei)]);
             Log::info("Device found or created: {$device->imei}");
 
             // Iterate over the remaining keys

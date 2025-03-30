@@ -47,4 +47,9 @@ class Device extends Model
     {
         return $this->hasOne(GPSLocation::class)->latestOfMany();
     }
+
+    public function latestStatus()
+    {
+        return $this->hasOne(GeneralStatus::class)->latestOfMany();
+    }
 }
