@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Filament\Resources\DeviceAlarmResource;
 use App\Jobs\SendSiaMessage;
 use App\Models\DeviceAlarm;
 use App\Services\SiaEncoderService;
@@ -31,8 +32,6 @@ class ProcessEmergencyAlarm implements ShouldQueue
      */
     public function handle()
     {
-        $emergencyLink = $this->alarm->createEmergencyLink();
-
         // Determine event code based on alarm flags
         if ($this->alarm->fall_down_alert) {
             $eventCode = 'NMA';
@@ -48,7 +47,8 @@ class ProcessEmergencyAlarm implements ShouldQueue
         $server = config('app.meldkamer_server');
         $port = config('app.meldkamer_port');
         $account = "3203";
-        $extraInfo = $emergencyLink->link;
+        $extraInfo = DeviceAlarmResource::getUrl('view', ['record' => $this->alarm]);
+        Log::info($extraInfo);
 
         SendSiaMessageJob::dispatch($server, $port, $account, $eventCode, $extraInfo);
 

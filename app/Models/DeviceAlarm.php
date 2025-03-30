@@ -77,11 +77,16 @@ class DeviceAlarm extends Model
             if ($alarm->fall_down_alert || $alarm->sos_alert) {
                 ProcessEmergencyAlarm::dispatch($alarm);
             }
-            $patient = $alarm->device->user;
-            $caregivers = $patient->caregivers;
 
-            // Attach each caregiver to the alarm with default status
-            $alarm->caregiverStatuses()->syncWithoutDetaching($caregivers->pluck('id')->toArray());
+            $patient = $alarm->device->user;
+            if($patient){
+                $caregivers = $patient->caregivers;
+
+                // Attach each caregiver to the alarm with default status
+                $alarm->caregiverStatuses()->syncWithoutDetaching($caregivers->pluck('id')->toArray());
+
+            }
+
         });
     }
 
