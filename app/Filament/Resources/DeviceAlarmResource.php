@@ -43,7 +43,6 @@ class DeviceAlarmResource extends Resource
                 TextEntry::make("device.user.name")->label("Naam"),
                 TextEntry::make("device.phone_number")->label("Telefoonnummer")
             ])->collapsible(),
-            Section::make("Contactpersonen")->collapsible(),
             Section::make("Kaart")->schema([
                 MapEntry::make("location")
                     ->state(fn ($record) => [

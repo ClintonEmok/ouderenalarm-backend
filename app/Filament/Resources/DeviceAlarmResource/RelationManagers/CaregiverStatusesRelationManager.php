@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\DeviceAlarmResource\RelationManagers;
 
+use App\Enums\CaregiverStatus;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -26,11 +27,9 @@ class CaregiverStatusesRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\Select::make('status')
-                    ->options([
-                        'assigned' => 'Assigned',
-                        'en_route' => 'En Route',
-                        'arrived' => 'Arrived',
-                    ])
+                    ->options(collect(CaregiverStatus::cases())
+                        ->mapWithKeys(fn ($case) => [$case->value => $case->label()])
+                        ->toArray())
                     ->required()
                     ->label('Status'),
             ]);
@@ -47,11 +46,8 @@ class CaregiverStatusesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('pivot.status')
                     ->label('Status')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'en_route' => 'warning',
-                        'arrived' => 'success',
-                        default => 'gray',
-                    }),
+                    ->formatStateUsing(fn ($state) => CaregiverStatus::from($state)->label())
+                    ->color(fn ($state) => CaregiverStatus::from($state)->color()),
             ])
             ->filters([
                 //

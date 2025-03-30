@@ -23,4 +23,6 @@ class ViewDeviceAlarm extends ViewRecord
             DeviceAlarmResource\Widgets\RecentDeviceAlarmsWidget::class,
         ];
     }
+
+
 }
