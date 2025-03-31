@@ -8,4 +8,9 @@ class GeneralStatus extends Model
 {
     //
     protected $guarded = [];
+
+    public function device()
+    {
+        return $this->belongsTo(Device::class);
+    }
 }

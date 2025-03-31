@@ -47,6 +47,24 @@ class UserDeviceController extends Controller
         return DeviceResource::collection($user->devices);
     }
 
+    public function updateDevice(Request $request, $deviceId)
+    {
+        $request->validate([
+            'nickname' => 'nullable|string|max:50',
+        ]);
+
+        $user = Auth::user();
+        $device = Device::where('id', $deviceId)->where('user_id', $user->id)->first();
+
+        if (!$device) {
+            return response()->json(['error' => 'Device not found or not attached to you'], 404);
+        }
+
+        $device->update(['nickname' => $request->nickname]);
+
+        return response()->json(['message' => 'Device updated successfully', 'device' => $device]);
+    }
+
     /**
      * Detach a device from the user (remove it).
      */

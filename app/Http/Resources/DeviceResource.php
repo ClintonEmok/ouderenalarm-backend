@@ -23,6 +23,13 @@ class DeviceResource extends JsonResource
             'phone_number' => $this->phone_number,
             'status' => $this->status,
             'user_id' => $this->user_id,
+            'location' => [
+                'latitude' => optional($this->latestLocation)->latitude,
+                'longitude' => optional($this->latestLocation)->longitude,
+            ],
+            'status_details' => [
+                'battery_level' => optional($this->latestStatus)->battery_level,
+            ],
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
             'user' => new UserResource($this->whenLoaded('user')) // Use a UserResource if needed

@@ -66,7 +66,7 @@ return [
     |
     */
 
-    'timezone' => env('APP_TIMEZONE', 'UTC'),
+    'timezone' => env('APP_TIMEZONE', 'Europe/Amsterdam'),
 
     /*
     |--------------------------------------------------------------------------
@@ -123,5 +123,9 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+
+    'meldkamer_server' => env('APP_MELDKAMER_SERVER', 'http://localhost'),
+    'meldkamer_port' => env('APP_MELDKAMER_PORT', 8388),
+    'meldkamer_account' => env('APP_MELDKAMER_ACCOUNT', ''),
 
 ];

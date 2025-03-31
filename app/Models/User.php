@@ -111,4 +111,16 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(CaregiverInvitation::class, 'patient_id');
     }
+
+    public function emergenciesRespondingTo()
+    {
+        return $this->belongsToMany(EmergencyLink::class, 'caregiver_emergency', 'user_id', 'emergency_link_id')->withTimestamps();
+    }
+
+    public function assignedAlarms()
+    {
+        return $this->belongsToMany(DeviceAlarm::class, 'caregiver_device_alarm')
+            ->withPivot('status')
+            ->withTimestamps();
+    }
 }

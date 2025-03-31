@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DeviceAlarm;
+use App\Models\GeneralStatus;
 use App\Models\GPSLocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -22,7 +23,7 @@ class SOSDataController extends Controller
             }
 
             $hexData = bin2hex($rawData);  // Convert binary to hex for logging/debugging
-            Log::info("Received raw data: " . $hexData);
+            Log::info("Received raw data (converted to hex): " . $hexData);
 
             if (strlen($hexData) < 16) {
                 return response()->json(['error' => 'Message too short'], 400);
@@ -64,7 +65,7 @@ class SOSDataController extends Controller
             $deviceImei = $this->parseHexToAscii($imeiHex);  // Convert IMEI to ASCII
             Log::info("Extracted IMEI: $deviceImei");
 
-            $device = Device::firstOrCreate(['imei' => $deviceImei]);
+            $device = Device::firstOrCreate(['imei' => trim($deviceImei)]);
             Log::info("Device found or created: {$device->imei}");
 
             // Iterate over the remaining keys
@@ -73,7 +74,7 @@ class SOSDataController extends Controller
                 Log::info("Current Offset: $offset, Next Key-Value Hex: " . mb_substr($body, $offset, 10));
                 $keyLength = hexdec(mb_substr($body, $offset, 2));  // Length of the key value
                 $key = mb_substr($body, $offset + 2, 2);  // Key ID
-                $value = $keyLength > 1 ? mb_substr($body, $offset + 4, $keyLength * 2) : null;  // Key value or NULL if length is 1
+                $value = $keyLength > 1 ? mb_substr($body, $offset + 4, ($keyLength * 2)-2) : null;  // Key value or NULL if length is 1
 
                 Log::info("Key: $key, Length: $keyLength, Value: " . ($value ?? 'NULL'));
 
@@ -97,13 +98,14 @@ class SOSDataController extends Controller
                 }
 
                 // Move to the next key-value pair
-                $offset += 4 + ($keyLength * 2);  // 4 bytes for key length + key + value length
+//                TODO: update
+                $offset += 2 + ($keyLength * 2);  // 4 bytes for key length + key + value length
             }
 
             if (hexdec($properties) & 0x10) {  // Check ACK flag
                 $ackResponse = $this->generateACK($sequenceId);
-                Log::info("Sending ACK response...");
-                return response($ackResponse, 200)->header('Content-Type', 'application/octet-stream');
+                Log::info("Sending ACK response... " . $ackResponse);
+                return strtoupper($ackResponse);
             }
 
             return response()->json(['message' => 'Data processed successfully']);
@@ -116,26 +118,33 @@ class SOSDataController extends Controller
     /**
      * Handle GPS Location (Key 0x20).
      */
-    private function handleGPSLocation($body, $deviceId)
+    private function handleGPSLocation($device, $body)
     {
         // Parsing the GPS location data
-        $latitude = $this->parseSignedDecimal(mb_substr($body, 6, 8));  // 4 bytes for latitude
-        $longitude = $this->parseSignedDecimal(mb_substr($body, 14, 8));  // 4 bytes for longitude
-        $speed = hexdec(mb_substr($body, 22, 4));  // 2 bytes for speed in KM/H
-        $direction = hexdec(mb_substr($body, 26, 4));  // 2 bytes for direction in degrees
-        $altitude = hexdec(mb_substr($body, 30, 4));  // 2 bytes for altitude in meters
 
-        // Additional data if needed
-        $accuracy = hexdec(mb_substr($body, 34, 4)) / 10;  // Horizontal positioning accuracy
-        $mileage = hexdec(mb_substr($body, 38, 8));  // 4 bytes for mileage in meters
-        $satellites = hexdec(mb_substr($body, 46, 2));  // 1 byte for number of satellites
+        $latitude = $this->littleEndianHexDec(mb_substr($body, 0, 8)) /  10000000.0;  // 4 bytes for latitude
+
+        $longitude = $this->littleEndianHexDec(mb_substr($body, 8, 8)) / 10000000.0;  // 4 bytes for longitude
+
+        $speed = $this->littleEndianHexDec(mb_substr($body, 16, 4));  // 2 bytes for speed in KM/H
+
+        $direction = $this->littleEndianHexDec(mb_substr($body, 20, 4));  // 2 bytes for direction in degrees
+
+        $altitude = $this->littleEndianHexDec(mb_substr($body, 24, 4));  // 2 bytes for altitude in meters
+
+        $accuracy = $this->littleEndianHexDec(mb_substr($body, 28, 4));  // Horizontal positioning accuracy
+
+        $mileage = $this->littleEndianHexDec(mb_substr($body, 32, 8));  // 4 bytes for mileage in meters
+
+        $satellites = $this->littleEndianHexDec(mb_substr($body, 40, 2));  // 1 byte for number of satellites
+
 
         // Logging for debugging
-        Log::info("GPS Location: Lat: $latitude, Lon: $longitude, Speed: $speed km/h, Direction: $direction, Altitude: $altitude m, Satellites: $satellites");
+        Log::info("GPS Location: Lat: $latitude, Lon: $longitude, Speed: $speed km/h, Direction: $direction, Altitude: $altitude m, Accuracy: $accuracy, Mileage: $mileage m, Satellites: $satellites");
 
         // Store GPS location in the database
         GPSLocation::create([
-            'device_id' => $deviceId,
+            'device_id' => $device->id,
             'latitude' => $latitude,
             'longitude' => $longitude,
             'speed' => $speed,
@@ -150,49 +159,75 @@ class SOSDataController extends Controller
     /**
      * Handle Alarm Code (Key 0x02).
      */
+//    Update
     private function handleAlarmCode($device, $value)
     {
-        $timestampHex = mb_substr($value, 0, 8);
-        $timestamp = hexdec($timestampHex);
-        $alarmDetails = mb_substr($value, 8);
+        // Validate input length
+        if (strlen($value) < 16) {
+            Log::error("Invalid alarm data received for device {$device->imei}");
+            return;
+        }
 
-        $alarmBinary = str_pad(base_convert($alarmDetails, 16, 2), 32, '0', STR_PAD_LEFT);
+        // Extract the 4-byte Alarm Code (Bytes 0-3) and convert it from little-endian to decimal
+        $alarmCodeHex = mb_substr($value, 0, 8);
+        $alarmCode = hexdec(implode('', array_reverse(str_split($alarmCodeHex, 2))));
+        Log::info("Alarm code: $alarmCode");
+        $alarmBinary = str_pad(decbin($alarmCode), 32, '0', STR_PAD_LEFT);
+        Log::info("Alarm Binary: $alarmBinary");
 
+        // Extract the 4-byte UTC Timestamp (Bytes 3-6) and convert from little-endian to decimal
+        $timestampHex = mb_substr($value, 8, 8);
+        $timestamp = hexdec(implode('', array_reverse(str_split($timestampHex, 2))));
+        $triggeredAt = $timestamp > 0 ? gmdate("Y-m-d H:i:s", $timestamp) : null;
+
+        // Check if the timestamp is within the last 5 minutes
+        $currentTimestamp = time();
+        if ($timestamp <= 0 || ($currentTimestamp - $timestamp) > 300) {
+            Log::warning("Device {$device->imei} Alarm ignored due to old timestamp: " . ($triggeredAt ?? "Invalid Timestamp"));
+            return;
+        }
+
+        // Debugging: Verify extracted values
+        Log::info("Device {$device->imei} Alarm UTC Timestamp: " . ($triggeredAt ?? "Invalid Timestamp"));
+        Log::info("Device {$device->imei} Alarm Binary: " . $alarmBinary);
+
+        // Define alarm mappings using bitwise flags
         $alarmData = [
-            'device_id' => $device->id,
-            'triggered_at' => $timestamp === 0 ? now() : gmdate("Y-m-d H:i:s", $timestamp),
-            'battery_low_alert' => $alarmBinary[31 - 0] === '1',
-            'over_speed_alert' => $alarmBinary[31 - 1] === '1',
-            'fall_down_alert' => $alarmBinary[31 - 2] === '1',
-            'welfare_alert' => $alarmBinary[31 - 3] === '1',
-            'geo_1_alert' => $alarmBinary[31 - 4] === '1',
-            'geo_2_alert' => $alarmBinary[31 - 5] === '1',
-            'geo_3_alert' => $alarmBinary[31 - 6] === '1',
-            'geo_4_alert' => $alarmBinary[31 - 7] === '1',
-            'power_off_alert' => $alarmBinary[31 - 8] === '1',
-            'power_on_alert' => $alarmBinary[31 - 9] === '1',
-            'motion_alert' => $alarmBinary[31 - 10] === '1',
-            'no_motion_alert' => $alarmBinary[31 - 11] === '1',
-            'sos_alert' => $alarmBinary[31 - 12] === '1',
-            'side_call_button_1' => $alarmBinary[31 - 13] === '1',
-            'side_call_button_2' => $alarmBinary[31 - 14] === '1',
-            'battery_charging_start' => $alarmBinary[31 - 15] === '1',
-            'no_charging' => $alarmBinary[31 - 16] === '1',
-            'sos_ending' => $alarmBinary[31 - 17] === '1',
-            'amber_alert' => $alarmBinary[31 - 18] === '1',
-            'welfare_alert_ending' => $alarmBinary[31 - 19] === '1',
-            'fall_down_ending' => $alarmBinary[31 - 20] === '1',
-            'one_day_upload' => $alarmBinary[31 - 22] === '1',
-            'beacon_absence' => $alarmBinary[31 - 23] === '1',
-            'bark_detection' => $alarmBinary[31 - 24] === '1',
-            'ble_disconnected' => $alarmBinary[31 - 30] === '1',
-            'watch_taken_away' => $alarmBinary[31 - 31] === '1',
+            'device_id'               => $device->id,
+            'triggered_at'            => $triggeredAt,
+            'battery_low_alert'       => $alarmBinary[31] === '1',
+            'over_speed_alert'        => $alarmBinary[30] === '1',
+            'fall_down_alert'         => $alarmBinary[29] === '1',
+            'welfare_alert'           => $alarmBinary[28] === '1',
+            'geo_1_alert'             => $alarmBinary[27] === '1',
+            'geo_2_alert'             => $alarmBinary[26] === '1',
+            'geo_3_alert'             => $alarmBinary[25] === '1',
+            'geo_4_alert'             => $alarmBinary[24] === '1',
+            'power_off_alert'         => $alarmBinary[23] === '1',
+            'power_on_alert'          => $alarmBinary[22] === '1',
+            'motion_alert'            => $alarmBinary[21] === '1',
+            'no_motion_alert'         => $alarmBinary[20] === '1',
+            'sos_alert'               => $alarmBinary[19] === '1',
+            'side_call_button_1'      => $alarmBinary[18] === '1',
+            'side_call_button_2'      => $alarmBinary[17] === '1',
+            'battery_charging_start'  => $alarmBinary[16] === '1',
+            'no_charging'             => $alarmBinary[15] === '1',
+            'sos_ending'              => $alarmBinary[14] === '1',
+            'amber_alert'             => $alarmBinary[13] === '1',
+            'welfare_alert_ending'    => $alarmBinary[12] === '1',
+            'fall_down_ending'        => $alarmBinary[11] === '1',
+            'one_day_upload'          => $alarmBinary[10] === '1',
+            'beacon_absence'          => $alarmBinary[9] === '1',
+            'bark_detection'          => $alarmBinary[8] === '1',
+            'ble_disconnected'        => $alarmBinary[1] === '1',
+            'watch_taken_away'        => $alarmBinary[0] === '1',
         ];
 
-        // Store in the database
+        // Store alarm in the database
         DeviceAlarm::create($alarmData);
 
-        Log::info("Device {$device->imei} Alarm recorded: " . gmdate("Y-m-d H:i:s", $timestamp));
+        // Log confirmation
+        Log::info("Device {$device->imei} Alarm recorded at: " . ($triggeredAt ?? "Unknown Time"));
     }
 
 
@@ -201,10 +236,63 @@ class SOSDataController extends Controller
      */
     private function handleGeneralStatus($device, $value)
     {
-        $timestamp = hexdec(mb_substr($value, 0, 8));
-        $batteryLevel = hexdec(mb_substr($value, 16, 2));
-        Log::info("Device {$device->imei} General Status: Battery: $batteryLevel%, Timestamp: " . gmdate("Y-m-d H:i:s", $timestamp));
+        // Convert little-endian hex to big-endian for correct parsing
+        $timestampHex = substr($value, 0, 8);
+        $timestamp = hexdec(implode('', array_reverse(str_split($timestampHex, 2))));
+
+        $statusHex = substr($value, 8, 8);
+        $statusBin = str_pad(base_convert(implode('', array_reverse(str_split($statusHex, 2))), 16, 2), 32, '0', STR_PAD_LEFT);
+
+        $status2Hex = substr($value, 16, 8);
+        $status2Bin = str_pad(base_convert(implode('', array_reverse(str_split($status2Hex, 2))), 16, 2), 32, '0', STR_PAD_LEFT);
+
+        // Decode status bits from binary representation
+        $decodedStatus = [
+            'gps' => $statusBin[31] === '1',
+            'wifi_source' => $statusBin[30] === '1',
+            'cell_tower' => $statusBin[29] === '1',
+            'ble_location' => $statusBin[28] === '1',
+            'in_charging' => $statusBin[27] === '1',
+            'fully_charged' => $statusBin[26] === '1',
+            'reboot' => $statusBin[25] === '1',
+            'historical_data' => $statusBin[24] === '1',
+            'agps_data_valid' => $statusBin[23] === '1',
+            'motion' => $statusBin[22] === '1',
+            'smart_locating' => $statusBin[21] === '1',
+            'beacon_location' => $statusBin[20] === '1',
+            'ble_connected' => $statusBin[19] === '1',
+            'fall_down_allow' => $statusBin[18] === '1',
+            'home_wifi_location' => $statusBin[17] === '1',
+            'indoor_outdoor_location' => $statusBin[16] === '1',
+            'work_mode' => bindec(substr($statusBin, 13, 3)), // Bits 16-18
+            'cell_signal_strength' => bindec(substr($statusBin, 8, 5)), // Bits 19-23
+            'battery_level' => bindec(substr($statusBin, 0, 8)), // Bits 24-31
+        ];
+
+        // Decode status2 bits
+        $networkTypeBits = bindec(substr($status2Bin, 29, 3)); // Bits 0-2
+        $networkTypes = ['No service', '2G', '3G', '4G'];
+        $mobileNetworkType = $networkTypes[$networkTypeBits] ?? 'Unknown';
+
+        $decodedStatus2 = [
+            'mobile_network_type' => $mobileNetworkType,
+        ];
+
+        // Log details
+        Log::info("Timestamp: " . gmdate("Y-m-d H:i:s", $timestamp));
+        Log::info("Status Bits (Binary): " . $statusBin);
+        Log::info("Decoded Status:", $decodedStatus);
+        Log::info("Status2 Bits (Binary): " . $status2Bin);
+        Log::info("Decoded Status2:", $decodedStatus2);
+        Log::info("General Status for Device {$device->imei} saved successfully.");
+
+        // Save to database
+        GeneralStatus::create(array_merge([
+            'device_id' => $device->id,
+            'status_time' => gmdate("Y-m-d H:i:s", $timestamp),
+        ], $decodedStatus, $decodedStatus2));
     }
+
 
     /**
      * Handle Call Record (Key 0x25).
@@ -222,14 +310,27 @@ class SOSDataController extends Controller
      */
     private function generateACK($sequenceId)
     {
-        $header = "ab";
-        $properties = "00";  // No encryption, no ACK request
-        $length = "0003";  // 3 bytes for the body
-        $crc = $this->calculateCRC("7f0100");  // Negative response body
-        $message = $header . $properties . $length . $crc . $sequenceId . "7f0100";
-        return hex2bin($message);
-    }
+        $header = "AB"; // Message header
+        $properties = "00"; // No encryption, no ACK request
+        $length = "0003"; // Length of the message body (3 bytes)
+        $lengthSwapped = "0300";
+         $crc = "C708"; // Precomputed CRC for 7F0100 (no need to recalculate)
+        $crcSwapped = "08C7";
 
+        $command = "7F"; // ACK command
+        $keyLength = "01"; // Length of the key field
+        $key = "00"; // Negative Response Key
+
+        // Swap sequence ID (little-endian)
+        $swappedSequenceId = substr($sequenceId, 2, 2) . substr($sequenceId, 0, 2);
+
+
+
+        // Construct the full message as a hex string
+        $message = $header . $properties . $lengthSwapped . $crcSwapped . $sequenceId . $command . $keyLength . $key;
+
+        return strtolower($message); // Return as uppercase hex string
+    }
     /**
      * Convert hex to ASCII string.
      */
@@ -285,5 +386,15 @@ class SOSDataController extends Controller
             $phoneNumber .= $asciiChar;
         }
         return $phoneNumber;
+    }
+    private function littleEndianHexDec($hex) {
+        // Split hex string into 2-character chunks (bytes)
+        $bytes = str_split($hex, 2);
+        // Reverse the order of bytes
+        $reversedBytes = array_reverse($bytes);
+        // Join bytes back into a hex string
+        $reversedHex = implode("", $reversedBytes);
+        // Convert the reversed hex string to decimal
+        return hexdec($reversedHex);
     }
 }

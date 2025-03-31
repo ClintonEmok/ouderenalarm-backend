@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Jobs\ProcessEmergencyAlarm;
+use App\Services\SiaEncoderService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -45,6 +47,11 @@ class DeviceAlarm extends Model
         return $this->belongsTo(Device::class);
     }
 
+    public function notes()
+    {
+        return $this->hasMany(AlarmNote::class);
+    }
+
     /**
      * Define a relationship with EmergencyLink.
      */
@@ -53,6 +60,12 @@ class DeviceAlarm extends Model
         return $this->hasOne(EmergencyLink::class);
     }
 
+    public function caregiverStatuses()
+    {
+        return $this->belongsToMany(User::class, 'caregiver_device_alarm')
+            ->withPivot('status')
+            ->withTimestamps();
+    }
     /**
      * Boot the model to handle events.
      */
@@ -62,11 +75,37 @@ class DeviceAlarm extends Model
 
         static::created(function ($alarm) {
             if ($alarm->fall_down_alert || $alarm->sos_alert) {
-                $alarm->createEmergencyLink();
-            } else {
-                Log::info("Alarm {$alarm->id} did not trigger an emergency link as no critical alerts were detected.");
+                ProcessEmergencyAlarm::dispatch($alarm);
             }
+
+            $patient = $alarm->device->user;
+            if($patient){
+                $caregivers = $patient->caregivers;
+
+                // Attach each caregiver to the alarm with default status
+                $alarm->caregiverStatuses()->syncWithoutDetaching($caregivers->pluck('id')->toArray());
+
+            }
+
         });
+    }
+
+    protected static function sendToMonitoringServer(string $message)
+    {
+        $host = config('app.meldkamer_server');
+        $port = config('app.meldkamer_port');
+
+        $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+        if (!$socket || !socket_connect($socket, $host, $port)) {
+            Log::error('SIA message send failed: ' . socket_strerror(socket_last_error()));
+            return;
+        }
+
+        socket_write($socket, $message, strlen($message));
+//        $response = socket_read($socket, 2048);
+        socket_close($socket);
+
+//        Log::info("Monitoring server response: {$response}");
     }
 
     /**
@@ -74,15 +113,18 @@ class DeviceAlarm extends Model
      */
     public function createEmergencyLink()
     {
-        $nextJsUrl = env('NEXTJS_URL', 'https://default-nextjs-url.com');
+        $nextJsUrl = config('app.frontend_url', 'https://default-nextjs-url.com');
         $uniqueCode = Str::uuid(); // Generate a unique identifier
         $link = "{$nextJsUrl}/emergency/{$uniqueCode}";
 
-        $this->emergencyLink()->create([
+        // Create and store the emergency link
+        $emergencyLink = $this->emergencyLink()->create([
             'link' => $link,
             'expires_at' => now()->addHours(24), // Set expiration to 24 hours
         ]);
 
         Log::info("Emergency link generated for alarm {$this->id}: {$link}");
+
+        return $emergencyLink; // Return the created emergency link
     }
 }

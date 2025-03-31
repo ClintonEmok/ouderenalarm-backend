@@ -26,4 +26,9 @@ class EmergencyLink extends Model
     {
         return $this->expires_at && now()->greaterThan($this->expires_at);
     }
+
+    public function caregiversOnTheWay()
+    {
+        return $this->belongsToMany(User::class, 'caregiver_emergency', 'emergency_link_id', 'user_id')->withTimestamps();
+    }
 }
