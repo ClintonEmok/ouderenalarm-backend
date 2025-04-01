@@ -65,7 +65,7 @@ class DeviceAlarmResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make("device.imei")->searchable(),
+                TextColumn::make("device.imei")->label("IMEI"),
                 TextColumn::make("device.phone_number")->label("Telefoonnummer"),
                 Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op")
                 //

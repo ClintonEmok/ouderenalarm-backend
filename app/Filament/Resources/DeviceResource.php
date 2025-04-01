@@ -6,8 +6,12 @@ use App\Filament\Resources\DeviceResource\Pages;
 use App\Filament\Resources\DeviceResource\RelationManagers;
 use App\Models\Device;
 use Dotswan\MapPicker\Fields\Map;
+use Dotswan\MapPicker\Infolists\MapEntry;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -80,11 +84,30 @@ class DeviceResource extends Resource
             ]);
     }
 
+//    public static function infolist(Infolist $infolist): Infolist
+//    {
+//        return $infolist->schema([
+//            Section::make("Klantendetails")->schema([
+//                TextEntry::make("user.name")->label("Naam"),
+//            ])->collapsible(),
+//            Section::make("Apparaatdetails")->schema([
+//                TextEntry::make("imei")->label("IMEI"),
+//                TextEntry::make("device.phone_number")->label("Telefoonnummer")
+//            ])->collapsible(),
+//            Section::make("Kaart")->schema([
+//
+//                TextEntry::make("nolocation")->placeholder("Geen locatie gevonden")->label("")
+//            ])->collapsible(),
+//
+//        ]);
+//    }
+
     public static function getRelations(): array
     {
         return [
             //
 //            RelationManagers\GpsLocationsRelationManager::class
+            RelationManagers\UserRelationManager::class
         ];
     }
 
