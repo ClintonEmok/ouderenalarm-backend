@@ -8,6 +8,7 @@ use App\Models\Device;
 use Dotswan\MapPicker\Fields\Map;
 use Dotswan\MapPicker\Infolists\MapEntry;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
@@ -50,7 +51,10 @@ class DeviceResource extends Resource
                     ->showMyLocationButton(false)
                     ->clickable(false)
                     ->label('Locatie')
-                    ->columnSpanFull()
+                    ->columnSpanFull(),
+                TextInput::make('longitude')->label('Longitude')->afterStateHydrated(function ($state, $record, Forms\Set $set): void { if($record->latestLocation){$set('longitude', $record->latestLocation->longitude);}}),
+                TextInput::make('latitiude')->label('Latitude')->afterStateHydrated(function ($state, $record, Forms\Set $set): void {if($record->latestLocation){$set('longitude', $record->latestLocation->latitude);}}),
+
             ]);
     }
 
