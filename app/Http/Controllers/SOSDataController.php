@@ -42,10 +42,10 @@ class SOSDataController extends Controller
                 return response()->json(['error' => 'Invalid header'], 400);
             }
 
-            if ($length !== strlen($body) / 2) {
-                Log::error("Invalid body length: Expected $length, Actual " . strlen($body) / 2);
-                return response()->json(['error' => 'Length mismatch'], 400);
-            }
+//            if ($length !== strlen($body) / 2) {
+//                Log::error("Invalid body length: Expected $length, Actual " . strlen($body) / 2);
+//                return response()->json(['error' => 'Length mismatch'], 400);
+//            }
 
             $calculatedCrc = $this->calculateCRC(hex2bin(mb_substr($hexData, 16)));  // Calculate CRC for body
             $calculatedCrcSwapped = bin2hex(strrev(hex2bin($calculatedCrc)));  // Swap bytes for little-endian format
