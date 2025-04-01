@@ -53,7 +53,7 @@ class DeviceResource extends Resource
                     ->label('Locatie')
                     ->columnSpanFull(),
                 TextInput::make('longitude')->label('Longitude')->afterStateHydrated(function ($state, $record, Forms\Set $set): void { if($record->latestLocation){$set('longitude', $record->latestLocation->longitude);}}),
-                TextInput::make('latitiude')->label('Latitude')->afterStateHydrated(function ($state, $record, Forms\Set $set): void {if($record->latestLocation){$set('longitude', $record->latestLocation->latitude);}}),
+                TextInput::make('latitiude')->label('Latitude')->afterStateHydrated(function ($state, $record, Forms\Set $set): void {if($record->latestLocation){$set('latitude', $record->latestLocation->latitude);}}),
 
             ]);
     }
