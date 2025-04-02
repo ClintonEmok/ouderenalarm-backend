@@ -56,7 +56,16 @@ class DeviceAlarmResource extends Resource
                     ->clickable(false)
                     ->label('Locatie')
                     ->columnSpanFull(),
-                TextEntry::make("nolocation")->placeholder("Geen locatie gevonden")->label("")
+                TextEntry::make('latitude')
+                    ->label('Latitude')
+                    ->state(fn($record) => $record->device->latestLocation?->latitude ?? 'Geen locatie gevonden')->copyable()
+                    ->copyMessage('Gekopieerd!')
+                    ->copyMessageDuration(1500),
+                TextEntry::make('longitude')
+                    ->label('Longitude')
+                    ->state(fn($record) => $record->device->latestLocation?->longitude ?? 'Geen locatie gevonden')->copyable()
+                    ->copyMessage('Gekopieerd!')
+                    ->copyMessageDuration(1500),
             ])->collapsible(),
         ]);
     }
