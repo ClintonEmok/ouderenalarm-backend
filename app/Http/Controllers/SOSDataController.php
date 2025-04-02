@@ -62,10 +62,10 @@ class SOSDataController extends Controller
             $deviceIdLength = hexdec(mb_substr($body, 2, 2));  // Length of the IMEI
             $deviceIdKey = mb_substr($body, 4, 2);  // Key indicating IMEI (should be 01 for IMEI)
             $imeiHex = mb_substr($body, 6, $deviceIdLength * 2);  // IMEI hex string
-            $deviceImei = $this->parseHexToAscii($imeiHex);  // Convert IMEI to ASCII
+            $deviceImei = trim($this->parseHexToAscii($imeiHex));  // Convert IMEI to ASCII
             Log::info("Extracted IMEI: $deviceImei");
 
-            $device = Device::firstOrCreate(['imei' => trim($deviceImei)]);
+            $device = Device::firstOrCreate(['imei' => $deviceImei]);
             Log::info("Device found or created: {$device->imei}");
 
             // Iterate over the remaining keys
