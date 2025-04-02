@@ -44,7 +44,7 @@ class SOSDataController extends Controller
 
             if ($length !== strlen($body) / 2) {
                 Log::error("Invalid body length: Expected $length, Actual " . strlen($body) / 2);
-                return response()->json(['error' => 'Length mismatch'], 400);
+//                return response()->json(['error' => 'Length mismatch'], 400);
             }
 
             $calculatedCrc = $this->calculateCRC(hex2bin(mb_substr($hexData, 16)));  // Calculate CRC for body
@@ -54,7 +54,7 @@ class SOSDataController extends Controller
             Log::info("Received checksum: $checksum");
             if (strtoupper($checksum) !== strtoupper($calculatedCrcSwapped)) {
                 Log::warning("Invalid checksum. Expected: $checksum, Calculated: $calculatedCrcSwapped");
-                return response()->json(['error' => 'Checksum mismatch'], 400);
+//                return response()->json(['error' => 'Checksum mismatch'], 400);
             }
 
             // Extract IMEI (first key in the body)
@@ -62,10 +62,10 @@ class SOSDataController extends Controller
             $deviceIdLength = hexdec(mb_substr($body, 2, 2));  // Length of the IMEI
             $deviceIdKey = mb_substr($body, 4, 2);  // Key indicating IMEI (should be 01 for IMEI)
             $imeiHex = mb_substr($body, 6, $deviceIdLength * 2);  // IMEI hex string
-            $deviceImei = $this->parseHexToAscii($imeiHex);  // Convert IMEI to ASCII
+            $deviceImei = trim($this->parseHexToAscii($imeiHex));  // Convert IMEI to ASCII
             Log::info("Extracted IMEI: $deviceImei");
 
-            $device = Device::firstOrCreate(['imei' => trim($deviceImei)]);
+            $device = Device::firstOrCreate(['imei' => $deviceImei]);
             Log::info("Device found or created: {$device->imei}");
 
             // Iterate over the remaining keys

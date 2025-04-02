@@ -46,17 +46,26 @@ class DeviceAlarmResource extends Resource
             Section::make("Kaart")->schema([
                 MapEntry::make("location")
                     ->state(fn ($record) => [
-                        'lat' => $record->latestLocation->latitude,
-                        'lng' => $record->latestLocation->longitude,
+                        'lat' => $record->device->latestLocation->latitude,
+                        'lng' => $record->device->latestLocation->longitude,
                         'geojson' => $record?->geojson ? json_decode($record->geojson) : null
                     ])
-                    ->visible(fn ($record) => $record->latestLocation !== null)
+                    ->visible(fn ($record) => $record->device->latestLocation !== null)
                     ->draggable(false)
                     ->showMyLocationButton(false)
                     ->clickable(false)
                     ->label('Locatie')
                     ->columnSpanFull(),
-                TextEntry::make("nolocation")->placeholder("Geen locatie gevonden")->label("")
+                TextEntry::make('latitude')
+                    ->label('Latitude')
+                    ->state(fn($record) => $record->device->latestLocation?->latitude ?? 'Geen locatie gevonden')->copyable()
+                    ->copyMessage('Gekopieerd!')
+                    ->copyMessageDuration(1500),
+                TextEntry::make('longitude')
+                    ->label('Longitude')
+                    ->state(fn($record) => $record->device->latestLocation?->longitude ?? 'Geen locatie gevonden')->copyable()
+                    ->copyMessage('Gekopieerd!')
+                    ->copyMessageDuration(1500),
             ])->collapsible(),
         ]);
     }
@@ -65,8 +74,9 @@ class DeviceAlarmResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make("device.imei"),
-                TextColumn::make("device.phone_number")->label("Telefoonnummer")
+                TextColumn::make("device.imei")->label("IMEI"),
+                TextColumn::make("device.phone_number")->label("Telefoonnummer"),
+                Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op")
                 //
             ])
             ->filters([
@@ -80,7 +90,7 @@ class DeviceAlarmResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])->defaultSort('created_at','desc');
     }
 
     public static function getRelations(): array

@@ -6,8 +6,13 @@ use App\Filament\Resources\DeviceResource\Pages;
 use App\Filament\Resources\DeviceResource\RelationManagers;
 use App\Models\Device;
 use Dotswan\MapPicker\Fields\Map;
+use Dotswan\MapPicker\Infolists\MapEntry;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -46,7 +51,10 @@ class DeviceResource extends Resource
                     ->showMyLocationButton(false)
                     ->clickable(false)
                     ->label('Locatie')
-                    ->columnSpanFull()
+                    ->columnSpanFull(),
+                TextInput::make('longitude')->label('Longitude')->afterStateHydrated(function ($state, $record, Forms\Set $set): void { if($record->latestLocation){$set('longitude', $record->latestLocation->longitude);}}),
+                TextInput::make('latitiude')->label('Latitude')->afterStateHydrated(function ($state, $record, Forms\Set $set): void {if($record->latestLocation){$set('latitude', $record->latestLocation->latitude);}}),
+
             ]);
     }
 
@@ -80,11 +88,50 @@ class DeviceResource extends Resource
             ]);
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist->schema([
+            Section::make("Klantendetails")->schema([
+                TextEntry::make("user.name")->label("Naam"),
+            ])->collapsible(),
+            Section::make("Apparaatdetails")->schema([
+                TextEntry::make("imei")->label("IMEI"),
+                TextEntry::make("device.phone_number")->label("Telefoonnummer")
+            ])->collapsible(),
+            Section::make("Kaart")->schema([
+                MapEntry::make("location")
+                    ->state(fn ($record) => [
+                        'lat' => $record->latestLocation->latitude,
+                        'lng' => $record->latestLocation->longitude,
+                        'geojson' => $record?->geojson ? json_decode($record->geojson) : null
+                    ])
+                    ->visible(fn ($record) => $record->latestLocation !== null)
+                    ->draggable(false)
+                    ->showMyLocationButton(false)
+                    ->clickable(false)
+                    ->label('Locatie')
+                    ->columnSpanFull(),
+                TextEntry::make('latitude')
+                    ->label('Latitude')
+                    ->state(fn($record) => $record->latestLocation?->latitude ?? 'Geen locatie gevonden')->copyable()
+                    ->copyMessage('Gekopieerd!')
+                    ->copyMessageDuration(1500),
+                TextEntry::make('longitude')
+                    ->label('Longitude')
+                    ->state(fn($record) => $record->latestLocation?->longitude ?? 'Geen locatie gevonden')->copyable()
+                    ->copyMessage('Gekopieerd!')
+                    ->copyMessageDuration(1500),
+            ])->collapsible(),
+
+        ]);
+    }
+
     public static function getRelations(): array
     {
         return [
             //
 //            RelationManagers\GpsLocationsRelationManager::class
+            RelationManagers\UserRelationManager::class
         ];
     }
 

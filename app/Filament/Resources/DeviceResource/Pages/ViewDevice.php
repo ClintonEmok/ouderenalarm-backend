@@ -9,4 +9,5 @@ use Filament\Resources\Pages\ViewRecord;
 class ViewDevice extends ViewRecord
 {
     protected static string $resource = DeviceResource::class;
+    public $location;
 }

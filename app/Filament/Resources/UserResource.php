@@ -21,6 +21,7 @@ use Filament\Tables\Actions\DeleteAction;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\UserResource\Pages;
 use STS\FilamentImpersonate\Tables\Actions\Impersonate;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class UserResource extends Resource
 {
@@ -74,6 +75,7 @@ class UserResource extends Resource
                         ? Hash::make($state)
                         : $record->password;
                 }),
+            PhoneInput::make('phone_number')->label("Telefoonnummer")
         ];
 
 

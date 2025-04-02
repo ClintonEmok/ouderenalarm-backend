@@ -9,6 +9,7 @@ use Filament\Resources\Pages\ViewRecord;
 class ViewDeviceAlarm extends ViewRecord
 {
     protected static string $resource = DeviceAlarmResource::class;
+    public $location;
 
     protected function getHeaderActions(): array
     {
