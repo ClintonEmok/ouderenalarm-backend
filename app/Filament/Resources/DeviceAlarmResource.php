@@ -46,11 +46,11 @@ class DeviceAlarmResource extends Resource
             Section::make("Kaart")->schema([
                 MapEntry::make("location")
                     ->state(fn ($record) => [
-                        'lat' => $record->latestLocation->latitude,
-                        'lng' => $record->latestLocation->longitude,
+                        'lat' => $record->device->latestLocation->latitude,
+                        'lng' => $record->device->latestLocation->longitude,
                         'geojson' => $record?->geojson ? json_decode($record->geojson) : null
                     ])
-                    ->visible(fn ($record) => $record->latestLocation !== null)
+                    ->visible(fn ($record) => $record->device->latestLocation !== null)
                     ->draggable(false)
                     ->showMyLocationButton(false)
                     ->clickable(false)

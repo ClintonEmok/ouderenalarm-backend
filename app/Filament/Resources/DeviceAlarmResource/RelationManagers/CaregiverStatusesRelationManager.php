@@ -39,7 +39,7 @@ class CaregiverStatusesRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('name')
-            ->heading("Contactperson")
+            ->heading("Contactpersonen")
             ->columns([
                 Tables\Columns\TextColumn::make('name')->label('Naam'),
                 Tables\Columns\TextColumn::make('email'),
