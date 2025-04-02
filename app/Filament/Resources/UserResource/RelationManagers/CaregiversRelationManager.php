@@ -39,7 +39,7 @@ class CaregiversRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make()
+                Tables\Actions\AttachAction::make()->preloadRecordSelect()->multiple()
             ])
             ->actions([
                 Tables\Actions\DetachAction::make()
@@ -48,6 +48,6 @@ class CaregiversRelationManager extends RelationManager
                 Tables\Actions\BulkActionGroup::make([
                  Tables\Actions\DetachBulkAction::make(),
                 ]),
-            ]);
+            ])->inverseRelationship('patients');
     }
 }
