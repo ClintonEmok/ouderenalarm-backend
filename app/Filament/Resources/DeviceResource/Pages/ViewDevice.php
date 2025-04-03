@@ -10,4 +10,11 @@ class ViewDevice extends ViewRecord
 {
     protected static string $resource = DeviceResource::class;
     public $location;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\EditAction::make(),
+        ];
+    }
 }
