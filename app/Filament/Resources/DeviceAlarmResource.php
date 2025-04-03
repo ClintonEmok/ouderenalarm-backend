@@ -13,6 +13,7 @@ use Filament\Forms\Form;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
+use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -96,8 +97,10 @@ class DeviceAlarmResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\NotesRelationManager::class,
-            RelationManagers\CaregiverStatusesRelationManager::class
+            RelationGroup::make('Extra info', [
+                RelationManagers\CaregiverStatusesRelationManager::class,
+                RelationManagers\NotesRelationManager::class,
+            ])
         ];
     }
 
