@@ -52,4 +52,9 @@ class Device extends Model
     {
         return $this->hasOne(GeneralStatus::class)->latestOfMany();
     }
+
+    public function latestAlarm()
+    {
+        return $this->hasOne(DeviceAlarm::class)->latestOfMany();
+    }
 }
