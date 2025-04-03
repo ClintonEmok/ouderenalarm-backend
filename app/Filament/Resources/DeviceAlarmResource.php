@@ -110,6 +110,7 @@ class DeviceAlarmResource extends Resource
             'index' => Pages\ListDeviceAlarms::route('/'),
             'create' => Pages\CreateDeviceAlarm::route('/create'),
             'view' => Pages\ViewDeviceAlarm::route('/{record}'),
+            'view-latest'=> Pages\ViewLatestAlarm::route('/customer/{record}')
 //            'edit' => Pages\EditDeviceAlarm::route('/{record}/edit'),
         ];
     }
