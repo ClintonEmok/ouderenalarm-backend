@@ -127,4 +127,20 @@ class DeviceAlarm extends Model
 
         return $emergencyLink; // Return the created emergency link
     }
+
+    public function refreshCaregiverStatuses(): void
+    {
+        $patient = $this->device->user;
+        $currentCaregiverIds = $patient->caregivers->pluck('id')->toArray();
+
+        // Attach any new caregivers
+        $this->caregiverStatuses()->syncWithoutDetaching(
+            collect($currentCaregiverIds)->mapWithKeys(fn ($id) => [$id => []])->toArray()
+        );
+
+        // Remove any caregivers who no longer apply
+        $this->caregiverStatuses()->detach(
+            $this->caregiverStatuses->pluck('id')->diff($currentCaregiverIds)
+        );
+    }
 }
