@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\DeviceAlarmResource\Widgets\RecentDeviceAlarmsWidget;
 use App\Filament\Resources\DeviceResource\Pages;
 use App\Filament\Resources\DeviceResource\RelationManagers;
 use App\Models\Device;
@@ -65,9 +66,9 @@ class DeviceResource extends Resource
             ->columns([
                 //
 
-                Tables\Columns\TextColumn::make('imei'),
-                Tables\Columns\TextColumn::make('phone_number')->label("Telefoonnummer"),
-                Tables\Columns\TextColumn::make('connection_number')->label("Aansluitnummer"),
+                Tables\Columns\TextColumn::make('imei')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('phone_number')->label("Telefoonnummer")->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('connection_number')->label("Aansluitnummer")->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('user.name')->label("Gebruiker"),
                 Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op")
                 ->dateTime()->toggleable(isToggledHiddenByDefault: true),
@@ -76,7 +77,7 @@ class DeviceResource extends Resource
 
             ])
             ->filters([
-                //
+
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -133,6 +134,12 @@ class DeviceResource extends Resource
             //
 //            RelationManagers\GpsLocationsRelationManager::class
             RelationManagers\UserRelationManager::class
+        ];
+    }
+    public static function getWidgets(): array
+    {
+        return [
+
         ];
     }
 

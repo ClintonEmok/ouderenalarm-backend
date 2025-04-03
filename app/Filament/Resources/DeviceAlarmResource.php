@@ -77,11 +77,18 @@ class DeviceAlarmResource extends Resource
             ->columns([
                 TextColumn::make("device.imei")->label("IMEI"),
                 TextColumn::make("device.phone_number")->label("Telefoonnummer"),
-                Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op")
+                Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op"),
+                Tables\Columns\ColumnGroup::make('Soort melding',[
+                    Tables\Columns\IconColumn::make('fall_down_alert')->label('Valalarm'),
+                    Tables\Columns\IconColumn::make('sos_alert')->label("Noodomroep"),
+                ])
                 //
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('fall_down_alert')->label("Is valalarm")
+                    ->toggle()->query(fn (Builder $query): Builder => $query->where('fall_down_alert', true)),
+                Tables\Filters\Filter::make('sos_alert')->label("Is noodomroep")
+                    ->toggle()->query(fn (Builder $query): Builder => $query->where('sos_alert', true)),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
