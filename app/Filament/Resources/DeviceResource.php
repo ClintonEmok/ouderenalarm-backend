@@ -95,10 +95,12 @@ class DeviceResource extends Resource
         return $infolist->schema([
             Section::make("Klantendetails")->schema([
                 TextEntry::make("user.name")->label("Naam"),
+                TextEntry::make("user.phone_number")->label("Telefoonnummer"),
             ])->collapsible(),
             Section::make("Apparaatdetails")->schema([
                 TextEntry::make("imei")->label("IMEI"),
-                TextEntry::make("device.phone_number")->label("Telefoonnummer")
+                TextEntry::make("device.phone_number")->label("Telefoonnummer"),
+                TextEntry::make("connection_number")->label("Aansluitnummer"),
             ])->collapsible(),
             Section::make("Kaart")->schema([
                 MapEntry::make("location")
@@ -139,7 +141,7 @@ class DeviceResource extends Resource
     public static function getWidgets(): array
     {
         return [
-
+            DeviceResource\Widgets\RecentDeviceAlarmsWidget::class
         ];
     }
 

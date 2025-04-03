@@ -125,12 +125,12 @@ class UserResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                Tables\Filters\Filter::make('verified')
-                    ->label(trans('filament-users::user.resource.verified'))
-                    ->query(fn(Builder $query): Builder => $query->whereNotNull('email_verified_at')),
-                Tables\Filters\Filter::make('unverified')
-                    ->label(trans('filament-users::user.resource.unverified'))
-                    ->query(fn(Builder $query): Builder => $query->whereNull('email_verified_at')),
+//                Tables\Filters\Filter::make('verified')
+//                    ->label(trans('filament-users::user.resource.verified'))
+//                    ->query(fn(Builder $query): Builder => $query->whereNotNull('email_verified_at')),
+//                Tables\Filters\Filter::make('unverified')
+//                    ->label(trans('filament-users::user.resource.unverified'))
+//                    ->query(fn(Builder $query): Builder => $query->whereNull('email_verified_at')),
             ])
             ->actions([
                 ActionGroup::make([
