@@ -130,6 +130,9 @@ class DeviceAlarm extends Model
 
     public function refreshCaregiverStatuses(): void
     {
+        if (!$this->device || !$this->device->user) {
+            return;
+        }
         $patient = $this->device->user;
         $currentCaregiverIds = $patient->caregivers->pluck('id')->toArray();
 
