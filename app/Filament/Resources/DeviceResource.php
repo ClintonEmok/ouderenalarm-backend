@@ -67,12 +67,12 @@ class DeviceResource extends Resource
 
                 Tables\Columns\TextColumn::make('imei'),
                 Tables\Columns\TextColumn::make('phone_number')->label("Telefoonnummer"),
+                Tables\Columns\TextColumn::make('connection_number')->label("Aansluitnummer"),
                 Tables\Columns\TextColumn::make('user.name')->label("Gebruiker"),
                 Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op")
-
-                ->dateTime(),
+                ->dateTime()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')->label("Bijgewerkt Op")
-                ->dateTime(),
+                ->dateTime()->toggleable(isToggledHiddenByDefault: true),
 
             ])
             ->filters([
