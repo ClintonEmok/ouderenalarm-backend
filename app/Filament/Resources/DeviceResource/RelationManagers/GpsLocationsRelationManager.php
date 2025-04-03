@@ -19,6 +19,7 @@ class GpsLocationsRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\TextInput::make('device.imei')
+                    ->label('IMEI')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -29,7 +30,7 @@ class GpsLocationsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('device.imei')
             ->columns([
-                Tables\Columns\TextColumn::make('device.imei'),
+                Tables\Columns\TextColumn::make('device.imei')->label('IMEI'),
                 Tables\Columns\TextColumn::make('longitude'),
                 Tables\Columns\TextColumn::make('latitude'),
             ])

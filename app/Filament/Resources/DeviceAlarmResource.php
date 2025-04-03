@@ -42,7 +42,8 @@ class DeviceAlarmResource extends Resource
         return $infolist->schema([
             Section::make("Klantendetails")->schema([
                 TextEntry::make("device.user.name")->label("Naam"),
-                TextEntry::make("device.phone_number")->label("Telefoonnummer")
+                TextEntry::make("device.phone_number")->label("Telefoonnummer"),
+                TextEntry::make("device.user.email")->label("E-mail")
             ])->collapsible(),
             Section::make("Kaart")->schema([
                 MapEntry::make("location")

@@ -36,27 +36,9 @@ class DeviceResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('imei')
-                ->label('imei')->readOnlyOn(['edit']),
+                    ->label('IMEI')->readOnlyOn(['edit']),
                 PhoneInput::make('phone_number')->label("Telefoonnummer"),
                 TextInput::make('connection_number')->label('Aansluitnummer'),
-//                Map::make("location")
-//                    ->afterStateHydrated(function ($state, $record, Forms\Set $set): void {
-//                        if ($record->latestLocation) {
-//                            $set('location', [
-//                                'lat' => $record->latestLocation->latitude,
-//                                'lng' => $record->latestLocation->longitude,
-//                            ]);
-//                        }
-//                    })
-//                    ->visible(fn ($record) => $record->latestLocation !== null)
-//                    ->draggable(false)
-//                    ->showMyLocationButton(false)
-//                    ->clickable(false)
-//                    ->label('Locatie')
-//                    ->columnSpanFull(),
-//                TextInput::make('longitude')->label('Longitude')->afterStateHydrated(function ($state, $record, Forms\Set $set): void { if($record->latestLocation){$set('longitude', $record->latestLocation->longitude);}}),
-//                TextInput::make('latitiude')->label('Latitude')->afterStateHydrated(function ($state, $record, Forms\Set $set): void {if($record->latestLocation){$set('latitude', $record->latestLocation->latitude);}}),
-
             ]);
     }
 
@@ -66,7 +48,7 @@ class DeviceResource extends Resource
             ->columns([
                 //
 
-                Tables\Columns\TextColumn::make('imei')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('imei')->label('IMEI')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('phone_number')->label("Telefoonnummer")->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('connection_number')->label("Aansluitnummer")->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('user.name')->label("Gebruiker"),
@@ -96,6 +78,7 @@ class DeviceResource extends Resource
             Section::make("Klantendetails")->schema([
                 TextEntry::make("user.name")->label("Naam"),
                 TextEntry::make("user.phone_number")->label("Telefoonnummer"),
+                TextEntry::make("user.email")->label("E-mail")
             ])->collapsible(),
             Section::make("Apparaatdetails")->schema([
                 TextEntry::make("imei")->label("IMEI"),
