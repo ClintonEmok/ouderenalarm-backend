@@ -29,7 +29,7 @@ class DeviceResource extends Resource
     protected static ?string $modelLabel = 'Apparaat';
     protected static ?string $pluralLabel = 'Apparaten';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-device-phone-mobile';
 
     public static function form(Form $form): Form
     {

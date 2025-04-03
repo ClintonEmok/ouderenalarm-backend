@@ -27,7 +27,7 @@ class DeviceAlarmResource extends Resource
     protected static ?string $modelLabel = 'Melding';
     protected static ?string $pluralLabel = 'Noodmelding';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-exclamation-triangle';
 
     public static function form(Form $form): Form
     {
