@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.2",
         "ext-sockets": "*",
+        "bezhansalleh/filament-shield": "^3.3",
         "dotswan/filament-map-picker": "^1.8",
         "filament/filament": "^3.2",
         "jeffgreco13/filament-breezy": "^2.5",
