@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CustomerResource\Pages;
 use App\Filament\Resources\CustomerResource\RelationManagers;
+use App\Models\Country;
 use App\Models\Customer;
 use App\Models\User;
 use Filament\Forms;
@@ -81,9 +82,11 @@ class CustomerResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
-                TextColumn::make('email'),
-                TextColumn::make('phone_number'),
+                TextColumn::make('name')->label("Naam"),
+                TextColumn::make('email')->label('E-mailadres'),
+                TextColumn::make('phone_number')->label("Telefoonnummer"),
+//                Tables\Columns\TextColumn::make('country')->label('Land')
+//                    ->getStateUsing(fn ($record): ?string => Country::find($record->addresses->first()?->country)?->name ?? null),
             ])
             ->filters([
                 //

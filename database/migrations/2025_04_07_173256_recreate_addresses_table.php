@@ -15,11 +15,11 @@ return new class extends Migration
 
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // 👈 direct link to user
             $table->string('full_name')->nullable();
             $table->string('street')->nullable();
             $table->string('house_number')->nullable();
             $table->string('postal_code')->nullable();
+            $table->string('state')->nullable();
             $table->string('city')->nullable();
             $table->string('country')->nullable();
             $table->enum('type', ['billing', 'shipping'])->default('shipping');
