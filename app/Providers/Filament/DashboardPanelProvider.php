@@ -61,7 +61,10 @@ class DashboardPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])->plugins([\TomatoPHP\FilamentUsers\FilamentUsersPlugin::make(),
-                BreezyCore::make()])
+                BreezyCore::make()->myProfile(
+                    userMenuLabel: 'Mijn Profiel', // Customizes the 'account' link label in the panel User Menu (default = null)
+                    navigationGroup: 'Instellingen', // Sets the navigation group for the My Profile page (default = null)
+                )])
             ;
     }
 }
