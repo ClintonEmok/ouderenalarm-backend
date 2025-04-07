@@ -125,4 +125,23 @@ class User extends Authenticatable implements MustVerifyEmail
             ->withPivot('status')
             ->withTimestamps();
     }
+
+    public function accessibleDevices()
+    {
+        // if I have patients, I’m a caregiver
+        if ($this->patients()->exists()) {
+            return Device::whereIn('user_id', $this->patients->pluck('id'))->get();
+        }
+
+        return $this->devices;
+    }
+
+    public function accessibleDevicesQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        if ($this->patients()->exists()) {
+            return Device::whereIn('user_id', $this->patients->pluck('id'));
+        }
+
+        return $this->devices();
+    }
 }
