@@ -8,17 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Address extends Model
 {
-    protected $fillable = ['city_id', 'country_id', 'street_name', 'house_number', 'postal_code'];
-
-    public function city(): BelongsTo
-    {
-        return $this->belongsTo(City::class);
-    }
-
-    public function country(): BelongsTo
-    {
-        return $this->belongsTo(Country::class);
-    }
+    protected $guarded = [];
 
     public function users()
     {
