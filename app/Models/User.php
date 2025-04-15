@@ -60,6 +60,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Address::class, 'user_address')->withTimestamps();
     }
 
+    public function userAddresses()
+    {
+        return $this->hasMany(UserAddress::class);
+    }
+
     public function devices(): HasMany
     {
         return $this->hasMany(Device::class);

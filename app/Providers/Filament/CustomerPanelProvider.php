@@ -18,14 +18,19 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
+use App\Livewire\AddressesProfileComponent;
 
 class CustomerPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
+            ->default()
             ->id('customer')
             ->path('customer')
+            ->login()
+            ->registration()
+            ->passwordReset()
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -56,7 +61,7 @@ class CustomerPanelProvider extends PanelProvider
                 BreezyCore::make()->myProfile(
                     userMenuLabel: 'Mijn Profiel', // Customizes the 'account' link label in the panel User Menu (default = null)
                     navigationGroup: 'Instellingen', // Sets the navigation group for the My Profile page (default = null)
-                )]);
+                )->myProfileComponents([AddressesProfileComponent::class])]);
 
     }
 }

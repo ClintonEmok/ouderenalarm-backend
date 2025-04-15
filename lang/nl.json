@@ -1,5 +1,7 @@
 {
     "Assigned": "Toegewezen",
     "En Route": "Onderweg",
-    "Arrived": "Aangekomen"
+    "Arrived": "Aangekomen",
+    "Billing": "Factuuradres",
+    "Shipping": "Verzendadres"
 }
