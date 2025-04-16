@@ -45,7 +45,6 @@ class DeviceResource extends Resource
             ]);
     }
 
-//    TODO: introduce custom action
     public static function table(Table $table): Table
     {
         return $table
@@ -63,6 +62,7 @@ class DeviceResource extends Resource
                 //
             ])
             ->actions([
+//                TODO: Add detach button
 //                Tables\Actions\EditAction::make(),
             ])->headerActions([
                 Tables\Actions\Action::make('claim_device')
