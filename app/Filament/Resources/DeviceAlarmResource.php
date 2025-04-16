@@ -93,8 +93,8 @@ class DeviceAlarmResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op"),
                 Tables\Columns\ColumnGroup::make('Soort melding',[
                     TextColumn::make('triggered_alerts')->label("Meldingen"),
-                    Tables\Columns\IconColumn::make('fall_down_alert')->label('Valalarm'),
-                    Tables\Columns\IconColumn::make('sos_alert')->label("Noodomroep"),
+//                    Tables\Columns\IconColumn::make('fall_down_alert')->label('Valalarm'),
+//                    Tables\Columns\IconColumn::make('sos_alert')->label("Noodomroep"),
                 ])
                 //
             ])
