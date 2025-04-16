@@ -20,6 +20,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Squire\Models\Country;
 
 class DeviceAlarmResource extends Resource
 {
@@ -43,7 +44,16 @@ class DeviceAlarmResource extends Resource
             Section::make("Klantendetails")->schema([
                 TextEntry::make("device.user.name")->label("Naam"),
                 TextEntry::make("device.phone_number")->label("Telefoonnummer"),
-                TextEntry::make("device.user.email")->label("E-mail")
+                TextEntry::make("device.user.email")->label("E-mail"),
+                 Section::make("Addressen")->schema([
+                     TextEntry::make("device.user.homeAddress.full_name")->label("Naam op adres"),
+                     TextEntry::make("device.user.homeAddress.street")->label("Straat"),
+                     TextEntry::make("device.user.homeAddress.house_number")->label("Huisnummer"),
+                     TextEntry::make("device.user.homeAddress.postal_code")->label("Postcode"),
+                     TextEntry::make("device.user.homeAddress.city")->label("Stad"),
+                     TextEntry::make('device.user.homeAddress.country')->label('Land')
+                         ->formatStateUsing(fn ($state): ?string => Country::find($state)?->name ?? null),
+                 ])
             ])->collapsible(),
             Section::make("Kaart")->schema([
                 MapEntry::make("location")

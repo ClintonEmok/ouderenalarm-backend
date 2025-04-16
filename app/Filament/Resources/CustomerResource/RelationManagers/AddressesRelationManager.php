@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\CustomerResource\RelationManagers;
 
+use App\Enums\AddressType;
+use App\Enums\CaregiverStatus;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -19,6 +21,8 @@ class AddressesRelationManager extends RelationManager
 
     public function form(Form $form): Form
     {
+//        TODO: add type to form
+//          TODO: Add limit of 2 addresses one of each type
         return $form
             ->schema([
                 Forms\Components\TextInput::make('street')->label('Straatnaam'),
@@ -48,6 +52,7 @@ class AddressesRelationManager extends RelationManager
 
                 Tables\Columns\TextColumn::make('country')->label('Land')
                     ->formatStateUsing(fn ($state): ?string => Country::find($state)?->name ?? null),
+                Tables\Columns\TextColumn::make('type')->label('Type')->badge()->formatStateUsing(fn ($state) => AddressType::from($state)->label())->color(fn(string $state): string => AddressType::from($state)->color(),)
             ])
             ->filters([
                 //

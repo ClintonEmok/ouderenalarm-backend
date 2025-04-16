@@ -17,8 +17,8 @@ enum AddressType: string
     public function color(): string
     {
         return match ($this) {
-            self::Billing => 'primary',
-            self::Shipping => 'secondary',
+            self::Billing => 'gray',
+            self::Shipping => 'success',
         };
     }
 }

@@ -19,6 +19,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Squire\Models\Country;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 use Ysfkaya\FilamentPhoneInput\Infolists\PhoneEntry;
 use Ysfkaya\FilamentPhoneInput\PhoneInputNumberType;
@@ -75,10 +76,20 @@ class DeviceResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
+//            TODO: Decide on whether to include or exclude house number
             Section::make("Klantendetails")->schema([
                 TextEntry::make("user.name")->label("Naam"),
                 TextEntry::make("user.phone_number")->label("Telefoonnummer"),
-                TextEntry::make("user.email")->label("E-mail")
+                TextEntry::make("user.email")->label("E-mail"),
+                Section::make("Addressen")->schema([
+                    TextEntry::make("user.homeAddress.full_name")->label("Naam op adres"),
+                    TextEntry::make("user.homeAddress.street")->label("Straat"),
+                    TextEntry::make("user.homeAddress.house_number")->label("Huisnummer"),
+                    TextEntry::make("user.homeAddress.postal_code")->label("Postcode"),
+                    TextEntry::make("user.homeAddress.city")->label("Stad"),
+                    TextEntry::make('user.homeAddress.country')->label('Land')
+                        ->formatStateUsing(fn ($state): ?string => Country::find($state)?->name ?? null),
+                ])
             ])->collapsible(),
             Section::make("Apparaatdetails")->schema([
                 TextEntry::make("imei")->label("IMEI"),

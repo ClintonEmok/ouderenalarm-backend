@@ -84,6 +84,19 @@ class User extends Authenticatable implements MustVerifyEmail
             ->withTimestamps();
     }
 
+    public function homeAddress()
+    {
+        return $this->hasOneThrough(
+            Address::class,
+            UserAddress::class,
+            'user_id',
+            'id',
+            'id',
+            'address_id'
+        )->where('user_address.type', '=', 'shipping')
+            ->orderBy('user_address.created_at');
+    }
+
     /**
      * Relationship: Users who are caregivers to this user (patients).
      */
