@@ -8,6 +8,7 @@ use App\Models\Device;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -56,6 +57,36 @@ class DeviceResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+            ])->headerActions([
+                Tables\Actions\Action::make('claim_device')
+                    ->label('Claim a Device')
+                    ->form([
+                        PhoneInput::make('phone_number')
+                            ->label('Device Phone Number')
+                            ->required(),
+                    ])
+                    ->action(function (array $data) {
+                        $device = Device::where('phone_number', $data['phone_number'])
+                            ->whereNull('user_id')
+                            ->first();
+
+                        if (! $device) {
+                            Notification::make()
+                                ->title('Device not found or already claimed')
+                                ->danger()
+                                ->send();
+
+                            return;
+                        }
+
+                        $device->user_id = auth()->id();
+                        $device->save();
+
+                        Notification::make()
+                            ->title('Device successfully claimed')
+                            ->success()
+                            ->send();
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

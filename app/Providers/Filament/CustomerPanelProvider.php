@@ -25,7 +25,6 @@ class CustomerPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->default()
             ->id('customer')
             ->path('customer')
             ->login()

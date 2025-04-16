@@ -64,7 +64,7 @@ class AddressesProfileComponent extends MyProfileComponent
                     ->maxItems(2)
                     ->reorderable(),
             ])
-            ->statePath('data') 
+            ->statePath('data')
             ->model($this->user);
     }
 

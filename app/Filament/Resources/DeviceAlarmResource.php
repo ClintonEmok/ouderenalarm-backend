@@ -80,6 +80,7 @@ class DeviceAlarmResource extends Resource
                 TextColumn::make("device.phone_number")->label("Telefoonnummer"),
                 Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op"),
                 Tables\Columns\ColumnGroup::make('Soort melding',[
+                    TextColumn::make('triggered_alerts')->label("Meldingen"),
                     Tables\Columns\IconColumn::make('fall_down_alert')->label('Valalarm'),
                     Tables\Columns\IconColumn::make('sos_alert')->label("Noodomroep"),
                 ])
@@ -93,7 +94,7 @@ class DeviceAlarmResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+//                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

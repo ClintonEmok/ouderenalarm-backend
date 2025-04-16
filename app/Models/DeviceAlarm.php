@@ -146,4 +146,19 @@ class DeviceAlarm extends Model
             $this->caregiverStatuses->pluck('id')->diff($currentCaregiverIds)
         );
     }
+
+    public function getTriggeredAlertsAttribute(): string
+    {
+        $alerts = [];
+
+        if ($this->fall_down_alert) {
+            $alerts[] = 'Medisch Alarm';
+        }
+
+        if ($this->sos_alert) {
+            $alerts[] = 'Noodomroep';
+        }
+
+        return implode(', ', $alerts);
+    }
 }
