@@ -76,7 +76,9 @@ class DeviceAlarmResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make("device.imei")->label("IMEI"),
+                TextColumn::make("device.imei")->label("IMEI")->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make("user.name")->label("Klantnaam"),
+                TextColumn::make("device.connection_number")->label("Aansluitnumer"),
                 TextColumn::make("device.phone_number")->label("Telefoonnummer"),
                 Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op"),
                 Tables\Columns\ColumnGroup::make('Soort melding',[

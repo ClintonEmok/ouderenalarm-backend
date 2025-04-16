@@ -50,19 +50,26 @@ class DeviceResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('imei')->label('IMEI')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('phone_number')->label("Telefoonnummer")->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('connection_number')->label("Aansluitnummer")->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('user.name')->label("Van wie"),
+                Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op")
+                    ->dateTime()->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')->label("Bijgewerkt Op")
+                    ->dateTime()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+//                Tables\Actions\EditAction::make(),
             ])->headerActions([
                 Tables\Actions\Action::make('claim_device')
-                    ->label('Claim a Device')
+                    ->label('Koppel je apparaat')
                     ->form([
                         PhoneInput::make('phone_number')
-                            ->label('Device Phone Number')
+                            ->label('Telefoonnummer')
                             ->required(),
                     ])
                     ->action(function (array $data) {
@@ -70,9 +77,9 @@ class DeviceResource extends Resource
                             ->whereNull('user_id')
                             ->first();
 
-                        if (! $device) {
+                        if (!$device) {
                             Notification::make()
-                                ->title('Device not found or already claimed')
+                                ->title('Apparaat niet gevonden of al in gebruik')
                                 ->danger()
                                 ->send();
 
@@ -83,7 +90,7 @@ class DeviceResource extends Resource
                         $device->save();
 
                         Notification::make()
-                            ->title('Device successfully claimed')
+                            ->title('Apparaat succesvol gekoppeled')
                             ->success()
                             ->send();
                     }),

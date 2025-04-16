@@ -51,7 +51,7 @@ class DeviceResource extends Resource
                 Tables\Columns\TextColumn::make('imei')->label('IMEI')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('phone_number')->label("Telefoonnummer")->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('connection_number')->label("Aansluitnummer")->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('user.name')->label("Gebruiker"),
+                Tables\Columns\TextColumn::make('user.name')->label("Klantnaam"),
                 Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op")
                 ->dateTime()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')->label("Bijgewerkt Op")
@@ -82,7 +82,7 @@ class DeviceResource extends Resource
             ])->collapsible(),
             Section::make("Apparaatdetails")->schema([
                 TextEntry::make("imei")->label("IMEI"),
-                TextEntry::make("device.phone_number")->label("Telefoonnummer"),
+                TextEntry::make("phone_number")->label("Telefoonnummer"),
                 TextEntry::make("connection_number")->label("Aansluitnummer"),
             ])->collapsible(),
             Section::make("Kaart")->schema([
