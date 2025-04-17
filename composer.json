@@ -19,6 +19,7 @@
         "rinvex/countries": "^9.0",
         "squirephp/countries-en": "^3.6",
         "tomatophp/filament-users": "^2.0",
+        "webbingbrasil/filament-maps": "^3.0",
         "ysfkaya/filament-phone-input": "^3.1",
         "zgldh/crc16-php": "^1.1"
     },

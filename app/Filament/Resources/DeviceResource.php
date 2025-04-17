@@ -143,8 +143,8 @@ class DeviceResource extends Resource
     {
         return [
             'index' => Pages\ListDevices::route('/'),
-            'view' => Pages\ViewDevice::route('/{record}'),
             'create' => Pages\CreateDevice::route('/create'),
+            'view' => Pages\ViewDevice::route('/{record}'),
             'edit' => Pages\EditDevice::route('/{record}/edit'),
         ];
     }
