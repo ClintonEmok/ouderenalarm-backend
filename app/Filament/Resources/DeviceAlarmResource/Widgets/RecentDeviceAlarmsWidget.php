@@ -28,7 +28,7 @@ class RecentDeviceAlarmsWidget extends BaseWidget
                 fn (Model $record): string => DeviceAlarmResource::getUrl('view',['record' => $record]),
             )
             ->columns([
-                TextColumn::make("created_at")->label("Wanneer"),
+                TextColumn::make("created_at")->label("Wanneer")->sortable(),
                 Tables\Columns\ColumnGroup::make('Soort melding',[
                     TextColumn::make('triggered_alerts')->label("Meldingen"),
 //                    Tables\Columns\IconColumn::make('fall_down_alert')->label('Valalarm'),
@@ -39,6 +39,6 @@ class RecentDeviceAlarmsWidget extends BaseWidget
                     ->toggle()->query(fn (Builder $query): Builder => $query->where('fall_down_alert', true)),
                 Tables\Filters\Filter::make('sos_alert')->label("Is noodomroep")
                     ->toggle()->query(fn (Builder $query): Builder => $query->where('sos_alert', true)),
-            ]);
+            ])->defaultSort('created_at', 'desc');
     }
 }
