@@ -29,8 +29,9 @@ class RecentDeviceAlarmsWidget extends BaseWidget
                 TextColumn::make("created_at")->label("Wanneer"),
                 TextColumn::make("device.imei")->label("IMEI")->sortable()->searchable(),
                 Tables\Columns\ColumnGroup::make('Soort melding',[
-                    Tables\Columns\IconColumn::make('fall_down_alert')->label('Valalarm'),
-                    Tables\Columns\IconColumn::make('sos_alert')->label("Noodomroep"),
+                    TextColumn::make('triggered_alerts')->label("Meldingen"),
+//                    Tables\Columns\IconColumn::make('fall_down_alert')->label('Valalarm'),
+//                    Tables\Columns\IconColumn::make('sos_alert')->label("Noodomroep"),
                 ])
             ])->filters([
                 Tables\Filters\Filter::make('fall_down_alert')->label("Is valalarm")
