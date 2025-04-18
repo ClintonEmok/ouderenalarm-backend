@@ -5,6 +5,7 @@ namespace App\Filament\Customer\Widgets;
 use App\Models\Device;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\Widget;
+use Illuminate\Support\Facades\Log;
 use Webbingbrasil\FilamentMaps\Actions\CenterMapAction;
 use Webbingbrasil\FilamentMaps\Actions\ZoomAction;
 use Webbingbrasil\FilamentMaps\Marker;
@@ -40,9 +41,9 @@ class DashboardDeviceMap extends MapWidget
     }
     public function getMarkers(): array
     {
-        $deviceId = $this->filters['device'] ?? null;
-
+        $deviceId = $this->filters['selectedDevice'] ?? null;
         if ($deviceId && $device = Device::find($deviceId)) {
+
             $latestLocation = $device->latestLocation;
 
             if ($latestLocation && $latestLocation->latitude && $latestLocation->longitude) {
@@ -64,7 +65,7 @@ class DashboardDeviceMap extends MapWidget
 
     public function getActions(): array
     {
-        $deviceId = $this->filters['device'] ?? null;
+        $deviceId = $this->filters['selectedDevice'] ?? null;
         [$latitude, $longitude] = $this->getDeviceLocation($deviceId);
 
         return [

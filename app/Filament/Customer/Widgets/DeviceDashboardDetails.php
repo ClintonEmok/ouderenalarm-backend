@@ -17,8 +17,17 @@ class DeviceDashboardDetails extends Widget
 
     protected function getViewData(): array
     {
-        $deviceId = $this->filters['device'] ?? null;
-        Log::info("device id: $deviceId");
+        $deviceId = $this->filters['selectedDevice'] ?? null;
+
+        if (is_array($deviceId)) {
+            Log::info('Device filter is an array', ['deviceId' => $deviceId]);
+        } elseif (is_string($deviceId)) {
+            Log::info('Device filter is a string', ['deviceId' => $deviceId]);
+        } elseif (is_null($deviceId)) {
+            Log::info('Device filter is null');
+        } else {
+            Log::warning('Device filter has unexpected type', ['type' => gettype($deviceId)]);
+        }
 
         $device = $deviceId
             ? Device::with('generalStatuses')->find($deviceId)
@@ -33,7 +42,7 @@ class DeviceDashboardDetails extends Widget
         return [
             'device' => $device,
             'batteryLevel' => $latestStatus?->battery_level,
-            'signalStrength' => $latestStatus?->signal_strength,
+            'signalStrength' => $latestStatus?->cell_signal_strength,
             'lastUpdatedAt' => $latestStatus?->created_at,
         ];
     }

@@ -5,7 +5,6 @@
         </x-slot>
 
         <div class="flex flex-col md:flex-row gap-6">
-            {{-- Left section: Device Info --}}
             <div class="md:w-1/3 w-full">
                 <x-filament::section>
                     <x-slot name="heading">
@@ -26,7 +25,6 @@
                 </x-filament::section>
             </div>
 
-            {{-- Right section: Battery, Signal, Last Update --}}
             <div class="md:w-2/3 w-full flex flex-col space-y-4">
                 <x-filament::section>
                     <x-slot name="heading">
@@ -34,6 +32,14 @@
                     </x-slot>
 
                     <div>
+                        @if ($batteryLevel === null || $batteryLevel <= 20)
+                            <x-heroicon-o-battery-0 class="w-6 h-6 text-red-500" />
+                        @elseif ($batteryLevel > 70)
+                            <x-heroicon-o-battery-100 class="w-6 h-6 text-green-500" />
+                        @else
+                            <x-heroicon-o-battery-50 class="w-6 h-6 text-yellow-500" />
+                        @endif
+
                         <p class="text-gray-800 font-semibold text-lg">
                             {{ $batteryLevel !== null ? $batteryLevel . '%' : 'Onbekend' }}
                         </p>
@@ -48,9 +54,9 @@
 
                     <div>
                         <p class="text-gray-800 font-semibold text-lg">
-                            {{ $signalStrength !== null ? $signalStrength : 'Onbekend' }}
+                            {{ $signalStrength !== null ? $signalStrength ."%" : 'Onbekend' }}
                         </p>
-                        <p class="text-sm text-gray-500">Signal strength & chart</p>
+                        <p class="text-sm text-gray-500">Verbindingssterkte</p>
                     </div>
                 </x-filament::section>
 
@@ -63,7 +69,7 @@
                         <p class="text-gray-800 font-semibold text-lg">
                             {{ $lastUpdatedAt ? $lastUpdatedAt->locale('nl')->diffForHumans() : 'Onbekend' }}
                         </p>
-                        <p class="text-sm text-gray-500">Time since last data point</p>
+{{--                        <p class="text-sm text-gray-500">Time since last data point</p>--}}
                     </div>
                 </x-filament::section>
             </div>
