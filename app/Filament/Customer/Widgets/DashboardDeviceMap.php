@@ -16,7 +16,7 @@ class DashboardDeviceMap extends MapWidget
 
     use InteractsWithPageFilters;
 
-    protected int | string | array $columnSpan = 2;
+    protected int | string | array $columnSpan = 1;
 
     protected bool $hasBorder = false;
 
@@ -59,7 +59,7 @@ class DashboardDeviceMap extends MapWidget
         }
 
         return [];
-    }   
+    }
 
     public function getActions(): array
     {
