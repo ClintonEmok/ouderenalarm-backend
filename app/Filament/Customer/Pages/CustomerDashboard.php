@@ -14,18 +14,25 @@ class CustomerDashboard extends BaseDashboard
 {
     use BaseDashboard\Concerns\HasFiltersForm;
 
+    public function getColumns(): int | string | array
+    {
+        return 2;
+    }
     public function filtersForm(Form $form): Form
     {
 //        TODO: Filter for selecting current device incase of multiple
         $devices = Device::query()
             ->accessibleTo(auth()->user())
             ->pluck('imei', 'id');
+
         return $form
             ->schema([
                 Section::make()
                     ->schema([
                         Select::make('device')
-                            ->options($devices->toArray()),
+                            ->options($devices->toArray())->default(Device::query()
+                                ->accessibleTo(auth()->user())->first()
+                                ->pluck('imei', 'id')),
 //                        DatePicker::make('startDate')
 //                            ->maxDate(fn (Get $get) => $get('endDate') ?: now()),
 //                        DatePicker::make('endDate')

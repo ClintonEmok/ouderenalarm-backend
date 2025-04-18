@@ -17,6 +17,7 @@ class DashboardDeviceMap extends MapWidget
     use InteractsWithPageFilters;
 
     protected int | string | array $columnSpan = 1;
+    protected static ?int $sort = 2;
 
     protected bool $hasBorder = false;
 
