@@ -25,6 +25,9 @@ class DeviceSeeder extends Seeder
                     'password' => bcrypt('password'),
                 ]
             );
+            if (!$user->hasRole('customer')) {
+                $user->assignRole('customer');
+            }
 
             for ($j = 1; $j <= $devicesPerUser; $j++) {
                 $deviceIndex = ($i - 1) * $devicesPerUser + $j;

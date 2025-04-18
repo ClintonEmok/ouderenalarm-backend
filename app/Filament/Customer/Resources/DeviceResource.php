@@ -38,6 +38,7 @@ class DeviceResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\TextInput::make('name')->label("Naam van apparaat"),
                 Forms\Components\TextInput::make('imei')
                     ->label('IMEI')->readOnlyOn(['edit']),
                 PhoneInput::make('phone_number')->label("Telefoonnummer")->disabled(),
@@ -62,8 +63,7 @@ class DeviceResource extends Resource
                 //
             ])
             ->actions([
-//                TODO: Add detach button
-//                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make(),
             ])->headerActions([
                 Tables\Actions\Action::make('claim_device')
                     ->label('Koppel je apparaat')
