@@ -30,10 +30,13 @@ class DashboardDeviceMap extends MapWidget
         $device = $deviceId ? \App\Models\Device::find($deviceId) : null;
 
         if ($device && $location = $device->latestLocation) {
+            $updatedAt = $location->updated_at
+                ? $location->updated_at->locale('nl')->diffForHumans()
+                : 'onbekend';
             $marker = \Webbingbrasil\FilamentMaps\Marker::make("device-{$device->id}")
                 ->lat($location->latitude)
                 ->lng($location->longitude)
-                ->popup("📍 {$device->name}");
+                ->popup("📍 Huidige locatie<br><small>Laatst bijgewerkt: {$updatedAt}</small>");
 
             $this->mapMarkers([$marker]);
             $this->centerTo([$location->latitude, $location->longitude], 13);
