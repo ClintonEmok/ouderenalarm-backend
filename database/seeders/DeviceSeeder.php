@@ -43,8 +43,8 @@ class DeviceSeeder extends Seeder
                 ]);
 
                 $device->gpsLocations()->create([
-                    'latitude' => 52.3676 + mt_rand(-100, 100) / 1000,
-                    'longitude' => 4.9041 + mt_rand(-100, 100) / 1000,
+                    'latitude' => rand(50750, 53550) / 1000,   // 50.750 to 53.550
+                    'longitude' => rand(3350, 7220) / 1000,    // 3.350 to 7.220
                     'speed' => rand(0, 80),
                     'direction' => rand(0, 359),
                     'altitude' => rand(0, 300),
