@@ -33,4 +33,13 @@ class CustomerDashboard extends BaseDashboard
                     ->columns(3),
             ]);
     }
+
+    public function updatedFilters($value, $key): void
+    {
+
+        if ($key === 'selectedDevice') {
+
+            $this->dispatch('deviceSelectedUpdated', deviceId: $value);
+        }
+    }
 }

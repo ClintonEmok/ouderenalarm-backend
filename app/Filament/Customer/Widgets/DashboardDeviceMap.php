@@ -4,8 +4,8 @@ namespace App\Filament\Customer\Widgets;
 
 use App\Models\Device;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
-use Filament\Widgets\Widget;
 use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\On;
 use Webbingbrasil\FilamentMaps\Actions\CenterMapAction;
 use Webbingbrasil\FilamentMaps\Actions\ZoomAction;
 use Webbingbrasil\FilamentMaps\Marker;
@@ -21,6 +21,26 @@ class DashboardDeviceMap extends MapWidget
     protected static ?int $sort = 2;
 
     protected bool $hasBorder = false;
+
+
+
+    #[On('deviceSelectedUpdated')]
+    public function handleDeviceSelection(?string $deviceId): void
+    {
+        $device = $deviceId ? \App\Models\Device::find($deviceId) : null;
+
+        if ($device && $location = $device->latestLocation) {
+            $marker = \Webbingbrasil\FilamentMaps\Marker::make("device-{$device->id}")
+                ->lat($location->latitude)
+                ->lng($location->longitude)
+                ->popup("📍 {$device->name}");
+
+            $this->mapMarkers([$marker]);
+            $this->centerTo([$location->latitude, $location->longitude], 13);
+        } else {
+            $this->mapMarkers([]); // clear markers if no device or no location
+        }
+    }
 
     protected function getDeviceLocation(?string $deviceId): array
     {
@@ -75,5 +95,7 @@ class DashboardDeviceMap extends MapWidget
                 ->zoom(14), // adjust zoom if needed
         ];
     }
+
+
 }
 
