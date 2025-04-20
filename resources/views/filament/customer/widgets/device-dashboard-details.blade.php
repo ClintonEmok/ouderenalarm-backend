@@ -3,7 +3,7 @@
         <x-slot name="heading">
             📊 Apparaatstatus Overzicht
         </x-slot>
-
+{{--TODO replace with individual widgets stats--}}
         <div class="flex flex-col md:flex-row gap-6">
             <div class="md:w-1/3 w-full">
                 <x-filament::section>
