@@ -159,6 +159,10 @@ class DeviceAlarm extends Model
             $alerts[] = 'Noodomroep';
         }
 
+        if($this->sos_ending){
+            $alerts[] = 'Einde noodomroep';
+        }
+
         return implode(', ', $alerts);
     }
 }
