@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Invite;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -16,7 +17,7 @@ class InviteCaregiverMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(public Invite $invite, public bool $isNewUser = false,)
     {
         //
     }
@@ -27,7 +28,9 @@ class InviteCaregiverMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Invite Caregiver Mail',
+            subject: $this->isNewUser
+                ? 'Complete your caregiver registration'
+                : 'You’ve been invited as a caregiver',
         );
     }
 
@@ -36,8 +39,18 @@ class InviteCaregiverMail extends Mailable
      */
     public function content(): Content
     {
+//        TODO: Fix url
+//        TODO: Fix email
         return new Content(
-            view: 'view.name',
+            markdown: $this->isNewUser
+                ? 'emails.caregivers.invite-new-user'
+                : 'emails.caregivers.invite-existing-user',
+            with: [
+                'inviter' => $this->invite->inviter,
+                'url' => $this->isNewUser
+                    ? url('/complete-registration/' . $this->invite->token)
+                    : "test",
+            ],
         );
     }
 

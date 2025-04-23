@@ -31,6 +31,7 @@ class CustomerPanelProvider extends PanelProvider
             ->login()
             ->registration()
             ->passwordReset()
+            ->databaseNotifications()
             ->sidebarFullyCollapsibleOnDesktop()
             ->colors([
                 'primary' => Color::Amber,
