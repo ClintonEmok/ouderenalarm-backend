@@ -58,7 +58,6 @@ class CreateInvite extends CreateRecord
             $this->halt();
         }
 
-        $inviter->caregivers()->syncWithoutDetaching([$user->id]);
 
         $data['inviter_id'] = $inviter->id;
         $data['invited_user_id'] = $user->id;
