@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Pages;
+namespace App\Filament\Customer\Pages;
 
 use App\Models\Device;
 use Filament\Forms\Components\Section;

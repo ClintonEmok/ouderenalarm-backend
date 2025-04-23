@@ -2,12 +2,13 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\CustomerDashboard;
+use App\Filament\Customer\Pages\CustomerDashboard;
+use App\Livewire\AddressesProfileComponent;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -19,7 +20,6 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
-use App\Livewire\AddressesProfileComponent;
 
 class CustomerPanelProvider extends PanelProvider
 {
@@ -59,6 +59,7 @@ class CustomerPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])->plugins([
+                FilamentShieldPlugin::make(),
                 BreezyCore::make()->myProfile(
                     userMenuLabel: 'Mijn Profiel', // Customizes the 'account' link label in the panel User Menu (default = null)
                     navigationGroup: 'Instellingen', // Sets the navigation group for the My Profile page (default = null)
