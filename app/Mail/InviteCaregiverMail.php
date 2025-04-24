@@ -9,6 +9,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\URL;
 
 class InviteCaregiverMail extends Mailable
 {
@@ -48,7 +49,10 @@ class InviteCaregiverMail extends Mailable
             with: [
                 'inviter' => $this->invite->inviter,
                 'url' => $this->isNewUser
-                    ? url('/complete-registration/' . $this->invite->token)
+                    ? URL::signedRoute(
+                        "invitation.accept",
+                        ['invitation' => $this->invite]
+                    )
                     : "test",
             ],
         );

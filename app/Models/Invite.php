@@ -54,6 +54,25 @@ class Invite extends Model
             ->sendToDatabase($this->invitedUser);
     }
 
+    public function acceptNew(User $user): void
+    {
+        if ($this->status !== InviteStatus::Pending || $this->invited_user_id) {
+            return;
+        }
+
+        $this->update([
+            'invited_user_id' => $user->id,
+            'status' => InviteStatus::Accepted,
+        ]);
+
+        $this->inviter->caregivers()->syncWithoutDetaching([$user->id]);
+
+        Notification::make()
+            ->title('Invitation accepted')
+            ->body("You are now a caregiver for {$this->inviter->name}.")
+            ->success()
+            ->sendToDatabase($user);
+    }
     public function decline(): void
     {
         Log::info("declined");
@@ -68,5 +87,22 @@ class Invite extends Model
             ->body("You declined the invitation from {$this->inviter->name}.")
             ->warning()
             ->sendToDatabase($this->invitedUser);
+    }
+    public function declineNew(User $user): void
+    {
+        if ($this->status !== InviteStatus::Pending || $this->invited_user_id) {
+            return;
+        }
+
+        $this->update([
+            'invited_user_id' => $user->id,
+            'status' => InviteStatus::Declined,
+        ]);
+
+        Notification::make()
+            ->title('Invitation declined')
+            ->body("You declined the invitation from {$this->inviter->name}.")
+            ->warning()
+            ->sendToDatabase($user);
     }
 }

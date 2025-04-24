@@ -37,6 +37,7 @@ class InviteResource extends Resource
 
     public static function table(Table $table): Table
     {
+//        TODO: Add name
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('email')->label('Email'),
