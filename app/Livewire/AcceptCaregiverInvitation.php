@@ -66,6 +66,7 @@ class AcceptCaregiverInvitation extends SimplePage
         ]);
 
 // TODO: Add a role of customer
+        $user->assignRole('customer');
         auth()->login($user);
         $this->invitationModel->acceptNew($user);
 //        $this->invitationModel->delete();
@@ -89,7 +90,7 @@ class AcceptCaregiverInvitation extends SimplePage
             ->label(__('filament-panels::pages/auth/register.form.actions.register.label'))
             ->submit('register');
     }
-
+//TODO: Change heading, subheading
     public function getHeading(): string
     {
         return 'Accept Invitation';
