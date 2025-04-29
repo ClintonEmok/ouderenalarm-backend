@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Jobs\ProcessEmergencyAlarm;
+use App\Models\Scopes\OnlyCriticalAlarms;
 use App\Services\SiaEncoderService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
@@ -69,6 +70,10 @@ class DeviceAlarm extends Model
     /**
      * Boot the model to handle events.
      */
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new OnlyCriticalAlarms());
+    }
     protected static function boot()
     {
         parent::boot();
@@ -111,6 +116,7 @@ class DeviceAlarm extends Model
     /**
      * Create an EmergencyLink for this alarm.
      */
+
     public function createEmergencyLink()
     {
         $nextJsUrl = config('app.frontend_url', 'https://default-nextjs-url.com');

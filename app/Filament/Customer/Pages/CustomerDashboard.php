@@ -16,6 +16,7 @@ class CustomerDashboard extends BaseDashboard
     {
         return 2;
     }
+
     public function filtersForm(Form $form): Form
     {
 
@@ -28,7 +29,7 @@ class CustomerDashboard extends BaseDashboard
                 Section::make()
                     ->schema([
                         Select::make('selectedDevice')->label('Huidige apparaat')
-                            ->options($devices->toArray()),
+                            ->options($devices->toArray())->default($devices->first()),
                     ])
                     ->columns(3),
             ]);
