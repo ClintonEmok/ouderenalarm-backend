@@ -27,7 +27,7 @@ class CustomerDashboard extends BaseDashboard
             ->schema([
                 Section::make()
                     ->schema([
-                        Select::make('selectedDevice')
+                        Select::make('selectedDevice')->label('Huidige apparaat')
                             ->options($devices->toArray()),
                     ])
                     ->columns(3),

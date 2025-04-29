@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Filament\Notifications\Notification;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\InviteStatus;
 use Illuminate\Support\Facades\Log;
@@ -104,5 +105,10 @@ class Invite extends Model
             ->body("You declined the invitation from {$this->inviter->name}.")
             ->warning()
             ->sendToDatabase($user);
+    }
+
+    public function scopePending(Builder $query): Builder
+    {
+        return $query->where('status', InviteStatus::Pending);
     }
 }

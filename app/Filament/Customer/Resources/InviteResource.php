@@ -20,11 +20,21 @@ class InviteResource extends Resource
     protected static ?string $model = Invite::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
             ->where('inviter_id', auth()->id());
+    }
+
+    public static function getPluralModelLabel(): string
+{
+    return "Uitnodigingen";
+}
+    public static function getModelLabel(): string
+    {
+        return "Uitnodiging";
     }
     public static function form(Form $form): Form
     {
@@ -37,7 +47,6 @@ class InviteResource extends Resource
 
     public static function table(Table $table): Table
     {
-//        TODO: Add name
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('email')->label('Email'),
