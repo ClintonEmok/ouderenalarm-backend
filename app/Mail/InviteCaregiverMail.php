@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Invite;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -28,10 +29,12 @@ class InviteCaregiverMail extends Mailable
      */
     public function envelope(): Envelope
     {
+        $inviterName = User::find($this->invite->inviter_user_id)?->name ?? 'iemand';
+
         return new Envelope(
             subject: $this->isNewUser
-                ? 'Complete your caregiver registration'
-                : 'You’ve been invited as a caregiver',
+                ? "Wil je bevestigen dat je mantelzorger wordt voor {$inviterName}?"
+                : "{$inviterName} heeft je uitgenodigd als mantelzorger.",
         );
     }
 
@@ -40,8 +43,6 @@ class InviteCaregiverMail extends Mailable
      */
     public function content(): Content
     {
-//        TODO: Fix url
-//        TODO: Fix email
         return new Content(
             markdown: $this->isNewUser
                 ? 'emails.caregivers.invite-new-user'

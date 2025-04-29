@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Enums\InviteStatus;
 use Livewire\Component;
 use App\Models\Invite;
 use App\Models\User;use Filament\Actions\Action;use Filament\Actions\ActionGroup;use Filament\Forms\Components\TextInput;use Filament\Forms\Concerns\InteractsWithForms;use Filament\Forms\Form;use Filament\Pages\Concerns\InteractsWithFormActions;use Filament\Pages\Dashboard;use Filament\Pages\SimplePage;use Illuminate\Validation\Rules\Password;
@@ -12,21 +13,39 @@ class AcceptCaregiverInvitation extends SimplePage
     use InteractsWithFormActions;
 
     protected static string $view = 'livewire.accept-caregiver-invitation';
+    protected static ?string $title = "Accepteer Mantelzorg uitnodiging";
 
     public int $invitation;
     private Invite $invitationModel;
 
     public ?array $data = [];
 
+
+//    TODO: Add custom error page
     public function mount(): void
     {
-        $this->invitationModel = Invite::findOrFail($this->invitation);
+        $this->invitationModel = Invite::query()
+            ->where('id', $this->invitation)
+            ->where('status', InviteStatus::Pending)
+            ->where(function ($query) {
+                $query->whereNull('expires_at')->orWhere('expires_at', '>', now());
+            })
+            ->whereNull('invited_user_id')
+            ->firstOrFail();
 
         $this->form->fill([
-            'email' => $this->invitationModel->email
+            'email' => $this->invitationModel->email,
         ]);
     }
 
+    public function getTitle(): string
+    {
+        if (! isset($this->invitationModel)) {
+            return 'Accepteer Mantelzorg uitnodiging';
+        }
+
+        return 'Accepteer Mantelzorg uitnodiging van ' . ($this->invitationModel->inviter->name ?? '');
+    }
     public function form(Form $form): Form
     {
         return $form
@@ -90,10 +109,13 @@ class AcceptCaregiverInvitation extends SimplePage
             ->label(__('filament-panels::pages/auth/register.form.actions.register.label'))
             ->submit('register');
     }
-//TODO: Change heading, subheading
     public function getHeading(): string
     {
-        return 'Accept Invitation';
+        if (! isset($this->invitationModel)) {
+            return 'Accepteer uitnodiging';
+        }
+
+        return 'Accepteer uitnodiging van ' . ($this->invitationModel->inviter->name ?? '');
     }
 
     public function hasLogo(): bool
@@ -103,6 +125,6 @@ class AcceptCaregiverInvitation extends SimplePage
 
     public function getSubHeading(): string
     {
-        return 'Create your user to accept an invitation';
+        return 'Maak een account aan om de uitnodiging te accepteren.';
     }
 }

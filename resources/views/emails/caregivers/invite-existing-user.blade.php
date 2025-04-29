@@ -1,14 +1,16 @@
-@component('mail::message')
-    # Caregiver Invitation
+<x-mail::message>
+    # Uitnodiging als Mantelzorger
 
-    {{ $inviter->name }} has invited you to become their caregiver.
+    {{ $inviter->name }} heeft je uitgenodigd om hun mantelzorger te worden.
 
-    You can respond to this invitation from your dashboard:
+    Je kunt op deze uitnodiging reageren via je dashboard:
 
-    @component('mail::button', ['url' => $url])
+    <x-mail::button :url="$url">
         Open Dashboard
-    @endcomponent
+    </x-mail::button>
 
-    Thanks,<br>
+    Met vriendelijke groet,<br>
     {{ config('app.name') }}
-@endcomponent
+</x-mail::message>
+
+

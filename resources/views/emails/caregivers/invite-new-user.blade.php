@@ -1,14 +1,14 @@
-@component('mail::message')
-# You've been invited!
+<x-mail::message>
+    # Je bent uitgenodigd!
 
-{{ $inviter->name }} has invited you to become their caregiver.
+    {{ $inviter->name }} heeft je uitgenodigd om hun mantelzorger te worden.
 
-Click below to complete your registration:
+    Klik op de knop hieronder om je registratie te voltooien:
 
-@component('mail::button', ['url' => $url])
-Complete Registration
-@endcomponent
+    @component('mail::button', ['url' => $url])
+        Registratie voltooien
+    @endcomponent
 
-Thanks,<br>
-{{ config('app.name') }}
-@endcomponent
+    Bedankt,<br>
+    {{ config('app.name') }}
+</x-mail::message>
