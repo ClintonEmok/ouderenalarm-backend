@@ -86,15 +86,13 @@ class DeviceAlarmResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make("device.imei")->label("IMEI")->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make("device.user.name")->label("Klantnaam"),
                 TextColumn::make("device.connection_number")->label("Aansluitnumer"),
                 TextColumn::make("device.phone_number")->label("Telefoonnummer"),
+                TextColumn::make("device.imei")->label("IMEI")->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op"),
                 Tables\Columns\ColumnGroup::make('Soort melding',[
                     TextColumn::make('triggered_alerts')->label("Meldingen"),
-//                    Tables\Columns\IconColumn::make('fall_down_alert')->label('Valalarm'),
-//                    Tables\Columns\IconColumn::make('sos_alert')->label("Noodomroep"),
                 ])
                 //
             ])

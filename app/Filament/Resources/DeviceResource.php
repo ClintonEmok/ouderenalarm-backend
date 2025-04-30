@@ -48,11 +48,10 @@ class DeviceResource extends Resource
         return $table
             ->columns([
                 //
-
-                Tables\Columns\TextColumn::make('imei')->label('IMEI')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('phone_number')->label("Telefoonnummer")->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('connection_number')->label("Aansluitnummer")->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('user.name')->label("Klantnaam"),
+                Tables\Columns\TextColumn::make('connection_number')->label("Aansluitnummer")->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('phone_number')->label("Telefoonnummer")->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('imei')->label('IMEI')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op")
                 ->dateTime()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')->label("Bijgewerkt Op")

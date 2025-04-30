@@ -16,6 +16,7 @@ class ViewDeviceAlarm extends ViewRecord
     {
         parent::mount($record);
 
+//        TODO: remove
         // Safely call the refresh method
         if (method_exists($this->record, 'refreshCaregiverStatuses')) {
             $this->record->refreshCaregiverStatuses();
