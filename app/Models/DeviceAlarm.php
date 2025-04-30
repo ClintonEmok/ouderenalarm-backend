@@ -158,16 +158,13 @@ class DeviceAlarm extends Model
         $alerts = [];
 
         if ($this->fall_down_alert) {
-            $alerts[] = 'Medisch Alarm';
+            $alerts[] = 'Val Alarm';
         }
 
         if ($this->sos_alert) {
-            $alerts[] = 'Noodomroep';
+            $alerts[] = 'SOS oproep';
         }
 
-        if($this->sos_ending){
-            $alerts[] = 'Einde noodomroep';
-        }
 
         return implode(', ', $alerts);
     }
