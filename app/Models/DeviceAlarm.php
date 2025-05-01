@@ -63,7 +63,7 @@ class DeviceAlarm extends Model
 
     public function caregiverStatuses()
     {
-        return $this->belongsToMany(Caregiver::class, 'caregiver_device_alarm')
+        return $this->belongsToMany(User::class, 'caregiver_device_alarm', 'device_alarm_id', 'user_id')
             ->withPivot('status')
             ->withTimestamps();
     }
