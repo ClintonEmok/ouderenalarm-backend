@@ -32,26 +32,48 @@ class ProcessEmergencyAlarm implements ShouldQueue
      */
     public function handle()
     {
-        // Determine event code based on alarm flags
-        if ($this->alarm->fall_down_alert) {
-            $eventCode = 'NMA';
-        } elseif ($this->alarm->sos_alert) {
-            $eventCode = 'NQA';
-        } else {
-            // Optional: Set a default or log unexpected case
+        // 1. Determine event code based on alarm flags
+        $eventCode = match (true) {
+            $this->alarm->fall_down_alert => 'NMA',
+            $this->alarm->sos_alert => 'NQA',
+            default => null,
+        };
+
+        if (!$eventCode) {
             Log::warning("Unknown alarm type for Alarm {$this->alarm->id}");
             return;
         }
 
-        // Send SIA message
-        $server = config('app.meldkamer_server');
-        $port = config('app.meldkamer_port');
-        $account = "3203";
-        $extraInfo = DeviceAlarmResource::getUrl('view', ['record' => $this->alarm]);
-        Log::info($extraInfo);
+        // 2. Get connection number safely
+        $connectionNumber = $this->alarm->device?->connection_number;
+        $account = $this->extractNumbers($connectionNumber);
 
-        SendSiaMessageJob::dispatch($server, $port, $account, $eventCode, $extraInfo);
+        if (!$connectionNumber) {
+            Log::warning("Missing device or connection number for Alarm {$this->alarm->id}");
+            return;
+        }
+
+        // 3. Generate extra info URL
+        $extraInfo = DeviceAlarmResource::getUrl('view-latest', ['record' => $connectionNumber]);
+        Log::info("Generated URL: {$extraInfo}");
+
+        // 5. Dispatch SIA message
+        SendSiaMessageJob::dispatch(
+            config('app.meldkamer_server'),
+            config('app.meldkamer_port'),
+            $account,
+            $eventCode,
+            $extraInfo
+        );
 
         Log::info("Queued SIA {$eventCode} alarm for Alarm {$this->alarm->id} with URL: {$extraInfo}");
+    }
+
+    /**
+     * Extract only digits from a string
+     */
+    protected function extractNumbers(string $input): string
+    {
+        return preg_replace('/\D+/', '', $input);
     }
 }

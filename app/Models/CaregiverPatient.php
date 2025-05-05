@@ -12,6 +12,7 @@ class CaregiverPatient extends Model
     protected $fillable = [
         'caregiver_id',
         'patient_id',
+        'priority'
     ];
 
     // Define relationships

@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Device extends Model
 {
-    protected $fillable = ['user_id', 'imei', 'nickname', 'ip_address', 'port', 'phone_number', 'status'];
+    protected $guarded = [];
 
     public function user(): BelongsTo
     {
@@ -51,5 +52,19 @@ class Device extends Model
     public function latestStatus()
     {
         return $this->hasOne(GeneralStatus::class)->latestOfMany();
+    }
+
+    public function latestAlarm()
+    {
+        return $this->hasOne(DeviceAlarm::class)->latestOfMany();
+    }
+
+    public function scopeAccessibleTo(Builder $query, User $user): Builder
+    {
+        if ($user->patients()->exists()) {
+            return $query->whereIn('user_id', $user->patients->pluck('id'));
+        }
+
+        return $query->where('user_id', $user->id);
     }
 }

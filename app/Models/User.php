@@ -5,16 +5,18 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -59,6 +61,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Address::class, 'user_address')->withTimestamps();
     }
 
+    public function userAddresses()
+    {
+        return $this->hasMany(UserAddress::class);
+    }
+
     public function devices(): HasMany
     {
         return $this->hasMany(Device::class);
@@ -76,6 +83,19 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Address::class, 'user_address')
             ->wherePivot('type','=', 'billing')
             ->withTimestamps();
+    }
+
+    public function homeAddress()
+    {
+        return $this->hasOneThrough(
+            Address::class,
+            UserAddress::class,
+            'user_id',
+            'id',
+            'id',
+            'address_id'
+        )->where('user_address.type', '=', 'shipping')
+            ->orderBy('user_address.created_at');
     }
 
     /**
@@ -123,4 +143,7 @@ class User extends Authenticatable implements MustVerifyEmail
             ->withPivot('status')
             ->withTimestamps();
     }
+
+
+
 }

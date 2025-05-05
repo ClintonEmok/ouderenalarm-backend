@@ -6,6 +6,7 @@ use App\Filament\Resources\UserResource\RelationManagers\CaregiversRelationManag
 use App\Filament\Resources\UserResource\RelationManagers\DevicesRelationManager;
 use Filament\Forms;
 use App\Models\User;
+use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
@@ -125,12 +126,12 @@ class UserResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                Tables\Filters\Filter::make('verified')
-                    ->label(trans('filament-users::user.resource.verified'))
-                    ->query(fn(Builder $query): Builder => $query->whereNotNull('email_verified_at')),
-                Tables\Filters\Filter::make('unverified')
-                    ->label(trans('filament-users::user.resource.unverified'))
-                    ->query(fn(Builder $query): Builder => $query->whereNull('email_verified_at')),
+//                Tables\Filters\Filter::make('verified')
+//                    ->label(trans('filament-users::user.resource.verified'))
+//                    ->query(fn(Builder $query): Builder => $query->whereNotNull('email_verified_at')),
+//                Tables\Filters\Filter::make('unverified')
+//                    ->label(trans('filament-users::user.resource.unverified'))
+//                    ->query(fn(Builder $query): Builder => $query->whereNull('email_verified_at')),
             ])
             ->actions([
                 ActionGroup::make([
@@ -140,7 +141,12 @@ class UserResource extends Resource
                 ]),
             ]);
         return $table;
-    }
+    }public static function getWidgets(): array
+{
+    return [
+        UserResource\Widgets\RecentDeviceAlarmsWidget::class
+    ];
+}
 
     public static function getPages(): array
     {
@@ -148,13 +154,19 @@ class UserResource extends Resource
             'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
+            'view'=> Pages\ViewUser::route('/{record}'),
+
         ];
     }
 
     public static function getRelations(): array
     {
-        return [DevicesRelationManager::class,
-            CaregiversRelationManager::class
+        return [
+            RelationGroup::make('Extra Info', [
+                CaregiversRelationManager::class,
+                DevicesRelationManager::class,
+
+            ])
         ];
     }
 }

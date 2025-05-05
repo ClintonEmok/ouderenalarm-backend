@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\DeviceAlarmResource\Widgets\RecentDeviceAlarmsWidget;
 use App\Filament\Resources\DeviceResource\Pages;
 use App\Filament\Resources\DeviceResource\RelationManagers;
 use App\Models\Device;
@@ -18,6 +19,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Squire\Models\Country;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 use Ysfkaya\FilamentPhoneInput\Infolists\PhoneEntry;
 use Ysfkaya\FilamentPhoneInput\PhoneInputNumberType;
@@ -28,33 +30,16 @@ class DeviceResource extends Resource
     protected static ?string $modelLabel = 'Apparaat';
     protected static ?string $pluralLabel = 'Apparaten';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-device-phone-mobile';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('imei')
-                ->label('imei')->readOnlyOn(['edit']),
+                    ->label('IMEI')->readOnlyOn(['edit']),
                 PhoneInput::make('phone_number')->label("Telefoonnummer"),
-                Map::make("location")
-                    ->afterStateHydrated(function ($state, $record, Forms\Set $set): void {
-                        if ($record->latestLocation) {
-                            $set('location', [
-                                'lat' => $record->latestLocation->latitude,
-                                'lng' => $record->latestLocation->longitude,
-                            ]);
-                        }
-                    })
-                    ->visible(fn ($record) => $record->latestLocation !== null)
-                    ->draggable(false)
-                    ->showMyLocationButton(false)
-                    ->clickable(false)
-                    ->label('Locatie')
-                    ->columnSpanFull(),
-                TextInput::make('longitude')->label('Longitude')->afterStateHydrated(function ($state, $record, Forms\Set $set): void { if($record->latestLocation){$set('longitude', $record->latestLocation->longitude);}}),
-                TextInput::make('latitiude')->label('Latitude')->afterStateHydrated(function ($state, $record, Forms\Set $set): void {if($record->latestLocation){$set('latitude', $record->latestLocation->latitude);}}),
-
+                TextInput::make('connection_number')->label('Aansluitnummer'),
             ]);
     }
 
@@ -63,19 +48,18 @@ class DeviceResource extends Resource
         return $table
             ->columns([
                 //
-
-                Tables\Columns\TextColumn::make('imei'),
-                Tables\Columns\TextColumn::make('phone_number')->label("Telefoonnummer"),
-                Tables\Columns\TextColumn::make('user.name')->label("Gebruiker"),
+                Tables\Columns\TextColumn::make('user.name')->label("Klantnaam"),
+                Tables\Columns\TextColumn::make('connection_number')->label("Aansluitnummer")->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('phone_number')->label("Telefoonnummer")->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('imei')->label('IMEI')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op")
-
-                ->dateTime(),
+                ->dateTime()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')->label("Bijgewerkt Op")
-                ->dateTime(),
+                ->dateTime()->toggleable(isToggledHiddenByDefault: true),
 
             ])
             ->filters([
-                //
+
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -91,12 +75,25 @@ class DeviceResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
+//            TODO: Decide on whether to include or exclude house number
             Section::make("Klantendetails")->schema([
                 TextEntry::make("user.name")->label("Naam"),
+                TextEntry::make("user.phone_number")->label("Telefoonnummer"),
+                TextEntry::make("user.email")->label("E-mail"),
+                Section::make("Adres")->schema([
+//                    TextEntry::make("user.homeAddress.full_name")->label("Naam op adres"),
+                    TextEntry::make("user.homeAddress.street")->label("Straat"),
+                    TextEntry::make("user.homeAddress.house_number")->label("Huisnummer"),
+                    TextEntry::make("user.homeAddress.postal_code")->label("Postcode"),
+                    TextEntry::make("user.homeAddress.city")->label("Stad"),
+                    TextEntry::make('user.homeAddress.country')->label('Land')
+                        ->formatStateUsing(fn ($state): ?string => Country::find($state)?->name ?? null),
+                ])
             ])->collapsible(),
             Section::make("Apparaatdetails")->schema([
                 TextEntry::make("imei")->label("IMEI"),
-                TextEntry::make("device.phone_number")->label("Telefoonnummer")
+                TextEntry::make("phone_number")->label("Telefoonnummer"),
+                TextEntry::make("connection_number")->label("Aansluitnummer"),
             ])->collapsible(),
             Section::make("Kaart")->schema([
                 MapEntry::make("location")
@@ -134,13 +131,19 @@ class DeviceResource extends Resource
             RelationManagers\UserRelationManager::class
         ];
     }
+    public static function getWidgets(): array
+    {
+        return [
+            DeviceResource\Widgets\RecentDeviceAlarmsWidget::class
+        ];
+    }
 
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListDevices::route('/'),
-            'view' => Pages\ViewDevice::route('/{record}'),
             'create' => Pages\CreateDevice::route('/create'),
+            'view' => Pages\ViewDevice::route('/{record}'),
             'edit' => Pages\EditDevice::route('/{record}/edit'),
         ];
     }

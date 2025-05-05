@@ -13,12 +13,14 @@ use Filament\Forms\Form;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
+use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Squire\Models\Country;
 
 class DeviceAlarmResource extends Resource
 {
@@ -26,7 +28,7 @@ class DeviceAlarmResource extends Resource
     protected static ?string $modelLabel = 'Melding';
     protected static ?string $pluralLabel = 'Noodmelding';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-exclamation-triangle';
 
     public static function form(Form $form): Form
     {
@@ -41,7 +43,17 @@ class DeviceAlarmResource extends Resource
         return $infolist->schema([
             Section::make("Klantendetails")->schema([
                 TextEntry::make("device.user.name")->label("Naam"),
-                TextEntry::make("device.phone_number")->label("Telefoonnummer")
+                TextEntry::make("device.phone_number")->label("Telefoonnummer"),
+                TextEntry::make("device.user.email")->label("E-mail"),
+                 Section::make("Adres")->schema([
+//                     TextEntry::make("device.user.homeAddress.full_name")->label("Naam op adres"),
+                     TextEntry::make("device.user.homeAddress.street")->label("Straat"),
+                     TextEntry::make("device.user.homeAddress.house_number")->label("Huisnummer"),
+                     TextEntry::make("device.user.homeAddress.postal_code")->label("Postcode"),
+                     TextEntry::make("device.user.homeAddress.city")->label("Stad"),
+                     TextEntry::make('device.user.homeAddress.country')->label('Land')
+                         ->formatStateUsing(fn ($state): ?string => Country::find($state)?->name ?? null),
+                 ])
             ])->collapsible(),
             Section::make("Kaart")->schema([
                 MapEntry::make("location")
@@ -74,17 +86,25 @@ class DeviceAlarmResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make("device.imei")->label("IMEI"),
+                TextColumn::make("device.user.name")->label("Klantnaam"),
+                TextColumn::make("device.connection_number")->label("Aansluitnumer"),
                 TextColumn::make("device.phone_number")->label("Telefoonnummer"),
-                Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op")
+                TextColumn::make("device.imei")->label("IMEI")->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op"),
+                Tables\Columns\ColumnGroup::make('Soort melding',[
+                    TextColumn::make('triggered_alerts')->label("Meldingen"),
+                ])
                 //
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('fall_down_alert')->label("Is valalarm")
+                    ->toggle()->query(fn (Builder $query): Builder => $query->where('fall_down_alert', true)),
+                Tables\Filters\Filter::make('sos_alert')->label("Is noodomroep")
+                    ->toggle()->query(fn (Builder $query): Builder => $query->where('sos_alert', true)),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+//                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -96,8 +116,10 @@ class DeviceAlarmResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\NotesRelationManager::class,
-            RelationManagers\CaregiverStatusesRelationManager::class
+            RelationGroup::make('Extra info', [
+                RelationManagers\CaregiverStatusesRelationManager::class,
+                RelationManagers\NotesRelationManager::class,
+            ])
         ];
     }
 
@@ -107,6 +129,7 @@ class DeviceAlarmResource extends Resource
             'index' => Pages\ListDeviceAlarms::route('/'),
             'create' => Pages\CreateDeviceAlarm::route('/create'),
             'view' => Pages\ViewDeviceAlarm::route('/{record}'),
+            'view-latest'=> Pages\ViewLatestAlarm::route('/customer/{record}')
 //            'edit' => Pages\EditDeviceAlarm::route('/{record}/edit'),
         ];
     }

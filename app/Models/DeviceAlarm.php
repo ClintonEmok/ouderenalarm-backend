@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Jobs\ProcessEmergencyAlarm;
+use App\Models\Scopes\OnlyCriticalAlarms;
 use App\Services\SiaEncoderService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
@@ -62,13 +63,17 @@ class DeviceAlarm extends Model
 
     public function caregiverStatuses()
     {
-        return $this->belongsToMany(User::class, 'caregiver_device_alarm')
+        return $this->belongsToMany(Customer::class, 'caregiver_device_alarm', 'device_alarm_id', 'user_id')
             ->withPivot('status')
             ->withTimestamps();
     }
     /**
      * Boot the model to handle events.
      */
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new OnlyCriticalAlarms());
+    }
     protected static function boot()
     {
         parent::boot();
@@ -111,6 +116,7 @@ class DeviceAlarm extends Model
     /**
      * Create an EmergencyLink for this alarm.
      */
+
     public function createEmergencyLink()
     {
         $nextJsUrl = config('app.frontend_url', 'https://default-nextjs-url.com');
@@ -126,5 +132,40 @@ class DeviceAlarm extends Model
         Log::info("Emergency link generated for alarm {$this->id}: {$link}");
 
         return $emergencyLink; // Return the created emergency link
+    }
+
+    public function refreshCaregiverStatuses(): void
+    {
+        if (!$this->device || !$this->device->user) {
+            return;
+        }
+        $patient = $this->device->user;
+        $currentCaregiverIds = $patient->caregivers->pluck('id')->toArray();
+
+        // Attach any new caregivers
+        $this->caregiverStatuses()->syncWithoutDetaching(
+            collect($currentCaregiverIds)->mapWithKeys(fn ($id) => [$id => []])->toArray()
+        );
+
+        // Remove any caregivers who no longer apply
+        $this->caregiverStatuses()->detach(
+            $this->caregiverStatuses->pluck('id')->diff($currentCaregiverIds)
+        );
+    }
+
+    public function getTriggeredAlertsAttribute(): string
+    {
+        $alerts = [];
+
+        if ($this->fall_down_alert) {
+            $alerts[] = 'Val Alarm';
+        }
+
+        if ($this->sos_alert) {
+            $alerts[] = 'SOS oproep';
+        }
+
+
+        return implode(', ', $alerts);
     }
 }

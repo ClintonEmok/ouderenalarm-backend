@@ -15,6 +15,7 @@ class DeviceImporter extends Importer
     {
         return [
             ImportColumn::make('imei')
+                ->label('IMEI')
                 ->requiredMapping()
                 ->rules(['required', 'max:255']),
 

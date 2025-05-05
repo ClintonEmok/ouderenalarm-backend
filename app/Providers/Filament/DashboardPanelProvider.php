@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use Filament\Http\Middleware\Authenticate;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -54,10 +55,16 @@ class DashboardPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            ->plugins([
+                FilamentShieldPlugin::make(),
+            ])
             ->authMiddleware([
                 Authenticate::class,
             ])->plugins([\TomatoPHP\FilamentUsers\FilamentUsersPlugin::make(),
-                BreezyCore::make()])
+                BreezyCore::make()->myProfile(
+                    userMenuLabel: 'Mijn Profiel', // Customizes the 'account' link label in the panel User Menu (default = null)
+                    navigationGroup: 'Instellingen', // Sets the navigation group for the My Profile page (default = null)
+                )])
             ;
     }
 }

@@ -11,6 +11,17 @@ class ViewDeviceAlarm extends ViewRecord
     protected static string $resource = DeviceAlarmResource::class;
     public $location;
 
+
+    public function mount($record): void
+    {
+        parent::mount($record);
+
+//        TODO: remove
+        // Safely call the refresh method
+        if (method_exists($this->record, 'refreshCaregiverStatuses')) {
+            $this->record->refreshCaregiverStatuses();
+        }
+    }
     protected function getHeaderActions(): array
     {
         return [

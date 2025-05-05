@@ -3,14 +3,13 @@
 namespace App\Filament\Resources\UserResource\RelationManagers;
 
 use App\Filament\Resources\DeviceResource;
-use App\Models\Device;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Database\Eloquent\Model;
+
 
 class DevicesRelationManager extends RelationManager
 {
@@ -25,7 +24,7 @@ class DevicesRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('imei')
+                Forms\Components\TextInput::make('imei')->label('IMEI')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -36,8 +35,11 @@ class DevicesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('imei')
             ->columns([
-                Tables\Columns\TextColumn::make('imei'),
+                Tables\Columns\TextColumn::make('imei')->label('IMEI'),
             ])
+            ->recordUrl(
+                fn (Model $record): string => DeviceResource::getUrl('view',['record' => $record]),
+            )
             ->filters([
                 //
             ])
