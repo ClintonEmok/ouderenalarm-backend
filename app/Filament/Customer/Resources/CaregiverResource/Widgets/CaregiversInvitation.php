@@ -23,7 +23,7 @@ class CaregiversInvitation extends BaseWidget
         return $table
             ->query(
                 Invite::query()->pending()
-            )
+            )->heading('Uitnodigingen')
             ->columns([
                 Tables\Columns\Layout\Split::make([
                     Tables\Columns\Layout\Stack::make([
