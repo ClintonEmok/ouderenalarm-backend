@@ -32,13 +32,13 @@
                     </x-slot>
 
                     <div>
-                        @if ($batteryLevel === null || $batteryLevel <= 20)
-                            <x-heroicon-o-battery-0 class="w-6 h-6 text-red-500" />
-                        @elseif ($batteryLevel > 70)
-                            <x-heroicon-o-battery-100 class="w-6 h-6 text-green-500" />
-                        @else
-                            <x-heroicon-o-battery-50 class="w-6 h-6 text-yellow-500" />
-                        @endif
+{{--                        @if ($batteryLevel === null || $batteryLevel <= 20)--}}
+{{--                            <x-heroicon-o-battery-0 class="w-6 h-6 text-red-500" />--}}
+{{--                        @elseif ($batteryLevel > 70)--}}
+{{--                            <x-heroicon-o-battery-100 class="w-6 h-6 text-green-500" />--}}
+{{--                        @else--}}
+{{--                            <x-heroicon-o-battery-50 class="w-6 h-6 text-yellow-500" />--}}
+{{--                        @endif--}}
 
                         <p class="text-gray-800 font-semibold text-lg">
                             {{ $batteryLevel !== null ? $batteryLevel . '%' : 'Onbekend' }}
