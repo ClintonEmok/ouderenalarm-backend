@@ -59,7 +59,10 @@ class CaregiversInvitation extends BaseWidget
                     ->form([
                         TextInput::make('email')->email()->required(),
                         PhoneInput::make('phone_number')->required(),
-                    ])
+                    ]) ->mutateFormDataUsing(function (array $data): array {
+                        $data['inviter_id'] = auth()->id();
+                        return $data;
+                    })
                     ->createAnother(false),
             ])
             ->actions([
