@@ -1,20 +1,20 @@
 <x-filament::widget>
     <x-filament::section>
         <x-slot name="heading">
-            📊 Apparaatstatus Overzicht
+            Apparaatstatus Overzicht
         </x-slot>
 {{--TODO replace with individual widgets stats--}}
         <div class="flex flex-col md:flex-row gap-6">
             <div class="md:w-1/3 w-full">
                 <x-filament::section>
                     <x-slot name="heading">
-                        📱 Apparaatinfo
+                         Apparaatinfo
                     </x-slot>
 
                     @if ($device)
                         <div class="space-y-1">
-                            <div class="text-sm text-gray-600">Naam</div>
-                            <div class="text-lg font-semibold">{{ $device->nickname ?? 'Geen naam' }}</div>
+{{--                            <div class="text-sm text-gray-600">Naam</div>--}}
+{{--                            <div class="text-lg font-semibold">{{ $device->nickname ?? 'Geen naam' }}</div>--}}
 
                             <div class="text-sm text-gray-600 mt-2">IMEI</div>
                             <div class="text-base text-gray-800">{{ $device->imei }}</div>
@@ -28,7 +28,7 @@
             <div class="md:w-2/3 w-full flex flex-col space-y-4">
                 <x-filament::section>
                     <x-slot name="heading">
-                        🔋 Batterijniveau
+                         Batterijniveau
                     </x-slot>
 
                     <div>
@@ -49,7 +49,7 @@
 
                 <x-filament::section>
                     <x-slot name="heading">
-                        📶 Signaalsterkte
+                        Signaalsterkte
                     </x-slot>
 
                     <div>
@@ -62,7 +62,7 @@
 
                 <x-filament::section>
                     <x-slot name="heading">
-                        ⏱️ Laatste update
+                         Laatste update
                     </x-slot>
 
                     <div>
