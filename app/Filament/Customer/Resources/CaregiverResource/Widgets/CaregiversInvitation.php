@@ -9,6 +9,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Support\Str;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class CaregiversInvitation extends BaseWidget
@@ -61,6 +62,7 @@ class CaregiversInvitation extends BaseWidget
                         PhoneInput::make('phone_number')->required(),
                     ]) ->mutateFormDataUsing(function (array $data): array {
                         $data['inviter_id'] = auth()->id();
+                        $data['token'] = Str::uuid();
                         return $data;
                     })
                     ->createAnother(false),
