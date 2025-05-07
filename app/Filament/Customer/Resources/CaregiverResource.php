@@ -55,14 +55,14 @@ class CaregiverResource extends Resource
                             ->label('Naam')
                             ->wrap(),
 
-                        TextColumn::make('caregiver.email')
-                            ->label('Email')
-                            ->limit(30),
+//                        TextColumn::make('caregiver.email')
+//                            ->label('Email')
+//                            ->limit(30),
                     ]),
 
-                    TextColumn::make('caregiver.phone_number')
-                        ->label('Telefoonnummer')
-                        ->limit(20),
+//                    TextColumn::make('caregiver.phone_number')
+//                        ->label('Telefoonnummer')
+//                        ->limit(20),
                 ]),
             ]) ->contentGrid([
                 'md' => 2,

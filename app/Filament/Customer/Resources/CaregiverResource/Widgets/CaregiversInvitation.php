@@ -36,12 +36,9 @@ class CaregiversInvitation extends BaseWidget
                             ->label('Email')
                             ->wrap(),
 
-                        Tables\Columns\TextColumn::make('phone_number')
-                            ->label('Telefoonnummer')
-                            ->limit(20),
-                    ]),
-
-                    Tables\Columns\Layout\Stack::make([
+//                        Tables\Columns\TextColumn::make('phone_number')
+//                            ->label('Telefoonnummer')
+//                            ->limit(20),
                         Tables\Columns\TextColumn::make('status')
                             ->badge()
                             ->formatStateUsing(fn (InviteStatus $state) => $state->label())
@@ -52,6 +49,8 @@ class CaregiversInvitation extends BaseWidget
                             ->since()
                             ->label('Verstuurd op'),
                     ]),
+
+
                 ]),
             ])
             ->filters([
