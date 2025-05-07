@@ -2,6 +2,9 @@
 
 namespace App\Filament\Customer\Resources;
 
+use App\Filament\Customer\Resources\DeviceAlarmResource\Pages\CreateDeviceAlarm;
+use App\Filament\Customer\Resources\DeviceAlarmResource\Pages\ListDeviceAlarms;
+use App\Filament\Customer\Resources\DeviceAlarmResource\Pages\ViewDeviceAlarm;
 use App\Filament\Resources\DeviceAlarmResource\Pages;
 use App\Filament\Resources\DeviceAlarmResource\RelationManagers;
 use App\Filament\Resources\DeviceAlarmResource\Widgets\RecentDeviceAlarmsWidget;
@@ -126,9 +129,9 @@ class DeviceAlarmResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDeviceAlarms::route('/'),
-            'create' => Pages\CreateDeviceAlarm::route('/create'),
-            'view' => Pages\ViewDeviceAlarm::route('/{record}'),
+            'index' => ListDeviceAlarms::route('/'),
+            'create' => CreateDeviceAlarm::route('/create'),
+            'view' => ViewDeviceAlarm::route('/{record}'),
         ];
     }
 }
