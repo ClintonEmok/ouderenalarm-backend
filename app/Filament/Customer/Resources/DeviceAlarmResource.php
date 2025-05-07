@@ -25,10 +25,10 @@ use Squire\Models\Country;
 class DeviceAlarmResource extends Resource
 {
     protected static ?string $model = DeviceAlarm::class;
-    protected static ?string $modelLabel = 'Melding';
-    protected static ?string $pluralLabel = 'Noodmelding';
+    protected static ?string $modelLabel = 'Noodmelding';
+    protected static ?string $pluralLabel = 'Noodmeldingen';
 
-    protected static ?string $navigationIcon = 'heroicon-o-exclamation-triangle';
+    protected static ?string $navigationIcon = 'heroicon-o-bell-alert';
 
     public static function form(Form $form): Form
     {
