@@ -4,11 +4,15 @@ namespace App\Filament\Customer\Resources\CaregiverResource\Widgets;
 
 use App\Enums\InviteStatus;
 use App\Filament\Customer\Resources\InviteResource;
+use App\Mail\InviteCaregiverMail;
 use App\Models\Invite;
+use App\Models\User;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
@@ -56,16 +60,74 @@ class CaregiversInvitation extends BaseWidget
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->model(Invite::class)
-                    ->modelLabel(InviteResource::getModelLabel())
                     ->form([
                         TextInput::make('email')->email()->required(),
                         PhoneInput::make('phone_number')->required(),
-                    ]) ->mutateFormDataUsing(function (array $data): array {
-                        $data['inviter_id'] = auth()->id();
+                    ])
+                    ->mutateFormDataUsing(function (array $data): array {
+                        $inviter = auth()->user();
+                        $email = $data['email'] ?? null;
+                        $phone = $data['phone_number'] ?? null;
+
+                        $user = User::where('email', $email)
+                            ->orWhere('phone_number', $phone)
+                            ->first();
+
+                        if ($user) {
+                            $hasPending = Invite::where('inviter_id', $inviter->id)
+                                ->where('invited_user_id', $user->id)
+                                ->where('status', InviteStatus::Pending)
+                                ->exists();
+
+                            if ($hasPending) {
+                                Notification::make()
+                                    ->title('Already invited')
+                                    ->body('This user has already been invited and has not responded yet.')
+                                    ->warning()
+                                    ->send();
+
+                                throw new \Exception('Halt creation'); // or use a cleaner way to halt
+                            }
+
+                            $data['invited_user_id'] = $user->id;
+                        } else {
+                            $hasPending = Invite::where('inviter_id', $inviter->id)
+                                ->where('email', $email)
+                                ->where('status', InviteStatus::Pending)
+                                ->exists();
+
+                            if ($hasPending) {
+                                Notification::make()
+                                    ->title('Already invited')
+                                    ->body('This email has already been invited and has not responded yet.')
+                                    ->warning()
+                                    ->send();
+
+                                throw new \Exception('Halt creation');
+                            }
+                        }
+
+                        $data['inviter_id'] = $inviter->id;
                         $data['token'] = Str::uuid();
+                        $data['status'] = InviteStatus::Pending;
+
                         return $data;
                     })
-                    ->createAnother(false),
+                    ->after(function (Invite $invite, array $data) {
+                        if ($invite->invited_user_id) {
+                            $user = $invite->invitedUser;
+
+                            Mail::to($user->email)->queue(new InviteCaregiverMail($invite, false));
+
+                            Notification::make()
+                                ->title('You’ve been invited as a caregiver')
+                                ->body("{$invite->inviter->name} has invited you to become their caregiver.")
+                                ->sendToDatabase($user);
+                        } else {
+                            Mail::to($invite->email)->queue(new InviteCaregiverMail($invite, true));
+                        }
+                    })
+                    ->createAnother(false)
             ])
             ->actions([
                 Tables\Actions\DeleteAction::make(),
