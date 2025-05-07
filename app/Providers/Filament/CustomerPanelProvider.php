@@ -31,7 +31,7 @@ class CustomerPanelProvider extends PanelProvider
             ->id('customer')
             ->path('customer')
             ->login()
-            ->registration(Register::class)
+//            ->registration(Register::class)
             ->passwordReset()
             ->databaseNotifications()
             ->sidebarFullyCollapsibleOnDesktop()
