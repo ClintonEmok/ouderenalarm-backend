@@ -24,7 +24,8 @@ class CaregiverResource extends Resource
 // TODO: make custom page
 // TODO: Add this table
 // TODO: Add invite table
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationLabel = 'Beheerde zorg';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     /**
      * @return string

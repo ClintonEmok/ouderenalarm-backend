@@ -43,7 +43,7 @@
                         <p class="text-gray-800 font-semibold text-lg">
                             {{ $batteryLevel !== null ? $batteryLevel . '%' : 'Onbekend' }}
                         </p>
-                        <p class="text-sm text-gray-500">Battery level & chart</p>
+                        <p class="text-sm text-gray-500">Batterij niveau</p>
                     </div>
                 </x-filament::section>
 

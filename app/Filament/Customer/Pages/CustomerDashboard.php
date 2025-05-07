@@ -10,37 +10,38 @@ use Filament\Pages\Dashboard as BaseDashboard;
 
 class CustomerDashboard extends BaseDashboard
 {
-    use BaseDashboard\Concerns\HasFiltersForm;
+//    use BaseDashboard\Concerns\HasFiltersForm;
 
     public function getColumns(): int | string | array
     {
         return 2;
     }
+//    TODO: Zet default value
 
-    public function filtersForm(Form $form): Form
-    {
+//    public function filtersForm(Form $form): Form
+//    {
+//
+//        $devices = Device::query()
+//            ->accessibleTo(auth()->user())
+//            ->pluck('imei', 'id');
+//
+//        return $form
+//            ->schema([
+//                Section::make()
+//                    ->schema([
+//                        Select::make('selectedDevice')->label('Huidige apparaat')
+//                            ->options($devices->toArray())->default($devices->first()),
+//                    ])
+//                    ->columns(3),
+//            ]);
+//    }
 
-        $devices = Device::query()
-            ->accessibleTo(auth()->user())
-            ->pluck('imei', 'id');
-
-        return $form
-            ->schema([
-                Section::make()
-                    ->schema([
-                        Select::make('selectedDevice')->label('Huidige apparaat')
-                            ->options($devices->toArray())->default($devices->first()),
-                    ])
-                    ->columns(3),
-            ]);
-    }
-
-    public function updatedFilters($value, $key): void
-    {
-
-        if ($key === 'selectedDevice') {
-
-            $this->dispatch('deviceSelectedUpdated', deviceId: $value);
-        }
-    }
+//    public function updatedFilters($value, $key): void
+//    {
+//
+//        if ($key === 'selectedDevice') {
+//
+//            $this->dispatch('deviceSelectedUpdated', deviceId: $value);
+//        }
+//    }
 }

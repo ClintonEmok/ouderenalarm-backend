@@ -29,6 +29,16 @@ class DeviceDashboardDetails extends Widget
             Log::warning('Device filter has unexpected type', ['type' => gettype($deviceId)]);
         }
 
+        $devices = Device::query()
+            ->accessibleTo(auth()->user())
+            ->pluck('imei', 'id');
+
+        // If no device is selected, use the first available device ID
+        if (!$deviceId && $devices->isNotEmpty()) {
+            $deviceId = $devices->keys()->first();
+            Log::info('No device selected, using first accessible device as default', ['deviceId' => $deviceId]);
+        }
+
         $device = $deviceId
             ? Device::with('generalStatuses')->find($deviceId)
             : null;
@@ -37,8 +47,9 @@ class DeviceDashboardDetails extends Widget
             ?->sortByDesc('created_at')
             ?->first();
 
-        Log::info("latestStatus: $latestStatus");
-        Log::info("device: $device");
+        Log::info('latestStatus:', ['latestStatus' => $latestStatus]);
+        Log::info('device:', ['device' => $device]);
+
         return [
             'device' => $device,
             'batteryLevel' => $latestStatus?->battery_level,
