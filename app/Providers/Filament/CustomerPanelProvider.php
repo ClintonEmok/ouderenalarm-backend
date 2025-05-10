@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Customer\Pages\CustomerDashboard;
+use App\Filament\Customer\Widgets\CustomAccountWidget;
 use App\Filament\Pages\Auth\Register;
 use App\Livewire\AddressesProfileComponent;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
@@ -45,7 +46,7 @@ class CustomerPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Customer/Widgets'), for: 'App\\Filament\\Customer\\Widgets')
             ->widgets([
-               Widgets\AccountWidget::class
+               CustomAccountWidget::class
 //                Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([

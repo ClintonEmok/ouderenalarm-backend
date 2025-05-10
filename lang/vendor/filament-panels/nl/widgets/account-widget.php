@@ -10,6 +10,6 @@ return [
 
     ],
 
-    'welcome' => 'Welkom',
+    'welcome' => 'Welkom bij MijnOuderenAlarm',
 
 ];
