@@ -33,7 +33,7 @@ class CaregiversInvitation extends BaseWidget
                 Tables\Columns\Layout\Split::make([
                     Tables\Columns\Layout\Stack::make([
                         Tables\Columns\TextColumn::make('email')
-                            ->label('Email')
+                            ->label('E-mailadres')
                             ->wrap(),
 
 //                        Tables\Columns\TextColumn::make('phone_number')
@@ -60,8 +60,8 @@ class CaregiversInvitation extends BaseWidget
                 Tables\Actions\CreateAction::make()
                     ->model(Invite::class)
                     ->form([
-                        TextInput::make('email')->email()->required(),
-                        PhoneInput::make('phone_number')->required(),
+                        TextInput::make('email')->label('E-mailadres')->email()->required(),
+                        PhoneInput::make('phone_number')->label("Telefoonnummer")->required(),
                     ])
                     ->mutateFormDataUsing(function (array $data): array {
                         $inviter = auth()->user();

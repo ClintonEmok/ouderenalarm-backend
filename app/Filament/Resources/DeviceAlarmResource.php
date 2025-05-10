@@ -44,7 +44,7 @@ class DeviceAlarmResource extends Resource
             Section::make("Klantendetails")->schema([
                 TextEntry::make("device.user.name")->label("Naam"),
                 TextEntry::make("device.phone_number")->label("Telefoonnummer"),
-                TextEntry::make("device.user.email")->label("E-mail"),
+                TextEntry::make("device.user.email")->label("E-mailadres"),
                  Section::make("Adres")->schema([
 //                     TextEntry::make("device.user.homeAddress.full_name")->label("Naam op adres"),
                      TextEntry::make("device.user.homeAddress.street")->label("Straat"),

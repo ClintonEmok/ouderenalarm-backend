@@ -32,6 +32,7 @@ class AddressesProfileComponent extends MyProfileComponent
             ->schema([
                 Repeater::make('userAddresses')
                     ->relationship('userAddresses')
+                    ->label("Addressen")
                     ->schema([
                         Select::make('address_id')
                             ->label('Address')

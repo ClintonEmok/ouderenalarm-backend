@@ -79,7 +79,7 @@ class DeviceResource extends Resource
             Section::make("Klantendetails")->schema([
                 TextEntry::make("user.name")->label("Naam"),
                 TextEntry::make("user.phone_number")->label("Telefoonnummer"),
-                TextEntry::make("user.email")->label("E-mail"),
+                TextEntry::make("user.email")->label("E-mailadres"),
                 Section::make("Adres")->schema([
 //                    TextEntry::make("user.homeAddress.full_name")->label("Naam op adres"),
                     TextEntry::make("user.homeAddress.street")->label("Straat"),
