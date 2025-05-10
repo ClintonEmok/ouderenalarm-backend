@@ -69,15 +69,14 @@ class DeviceAlarmResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op"),
                 Tables\Columns\ColumnGroup::make('Soort melding', [
                     TextColumn::make('triggered_alerts')->label("Meldingen"),
                 ]),
                 TextColumn::make('caregivers_en_route_list')
-                    ->label('En Route Caregivers')
+                    ->label('Wie is onderweg')
                     ->searchable()
                     ->wrap(),
-                //
+                Tables\Columns\TextColumn::make('created_at')->label("Tijdstip"),
             ])
             ->filters([
                 Tables\Filters\Filter::make('fall_down_alert')->label("Is valalarm")
