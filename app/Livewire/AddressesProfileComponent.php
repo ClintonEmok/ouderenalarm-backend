@@ -35,7 +35,7 @@ class AddressesProfileComponent extends MyProfileComponent
                     ->label("Addressen")
                     ->schema([
                         Select::make('address_id')
-                            ->label('Address')
+                            ->label('Adres')
                             ->relationship('address', 'street')
                             ->searchable()
                             ->preload()
@@ -60,7 +60,7 @@ class AddressesProfileComponent extends MyProfileComponent
                             ->required(),
                     ])
                     ->columns(2)
-                    ->addActionLabel('Add Address')
+                    ->addActionLabel('Voeg adres toe')
                     ->deletable()
                     ->maxItems(2)
                     ->reorderable(),
