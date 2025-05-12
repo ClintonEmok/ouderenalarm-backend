@@ -67,6 +67,14 @@ class DeviceAlarm extends Model
             ->withPivot('status')
             ->withTimestamps();
     }
+
+    public function getCaregiversEnRouteListAttribute()
+    {
+        return $this->caregiverStatuses
+            ->where('pivot.status', 'en_route')
+            ->pluck('name')
+            ->implode(', ');
+    }
     /**
      * Boot the model to handle events.
      */

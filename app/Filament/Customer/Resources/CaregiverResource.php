@@ -24,7 +24,8 @@ class CaregiverResource extends Resource
 // TODO: make custom page
 // TODO: Add this table
 // TODO: Add invite table
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationLabel = 'Beheerde zorg';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     /**
      * @return string
@@ -54,14 +55,14 @@ class CaregiverResource extends Resource
                             ->label('Naam')
                             ->wrap(),
 
-                        TextColumn::make('caregiver.email')
-                            ->label('Email')
-                            ->limit(30),
+//                        TextColumn::make('caregiver.email')
+//                            ->label('Email')
+//                            ->limit(30),
                     ]),
 
-                    TextColumn::make('caregiver.phone_number')
-                        ->label('Telefoonnummer')
-                        ->limit(20),
+//                    TextColumn::make('caregiver.phone_number')
+//                        ->label('Telefoonnummer')
+//                        ->limit(20),
                 ]),
             ]) ->contentGrid([
                 'md' => 2,

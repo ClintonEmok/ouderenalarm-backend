@@ -32,9 +32,10 @@ class AddressesProfileComponent extends MyProfileComponent
             ->schema([
                 Repeater::make('userAddresses')
                     ->relationship('userAddresses')
+                    ->label("Addressen")
                     ->schema([
                         Select::make('address_id')
-                            ->label('Address')
+                            ->label('Adres')
                             ->relationship('address', 'street')
                             ->searchable()
                             ->preload()
@@ -59,7 +60,7 @@ class AddressesProfileComponent extends MyProfileComponent
                             ->required(),
                     ])
                     ->columns(2)
-                    ->addActionLabel('Add Address')
+                    ->addActionLabel('Voeg adres toe')
                     ->deletable()
                     ->maxItems(2)
                     ->reorderable(),

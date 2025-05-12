@@ -17,6 +17,7 @@ class CaregiverStatusesRelationManager extends RelationManager
     protected static string $relationship = 'caregiverStatuses';
     protected static ?string $title = 'Contactpersonen';
 
+//   TODO: Attach a permission to this
     public function isReadOnly(): bool
     {
         return false;
