@@ -18,18 +18,11 @@ class DeviceResource extends JsonResource
             'id' => $this->id,
             'imei' => $this->imei,
             'nickname' => $this->nickname,
-            'ip_address' => $this->ip_address,
-            'port' => $this->port,
             'phone_number' => $this->phone_number,
-            'status' => $this->status,
+//            'status' => $this->status,
             'user_id' => $this->user_id,
-            'location' => [
-                'latitude' => optional($this->latestLocation)->latitude,
-                'longitude' => optional($this->latestLocation)->longitude,
-            ],
-            'status_details' => [
-                'battery_level' => optional($this->latestStatus)->battery_level,
-            ],
+            'location' => new LocationResource($this->whenLoaded('latestLocation')),
+            'status' => new StatusResource($this->whenLoaded('latestStatus')),
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
             'user' => new UserResource($this->whenLoaded('user')) // Use a UserResource if needed
