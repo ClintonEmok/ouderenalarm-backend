@@ -49,7 +49,7 @@ class CaregiverController extends Controller
         ]);
 
         // Send the invitation email
-        Mail::to($request->email)->send(new CaregiverInvitationMailable($token, $patient->name, $request->email));
+        Mail::to($request->email)->queue(new CaregiverInvitationMailable($token, $patient->name, $request->email));
 
         return response()->json(['message' => 'Invitation sent successfully'], 200);
     }
