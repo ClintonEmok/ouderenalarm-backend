@@ -1,17 +1,87 @@
-name: Devices
+name: Endpoints
 description: ''
 endpoints:
   -
     httpMethods:
-      - GET
-    uri: api/devices
+      - POST
+    uri: api/login
     metadata:
-      groupName: Devices
+      groupName: Endpoints
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: "Display a listing of the user's devices."
-      description: ''
+      title: '**Login for Mobile/API Users (Token-based)**'
+      description: 'This endpoint logs in users via token-based authentication.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      email:
+        name: email
+        description: "The user's email address."
+        required: true
+        example: user@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      password:
+        name: password
+        description: "The user's password."
+        required: true
+        example: password123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      email: user@example.com
+      password: password123
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Login successful",
+            "access_token": "1|e3PDeODU1v6Fw7zUb1DQcqNfXk7LJACXfiHVAmk2",
+            "token_type": "Bearer",
+            "user": {
+              "id": 1,
+              "name": "John Doe",
+              "email": "user@example.com",
+              "created_at": "2024-11-20T12:00:00.000000Z",
+              "updated_at": "2024-11-20T12:00:00.000000Z"
+            }
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/logout
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: '**Logout for Mobile/API users (Token-based)**'
+      description: 'This endpoint logs out a user by revoking the current access token.'
       authenticated: true
       custom: []
     headers:
@@ -28,7 +98,10 @@ endpoints:
     responses:
       -
         status: 200
-        content: '{}'
+        content: |-
+          {
+            "message": "Logout successful"
+          }
         headers: []
         description: ''
         custom: []
@@ -36,319 +109,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 8ah6e61VbafDd4kcZgPv3E5'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/devices
-    metadata:
-      groupName: Devices
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Store a newly created device for the authenticated user.'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      alarm_code:
-        name: alarm_code
-        description: 'Must not be greater than 20 characters.'
-        required: false
-        example: qyglpfirscihxxvyyuo
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        custom: []
-      longitude:
-        name: longitude
-        description: 'Must be between -180 and 180.'
-        required: false
-        example: -180
-        type: number
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        custom: []
-      latitude:
-        name: latitude
-        description: 'Must be between -90 and 90.'
-        required: false
-        example: -89
-        type: number
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        custom: []
-      maps_link:
-        name: maps_link
-        description: 'Must not be greater than 2083 characters.'
-        required: false
-        example: iwyljgcushr
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        custom: []
-      phone_number:
-        name: phone_number
-        description: 'Must not be greater than 15 characters.'
-        required: true
-        example: tfsloayxf
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      battery_percentage:
-        name: battery_percentage
-        description: 'Must be between 0 and 100.'
-        required: false
-        example: 0
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        custom: []
-    cleanBodyParameters:
-      alarm_code: qyglpfirscihxxvyyuo
-      longitude: -180
-      latitude: -89
-      maps_link: iwyljgcushr
-      phone_number: tfsloayxf
-      battery_percentage: 0
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer D6aZV5ch4v6baf8Pge3d1Ek'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: 'api/devices/{id}'
-    metadata:
-      groupName: Devices
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Display the specified device for the authenticated user.'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      id:
-        name: id
-        description: 'The ID of the device.'
-        required: true
-        example: a
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      id: a
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 401
-        content: '{"message":"Unauthenticated."}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: 'http://localhost:3000'
-          access-control-allow-credentials: 'true'
-        description: null
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer D1fh6ageba83PV4c6dZvkE5'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - PUT
-      - PATCH
-    uri: 'api/devices/{id}'
-    metadata:
-      groupName: Devices
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Update the specified device for the authenticated user.'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      id:
-        name: id
-        description: 'The ID of the device.'
-        required: true
-        example: voluptatem
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      id: voluptatem
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      alarm_code:
-        name: alarm_code
-        description: 'Must not be greater than 20 characters.'
-        required: false
-        example: nuzgt
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        custom: []
-      longitude:
-        name: longitude
-        description: 'Must be between -180 and 180.'
-        required: false
-        example: -180
-        type: number
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        custom: []
-      latitude:
-        name: latitude
-        description: 'Must be between -90 and 90.'
-        required: false
-        example: -90
-        type: number
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        custom: []
-      maps_link:
-        name: maps_link
-        description: 'Must not be greater than 2083 characters.'
-        required: false
-        example: yuxxkdggvzngd
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        custom: []
-      phone_number:
-        name: phone_number
-        description: 'Must not be greater than 15 characters.'
-        required: false
-        example: siekyjhqxacf
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        custom: []
-      battery_percentage:
-        name: battery_percentage
-        description: 'Must be between 0 and 100.'
-        required: false
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        custom: []
-    cleanBodyParameters:
-      alarm_code: nuzgt
-      longitude: -180
-      latitude: -90
-      maps_link: yuxxkdggvzngd
-      phone_number: siekyjhqxacf
-      battery_percentage: 1
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer d8eZ4Pacfk16EvaDVg53bh6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - DELETE
-    uri: 'api/devices/{id}'
-    metadata:
-      groupName: Devices
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Remove the specified device for the authenticated user.'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      id:
-        name: id
-        description: 'The ID of the device.'
-        required: true
-        example: voluptas
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      id: voluptas
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer fedD3k6ac1aZgEvV6485bPh'
+      - 'Bearer v43kDVea1gcPab5hdZE668f'
     controller: null
     method: null
     route: null

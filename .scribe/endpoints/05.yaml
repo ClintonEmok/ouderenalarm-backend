@@ -1,0 +1,106 @@
+name: 'Device Alarms'
+description: |-
+
+  Retrieve relevant alarms triggered by devices.
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: api/device-alarms
+    metadata:
+      groupName: 'Device Alarms'
+      groupDescription: |-
+
+        Retrieve relevant alarms triggered by devices.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List relevant device alarms'
+      description: 'Only returns alarms that are fall or SOS alerts.'
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 1faE64v63bkgaeDhPdV5cZ8'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/device-alarms/{id}'
+    metadata:
+      groupName: 'Device Alarms'
+      groupDescription: |-
+
+        Retrieve relevant alarms triggered by devices.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Show details for a specific device alarm'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the alarm.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer d51avaPD86E3ch6ZVfkg4eb'
+    controller: null
+    method: null
+    route: null
+    custom: []

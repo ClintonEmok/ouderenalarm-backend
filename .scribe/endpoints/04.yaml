@@ -1,0 +1,303 @@
+name: Devices
+description: |-
+
+  Endpoints for managing and viewing devices.
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: api/my-devices
+    metadata:
+      groupName: Devices
+      groupDescription: |-
+
+        Endpoints for managing and viewing devices.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get all devices accessible to the authenticated user'
+      description: 'Returns devices the user owns (`own`) and devices they access through caregiving relationships (`caregiving`).'
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 3f46eV1h8EdgakPDvb6Zca5'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/my-devices/own
+    metadata:
+      groupName: Devices
+      groupDescription: |-
+
+        Endpoints for managing and viewing devices.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get devices owned by the authenticated user'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6kPva6d1V3ZeEag8fbhDc54'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/my-devices/caregiving
+    metadata:
+      groupName: Devices
+      groupDescription: |-
+
+        Endpoints for managing and viewing devices.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get devices accessible through caregiving relationships'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 8d6eV3aDZ5Pb4g61aEhcvkf'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/devices/assign
+    metadata:
+      groupName: Devices
+      groupDescription: |-
+
+        Endpoints for managing and viewing devices.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Assign a device to the authenticated user using its phone number'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      phone_number:
+        name: phone_number
+        description: 'The phone number of the device.'
+        required: true
+        example: '+31612345678'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      nickname:
+        name: nickname
+        description: 'optional A nickname for the device.'
+        required: false
+        example: "Grandma's Alarm"
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+    cleanBodyParameters:
+      phone_number: '+31612345678'
+      nickname: "Grandma's Alarm"
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer h1645D3Zgbv86aeaVkPfcdE'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/devices/{id}'
+    metadata:
+      groupName: Devices
+      groupDescription: |-
+
+        Endpoints for managing and viewing devices.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get a specific device by ID, if user has access'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the device.'
+        required: true
+        example: 14
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 14
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 5v1Dahd3ZecV8b66akf4gPE'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/devices/{id}'
+    metadata:
+      groupName: Devices
+      groupDescription: |-
+
+        Endpoints for managing and viewing devices.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Unassign a device from the authenticated user'
+      description: |-
+        This removes the ownership link between the user and the device.
+        Only the device owner can perform this action.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the device to unassign.'
+        required: true
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 5
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer gV6ZE81cvPhe43kbaadDf65'
+    controller: null
+    method: null
+    route: null
+    custom: []

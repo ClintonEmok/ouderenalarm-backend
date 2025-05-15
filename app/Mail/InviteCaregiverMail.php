@@ -29,7 +29,7 @@ class InviteCaregiverMail extends Mailable
      */
     public function envelope(): Envelope
     {
-        $inviterName = User::find($this->invite->inviter_user_id)?->name ?? 'iemand';
+        $inviterName = User::find($this->invite->inviter_id)?->name ?? 'iemand';
 
         return new Envelope(
             subject: $this->isNewUser
