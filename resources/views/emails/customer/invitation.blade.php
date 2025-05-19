@@ -13,6 +13,8 @@ Ter voorbereiding sturen we je alvast een voorbereidingsgids zodat je gelijk wee
 
 Je kunt inloggen op [www.ouderen-alarmering.nl](https://www.ouderen-alarmering.nl)
 
+<img src="{{ asset('images/email/inloggen.png') }}" alt="Inloggen Illustratie" style="max-width: 100%; height: auto; margin: 20px 0;">
+
 **E-mailadres:**
 {{ $customer->email }}
 
@@ -21,13 +23,19 @@ Je kunt inloggen op [www.ouderen-alarmering.nl](https://www.ouderen-alarmering.n
 
 Je kunt je wachtwoord later zelf aanpassen in het portaal.
 
+<img src="{{ asset('images/email/wachtwoord.png') }}" alt="Wachtwoord Aanpassen" style="max-width: 100%; height: auto; margin: 20px 0;">
+
 ---
 
 ## Familieleden toevoegen
 
 Je kunt eenvoudig familieleden toevoegen in het portaal. Je bepaalt zelf wie als eerste wordt gebeld bij een noodgeval (nummer 1 = eerste contactpersoon).
 
+<img src="{{ asset('images/email/familieleden.png') }}" alt="Familie Toevoegen" style="max-width: 100%; height: auto; margin: 20px 0;">
+
 Als er iets gebeurt, nemen onze veiligheidsexperts binnen **30 seconden** contact op. Je ziet live in het portaal wat er is gebeurd en wie er onderweg is.
+
+<img src="{{ asset('images/email/noodmelding.png') }}" alt="Live Alarm Inzicht" style="max-width: 100%; height: auto; margin: 20px 0;">
 
 ---
 
