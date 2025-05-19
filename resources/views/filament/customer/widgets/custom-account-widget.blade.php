@@ -9,7 +9,7 @@ $user = filament()->auth()->user();
 
 <div class="flex-1">
 <h2
-class="grid flex-1 font-bold font-semibold leading-6 text-white text-3xl"
+class="grid flex-1 font-bold font-semibold leading-6 text-white text-base"
 >
 {{ __('filament-panels::widgets/account-widget.welcome', ['app' => config('app.name')]) }}, {{ filament()->getUserName($user) }}
 </h2>

@@ -20,4 +20,10 @@ class Customer extends User
         return $this->belongsToMany(Address::class, 'user_address', 'user_id', 'address_id');
     }
 
+    public function getMorphClass()
+    {
+        // Zorg dat Spatie de rollen koppelt aan model_type = App\Models\User
+        return User::class;
+    }
+
 }
