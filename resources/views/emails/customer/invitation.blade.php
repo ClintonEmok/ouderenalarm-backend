@@ -33,7 +33,7 @@ Als er iets gebeurt, nemen onze veiligheidsexperts binnen **30 seconden** contac
 
 Wij koppelen het apparaat alvast aan jouw account zodat je het direct kunt gebruiken zodra het wordt geleverd.
 
-<x-mail::button :url="'https://www.ouderen-alarmering.nl'">
+<x-mail::button :url="'https://api.ouderen-alarmering.nl/customer/login'">
 Log direct in
 </x-mail::button>
 
