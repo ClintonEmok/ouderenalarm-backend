@@ -19,7 +19,7 @@ Je kunt inloggen op [www.ouderen-alarmering.nl](https://www.ouderen-alarmering.n
 **Wachtwoord:**
 {{ $password }}
 
-> Je kunt je wachtwoord later zelf aanpassen in het portaal.
+Je kunt je wachtwoord later zelf aanpassen in het portaal.
 
 ---
 

@@ -59,6 +59,7 @@ class CaregiversInvitation extends BaseWidget
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->model(Invite::class)
+                    ->label("Uitnodiging aanmaken")
                     ->form([
                         TextInput::make('email')->label('E-mailadres')->email()->required(),
                         PhoneInput::make('phone_number')->label("Telefoonnummer")->required(),
