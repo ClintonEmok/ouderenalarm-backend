@@ -41,14 +41,14 @@ endpoints:
         name: token
         description: ''
         required: true
-        example: impedit
+        example: laboriosam
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      token: impedit
+      token: laboriosam
     fileParameters: []
     responses:
       -
@@ -111,7 +111,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer bdPc8e6ga1k6V43DhaZEvf5'
+      - 'Bearer Ph8ak5vZ66e34EfDbaVgcd1'
     controller: null
     method: null
     route: null
@@ -191,7 +191,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 8D5d4gbV66PvfeEakcZh31a'
+      - 'Bearer vaebE6VadkZPgh5D31fc684'
     controller: null
     method: null
     route: null
@@ -238,7 +238,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer fag615EbkhZ8v643VPdeDac'
+      - 'Bearer kcbZDfVedg6h5836av1PaE4'
     controller: null
     method: null
     route: null
@@ -283,7 +283,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer ca3bv1Ed4P6h8eVa56fZkgD'
+      - 'Bearer E5Pbag61Z3d6vkfcVeD8ha4'
     controller: null
     method: null
     route: null
