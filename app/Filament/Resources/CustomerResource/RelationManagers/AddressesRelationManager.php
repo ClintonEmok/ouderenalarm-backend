@@ -16,6 +16,7 @@ use Squire\Models\Country;
 class AddressesRelationManager extends RelationManager
 {
     protected static string $relationship = 'addresses';
+    protected static ?string $title = "Addressen";
 
     protected static ?string $recordTitleAttribute = 'street';
 

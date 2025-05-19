@@ -4,11 +4,14 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CustomerResource\Pages;
 use App\Filament\Resources\CustomerResource\RelationManagers;
+use App\Filament\Resources\UserResource\RelationManagers\CaregiversRelationManager;
+use App\Filament\Resources\UserResource\RelationManagers\DevicesRelationManager;
 use App\Models\Country;
 use App\Models\Customer;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -101,10 +104,15 @@ class CustomerResource extends Resource
             ]);
     }
 
+
     public static function getRelations(): array
     {
         return [
-            RelationManagers\AddressesRelationManager::make()
+            RelationManagers\AddressesRelationManager::class,
+                CaregiversRelationManager::class,
+                DevicesRelationManager::class,
+
+
         ];
     }
 
