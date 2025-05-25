@@ -43,7 +43,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6aa51h3kEPDegv8bc4fZd6V'
+      - 'Bearer DegcdPafE1368Zh546kVabv'
     controller: null
     method: null
     route: null
@@ -112,7 +112,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer d6Ev8akZ3fPg41eca6h5VbD'
+      - 'Bearer 5Zkah1Vdbf3c4Pa6DE8vg6e'
     controller: null
     method: null
     route: null
@@ -181,7 +181,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer aDgecZ6Vad5P41Ehf63v8kb'
+      - 'Bearer aEbPahfedVc184gvD53Z6k6'
     controller: null
     method: null
     route: null
@@ -228,7 +228,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 8e4h6E3PZ1Dk5Vdcab6gfav'
+      - 'Bearer D1dVP6kcea4Ea5bZv8gf36h'
     controller: null
     method: null
     route: null
@@ -273,7 +273,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 1c86bVak3aPDeh6fgEv4Zd5'
+      - 'Bearer PDavb354dga1hE6Zek68cVf'
     controller: null
     method: null
     route: null
@@ -318,7 +318,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer ZcbgE14aPdhk8v5fVe63a6D'
+      - 'Bearer cDvaP6kEZ54Vgba3f6e1h8d'
     controller: null
     method: null
     route: null
@@ -352,7 +352,7 @@ endpoints:
         description: ''
         required: true
         example:
-          - quis
+          - animi
         type: 'string[]'
         enumValues: []
         exampleWasSpecified: false
@@ -362,7 +362,7 @@ endpoints:
         name: 'caregivers[].user_id'
         description: ''
         required: true
-        example: 9
+        example: 14
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -372,7 +372,7 @@ endpoints:
         name: 'caregivers[].priority'
         description: ''
         required: true
-        example: 3
+        example: 11
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -380,14 +380,14 @@ endpoints:
         custom: []
     cleanBodyParameters:
       caregivers:
-        - quis
+        - animi
     fileParameters: []
     responses: []
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer ba3heD4EkvZ665Vadg8c1Pf'
+      - 'Bearer eb36chDad4a8VvPf1Ek6g5Z'
     controller: null
     method: null
     route: null

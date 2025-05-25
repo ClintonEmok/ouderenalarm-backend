@@ -26,7 +26,7 @@ class CreateCustomer extends CreateRecord
     }
 
     protected function afterCreate(): void
-    {
+    {   
         $this->record->assignRole('customer');
         if ($this->generatedPassword) {
             Mail::to($this->record->email)

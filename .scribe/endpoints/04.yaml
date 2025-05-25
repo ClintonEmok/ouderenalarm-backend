@@ -43,7 +43,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 3f46eV1h8EdgakPDvb6Zca5'
+      - 'Bearer 643aVbD1vfc6akePZgd5E8h'
     controller: null
     method: null
     route: null
@@ -88,7 +88,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6kPva6d1V3ZeEag8fbhDc54'
+      - 'Bearer b8afPvc6VgZ5DhEe63ak14d'
     controller: null
     method: null
     route: null
@@ -133,7 +133,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 8d6eV3aDZ5Pb4g61aEhcvkf'
+      - 'Bearer kE6c5h6v4df1ePgaVabDZ83'
     controller: null
     method: null
     route: null
@@ -191,7 +191,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer h1645D3Zgbv86aeaVkPfcdE'
+      - 'Bearer Db8Eka6fZ3ved164Pagh5Vc'
     controller: null
     method: null
     route: null
@@ -220,14 +220,14 @@ endpoints:
         name: id
         description: 'The ID of the device.'
         required: true
-        example: 14
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      id: 14
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -247,7 +247,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5v1Dahd3ZecV8b66akf4gPE'
+      - 'Bearer E6VDacPZ15kve86hfb3g4ad'
     controller: null
     method: null
     route: null
@@ -278,14 +278,14 @@ endpoints:
         name: id
         description: 'The ID of the device to unassign.'
         required: true
-        example: 5
+        example: 10
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      id: 5
+      id: 10
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -296,7 +296,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer gV6ZE81cvPhe43kbaadDf65'
+      - 'Bearer akDgvVebh5cf4P661Zd83Ea'
     controller: null
     method: null
     route: null

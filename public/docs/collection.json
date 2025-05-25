@@ -5,12 +5,12 @@
             "key": "baseUrl",
             "type": "string",
             "name": "string",
-            "value": "http:\/\/localhost:8000"
+            "value": "https:\/\/api.ouderen-alarmering.nl"
         }
     ],
     "info": {
         "name": "Ouderenalarm API",
-        "_postman_id": "5e926570-f296-4857-b106-ca78fd95dfe9",
+        "_postman_id": "bbfe10bb-1c83-43bf-a44a-3a24e9b38b53",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -92,7 +92,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"token\":\"impedit\"}"
+                            "raw": "{\"token\":\"laboriosam\"}"
                         },
                         "description": "",
                         "auth": {
@@ -535,7 +535,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "14",
+                                    "value": "1",
                                     "description": "The ID of the device."
                                 }
                             ]
@@ -588,7 +588,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "5",
+                                    "value": "10",
                                     "description": "The ID of the device to unassign."
                                 }
                             ]
@@ -932,7 +932,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"caregivers\":[\"quis\"]}"
+                            "raw": "{\"caregivers\":[\"animi\"]}"
                         },
                         "description": ""
                     },
