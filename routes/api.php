@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 // 🔓 Public Routes
 //
 Route::post('/register', [\App\Http\Controllers\API\Auth\RegisterController::class, 'register']);
-Route::post('/login', [\App\Http\Controllers\API\Auth\AuthenticatedSessionController::class, 'loginToken']);
+Route::post('/login', [\App\Http\Controllers\API\Auth\AuthSessionController::class, 'loginToken']);
 Route::get('/invites/validate', [\App\Http\Controllers\API\CaregiverController::class, 'validateToken']);
 
 //
@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //
     // 🔒 Auth
     //
-    Route::post('/logout', [\App\Http\Controllers\API\Auth\AuthenticatedSessionController::class, 'logoutToken']);
+    Route::post('/logout', [\App\Http\Controllers\API\Auth\AuthSessionController::class, 'logoutToken']);
 
     //
     // 👤 User

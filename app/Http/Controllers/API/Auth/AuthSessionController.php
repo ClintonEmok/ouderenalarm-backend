@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
  *
  * Endpoints for mobile/API users using token-based login via Laravel Sanctum.
  */
-class AuthenticatedSessionController extends Controller
+class AuthSessionController extends Controller
 {
     /**
      * Login for Mobile/API Users (Token-based)
