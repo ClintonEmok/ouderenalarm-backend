@@ -25,17 +25,19 @@ class DeviceController extends Controller
     {
         $user = $request->user();
 
+        // Devices owned by the user
         $own = $user->devices()
             ->with(['latestLocation', 'latestStatus', 'user'])
             ->get();
 
-        $caregiving = $user->caregivingPatients()
+        // Devices of the user's patients (caregiving role)
+        $caregiving = $user->patients()
             ->with(['devices.latestLocation', 'devices.latestStatus', 'devices.user'])
             ->get()
             ->pluck('devices')
             ->flatten()
             ->unique('id')
-            ->reject(fn ($d) => $own->contains('id', $d->id))
+            ->reject(fn ($device) => $own->contains('id', $device->id))
             ->values();
 
         return response()->json([
