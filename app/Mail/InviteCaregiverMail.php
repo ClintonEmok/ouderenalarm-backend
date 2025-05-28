@@ -54,7 +54,7 @@ class InviteCaregiverMail extends Mailable
                         "invitation.accept",
                         ['invitation' => $this->invite]
                     )
-                    : "test",
+                    : route('filament.customer.auth.login'),
             ],
         );
     }
