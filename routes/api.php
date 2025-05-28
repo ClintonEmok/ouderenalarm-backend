@@ -63,5 +63,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/caregivers/accept', 'accept');
         Route::post('/caregivers/remove', 'remove');
         Route::get('/caregivers/invites/pending', 'pending');
+        Route::patch('/caregivers/reorder', [\App\Http\Controllers\API\CaregiverController::class, 'reorderCaregivers']);
     });
 });
