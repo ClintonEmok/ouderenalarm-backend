@@ -112,10 +112,13 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->belongsToMany(
             User::class,
-            'caregiver_patients', // Intermediate table
-            'patient_id',        // Foreign key on caregiver_patient for this user as a patient
-            'caregiver_id'       // Foreign key on caregiver_patient for the caregiver
-        )->withTimestamps();
+            'caregiver_patients',
+            'patient_id',
+            'caregiver_id'
+        )
+            ->withTimestamps()
+            ->withPivot('priority')
+            ->orderBy('caregiver_patients.priority');
     }
 
     /**

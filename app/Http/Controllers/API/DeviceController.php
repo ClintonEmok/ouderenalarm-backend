@@ -70,7 +70,7 @@ class DeviceController extends Controller
         $user = $request->user();
         $ownIds = $user->devices()->pluck('id');
 
-        $devices = $user->caregivingPatients()
+        $devices = $user->patients()
             ->with(['devices.latestLocation', 'devices.latestStatus', 'devices.user'])
             ->get()
             ->pluck('devices')
@@ -134,7 +134,7 @@ class DeviceController extends Controller
         $device = Device::with(['latestLocation', 'latestStatus', 'user'])->findOrFail($id);
 
         $hasAccess = $device->user_id === $user->id
-            || $user->caregivingPatients()->where('id', $device->user_id)->exists();
+            || $user->patients()->where('id', $device->user_id)->exists();
 
         if (! $hasAccess) {
             return response()->json(['message' => 'Unauthorized.'], 403);

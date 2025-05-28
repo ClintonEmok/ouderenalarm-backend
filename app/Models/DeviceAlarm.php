@@ -147,17 +147,25 @@ class DeviceAlarm extends Model
         if (!$this->device || !$this->device->user) {
             return;
         }
-        $patient = $this->device->user;
-        $currentCaregiverIds = $patient->caregivers->pluck('id')->toArray();
 
-        // Attach any new caregivers
+        $patient = $this->device->user;
+
+        // Load caregivers with priority and order them
+        $orderedCaregivers = $patient->caregivers()
+            ->withPivot('priority')
+            ->orderBy('caregiver_patients.priority')
+            ->get();
+
+        $orderedCaregiverIds = $orderedCaregivers->pluck('id')->toArray();
+
+        // Attach any new caregivers (preserving priority order in your logic)
         $this->caregiverStatuses()->syncWithoutDetaching(
-            collect($currentCaregiverIds)->mapWithKeys(fn ($id) => [$id => []])->toArray()
+            collect($orderedCaregiverIds)->mapWithKeys(fn ($id) => [$id => []])->toArray()
         );
 
         // Remove any caregivers who no longer apply
         $this->caregiverStatuses()->detach(
-            $this->caregiverStatuses->pluck('id')->diff($currentCaregiverIds)
+            $this->caregiverStatuses->pluck('id')->diff($orderedCaregiverIds)
         );
     }
 
