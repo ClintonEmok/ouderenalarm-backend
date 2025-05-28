@@ -98,8 +98,8 @@ class CaregiverController extends Controller
             }
         }
 
-        if (! $user->caregivingPatients()->where('patient_id', $patient->id)->exists()) {
-            $user->caregivingPatients()->attach($patient->id, ['priority' => 0]);
+        if (! $user->patients()->where('patient_id', $patient->id)->exists()) {
+            $user->patients()->attach($patient->id, ['priority' => 0]);
         }
 
         $invite->update(['status' => 'accepted']);
@@ -125,7 +125,7 @@ class CaregiverController extends Controller
         $other = User::findOrFail($request->user_id);
 
         $user->caregivers()->detach($other->id);
-        $user->caregivingPatients()->detach($other->id);
+        $user->patients()->detach($other->id);
 
         return response()->json(['message' => 'Caregiver relationship removed.']);
     }
