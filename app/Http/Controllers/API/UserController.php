@@ -161,7 +161,7 @@ class UserController extends Controller
      */
     public function patients(Request $request)
     {
-        $patients = $request->user()->caregivingPatients()->get();
+        $patients = $request->user()->patients()->get();
 
         return UserResource::collection($patients);
     }
