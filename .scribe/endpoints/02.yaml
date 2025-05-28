@@ -1,260 +1,20 @@
-name: Caregivers
+name: User
 description: |-
 
-  Manage caregiver-patient relationships.
+  Endpoints for managing the authenticated user's profile, caregivers, and patients.
 endpoints:
   -
     httpMethods:
       - GET
-    uri: api/invites/validate
+    uri: api/user
     metadata:
-      groupName: Caregivers
+      groupName: User
       groupDescription: |-
 
-        Manage caregiver-patient relationships.
+        Endpoints for managing the authenticated user's profile, caregivers, and patients.
       subgroup: ''
       subgroupDescription: ''
-      title: 'Validate an invite token (for public use in registration flows)'
-      description: ''
-      authenticated: false
-      custom: []
-    headers:
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters:
-      token:
-        name: token
-        description: 'The invite token.'
-        required: true
-        example: abc-123
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanQueryParameters:
-      token: abc-123
-    bodyParameters:
-      token:
-        name: token
-        description: ''
-        required: true
-        example: laboriosam
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      token: laboriosam
-    fileParameters: []
-    responses:
-      -
-        status: 404
-        content: |-
-          {
-              "message": "No query results for model [App\\Models\\Invite]."
-          }
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          vary: Origin
-        description: null
-        custom: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/caregivers/invite
-    metadata:
-      groupName: Caregivers
-      groupDescription: |-
-
-        Manage caregiver-patient relationships.
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Invite a user to be your caregiver by email'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      email:
-        name: email
-        description: 'The email of the invited caregiver.'
-        required: true
-        example: test@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      email: test@example.com
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer Ph8ak5vZ66e34EfDbaVgcd1'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/caregivers/accept
-    metadata:
-      groupName: Caregivers
-      groupDescription: |-
-
-        Manage caregiver-patient relationships.
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Accept a caregiver invitation and register if needed'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      token:
-        name: token
-        description: 'The invitation token.'
-        required: true
-        example: abc-123
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      name:
-        name: name
-        description: 'Your name.'
-        required: true
-        example: 'Jane Doe'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password:
-        name: password
-        description: 'Your password.'
-        required: true
-        example: secret123
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password_confirmation:
-        name: password_confirmation
-        description: 'Confirm password.'
-        required: true
-        example: secret123
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      token: abc-123
-      name: 'Jane Doe'
-      password: secret123
-      password_confirmation: secret123
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer vaebE6VadkZPgh5D31fc684'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/caregivers/remove
-    metadata:
-      groupName: Caregivers
-      groupDescription: |-
-
-        Manage caregiver-patient relationships.
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Remove a caregiver-patient relationship'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      user_id:
-        name: user_id
-        description: 'The ID of the other party.'
-        required: true
-        example: 5
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      user_id: 5
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer kcbZDfVedg6h5836av1PaE4'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: api/caregivers/invites/pending
-    metadata:
-      groupName: Caregivers
-      groupDescription: |-
-
-        Manage caregiver-patient relationships.
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'List pending invites sent by the authenticated user'
+      title: "Show the authenticated user's information."
       description: ''
       authenticated: true
       custom: []
@@ -283,7 +43,351 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer E5Pbag61Z3d6vkfcVeD8ha4'
+      - 'Bearer 4k3gVhf6d1vZ6a8eD5cEaPb'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+    uri: api/user
+    metadata:
+      groupName: User
+      groupDescription: |-
+
+        Endpoints for managing the authenticated user's profile, caregivers, and patients.
+      subgroup: ''
+      subgroupDescription: ''
+      title: "Update the authenticated user's profile information."
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: "optional The user's name."
+        required: false
+        example: John
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      email:
+        name: email
+        description: 'optional Unique email.'
+        required: false
+        example: john@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      phone_number:
+        name: phone_number
+        description: 'optional Phone number.'
+        required: false
+        example: '+31612345678'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      name: John
+      email: john@example.com
+      phone_number: '+31612345678'
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 4fgZ85DakdVbheE63P61vac'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+    uri: api/user/password
+    metadata:
+      groupName: User
+      groupDescription: |-
+
+        Endpoints for managing the authenticated user's profile, caregivers, and patients.
+      subgroup: ''
+      subgroupDescription: ''
+      title: "Update the authenticated user's password."
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      current_password:
+        name: current_password
+        description: required.
+        required: false
+        example: oldpass123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      new_password:
+        name: new_password
+        description: required.
+        required: false
+        example: newpass456
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      new_password_confirmation:
+        name: new_password_confirmation
+        description: required.
+        required: false
+        example: newpass456
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      current_password: oldpass123
+      new_password: newpass456
+      new_password_confirmation: newpass456
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eda1843EkVZbg6fDPahcv65'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: api/user
+    metadata:
+      groupName: User
+      groupDescription: |-
+
+        Endpoints for managing the authenticated user's profile, caregivers, and patients.
+      subgroup: ''
+      subgroupDescription: ''
+      title: "Delete the authenticated user's account."
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      password:
+        name: password
+        description: "The user's password."
+        required: true
+        example: pass123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      password: pass123
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer V5ca1EZf6deaP3h86gvk4Db'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/user/caregivers
+    metadata:
+      groupName: User
+      groupDescription: |-
+
+        Endpoints for managing the authenticated user's profile, caregivers, and patients.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get all caregivers for the authenticated user.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6bcaEZha8fV4g6DevkP1d53'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/user/patients
+    metadata:
+      groupName: User
+      groupDescription: |-
+
+        Endpoints for managing the authenticated user's profile, caregivers, and patients.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get all patients the authenticated user cares for.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 5ca661hvDVP3fEZ4egadkb8'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/user/caregivers/update
+    metadata:
+      groupName: User
+      groupDescription: |-
+
+        Endpoints for managing the authenticated user's profile, caregivers, and patients.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update caregiver priorities.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      caregivers:
+        name: caregivers
+        description: ''
+        required: true
+        example:
+          - in
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'caregivers[].user_id':
+        name: 'caregivers[].user_id'
+        description: ''
+        required: true
+        example: 8
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'caregivers[].priority':
+        name: 'caregivers[].priority'
+        description: ''
+        required: true
+        example: 8
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      caregivers:
+        - in
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer b4c3hEfP15eZ6aDdkaVg8v6'
     controller: null
     method: null
     route: null

@@ -3,15 +3,15 @@ description: ''
 endpoints:
   -
     httpMethods:
-      - POST
-    uri: api/login
+      - GET
+    uri: api/invites/validate
     metadata:
       groupName: Endpoints
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: '**Login for Mobile/API Users (Token-based)**'
-      description: 'This endpoint logs in users via token-based authentication.'
+      title: 'Validate an invite token (for public use in registration flows)'
+      description: ''
       authenticated: false
       custom: []
     headers:
@@ -19,51 +19,31 @@ endpoints:
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      email:
-        name: email
-        description: "The user's email address."
+    queryParameters:
+      token:
+        name: token
+        description: 'The invite token.'
         required: true
-        example: user@example.com
+        example: abc-123
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      password:
-        name: password
-        description: "The user's password."
-        required: true
-        example: password123
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      email: user@example.com
-      password: password123
+    cleanQueryParameters:
+      token: abc-123
+    bodyParameters: []
+    cleanBodyParameters: []
     fileParameters: []
     responses:
       -
-        status: 200
-        content: |-
-          {
-            "message": "Login successful",
-            "access_token": "1|e3PDeODU1v6Fw7zUb1DQcqNfXk7LJACXfiHVAmk2",
-            "token_type": "Bearer",
-            "user": {
-              "id": 1,
-              "name": "John Doe",
-              "email": "user@example.com",
-              "created_at": "2024-11-20T12:00:00.000000Z",
-              "updated_at": "2024-11-20T12:00:00.000000Z"
-            }
-          }
-        headers: []
-        description: ''
+        status: 500
+        content: '{"message":"Failed to validate token.","error":"No query results for model [App\\Models\\Invite]."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
         custom: []
     responseFields: []
     auth: []
@@ -74,14 +54,182 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: api/logout
+    uri: api/caregivers/invite
     metadata:
       groupName: Endpoints
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: '**Logout for Mobile/API users (Token-based)**'
-      description: 'This endpoint logs out a user by revoking the current access token.'
+      title: 'Invite a user to be your caregiver by email'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      email:
+        name: email
+        description: 'The email of the invited caregiver.'
+        required: true
+        example: test@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      email: test@example.com
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer fcbvE6gVe5d81DaaPh64Z3k'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/caregivers/accept
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Accept a caregiver invitation and register if needed'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      token:
+        name: token
+        description: 'The invitation token.'
+        required: true
+        example: abc-123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      name:
+        name: name
+        description: 'Your name.'
+        required: true
+        example: 'Jane Doe'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      password:
+        name: password
+        description: 'Your password.'
+        required: true
+        example: secret123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      password_confirmation:
+        name: password_confirmation
+        description: 'Confirm password.'
+        required: true
+        example: secret123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      token: abc-123
+      name: 'Jane Doe'
+      password: secret123
+      password_confirmation: secret123
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 5Ee6bg4VfPZ81ac6k3vDhad'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/caregivers/remove
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Remove a caregiver-patient relationship'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      user_id:
+        name: user_id
+        description: 'The ID of the other party.'
+        required: true
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      user_id: 5
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 8vVfca53kDg1ZbaE4e6hPd6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/caregivers/invites/pending
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List pending invites sent by the authenticated user'
+      description: ''
       authenticated: true
       custom: []
     headers:
@@ -97,19 +245,70 @@ endpoints:
     fileParameters: []
     responses:
       -
-        status: 200
-        content: |-
-          {
-            "message": "Logout successful"
-          }
-        headers: []
-        description: ''
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
         custom: []
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer Dah6vgd1kVEfZaPb54ce638'
+      - 'Bearer 1PD6Evbe6ghca43aZdf8k5V'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PATCH
+    uri: api/caregivers/reorder
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Reorder caregivers by priority'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      caregiver_ids:
+        name: caregiver_ids
+        description: 'Ordered caregiver IDs.'
+        required: true
+        example:
+          - 12
+          - 7
+          - 4
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      caregiver_ids:
+        - 12
+        - 7
+        - 4
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer vg5aa1D64Eb38Z6hedfcVkP'
     controller: null
     method: null
     route: null
