@@ -164,6 +164,178 @@ paths:
                     example: 'Logout successful'
       tags:
         - Authentication
+  /api/invites/validate:
+    get:
+      summary: 'Validate an invite token (for public use in registration flows)'
+      operationId: validateAnInviteTokenforPublicUseInRegistrationFlows
+      description: ''
+      parameters:
+        -
+          in: query
+          name: token
+          description: 'The invite token.'
+          example: abc-123
+          required: true
+          schema:
+            type: string
+            description: 'The invite token.'
+            example: abc-123
+            nullable: false
+      responses:
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Failed to validate token.'
+                  error: 'No query results for model [App\Models\Invite].'
+                properties:
+                  message:
+                    type: string
+                    example: 'Failed to validate token.'
+                  error:
+                    type: string
+                    example: 'No query results for model [App\Models\Invite].'
+      tags:
+        - Caregivers
+      security: []
+  /api/caregivers/invite:
+    post:
+      summary: 'Invite a user to be your caregiver by email'
+      operationId: inviteAUserToBeYourCaregiverByEmail
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Caregivers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'The email of the invited caregiver.'
+                  example: test@example.com
+                  nullable: false
+              required:
+                - email
+  /api/caregivers/accept:
+    post:
+      summary: 'Accept a caregiver invitation and register if needed'
+      operationId: acceptACaregiverInvitationAndRegisterIfNeeded
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Caregivers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: 'The invitation token.'
+                  example: abc-123
+                  nullable: false
+                name:
+                  type: string
+                  description: 'Your name.'
+                  example: 'Jane Doe'
+                  nullable: false
+                password:
+                  type: string
+                  description: 'Your password.'
+                  example: secret123
+                  nullable: false
+                password_confirmation:
+                  type: string
+                  description: 'Confirm password.'
+                  example: secret123
+                  nullable: false
+              required:
+                - token
+                - name
+                - password
+                - password_confirmation
+  /api/caregivers/remove:
+    post:
+      summary: 'Remove a caregiver-patient relationship'
+      operationId: removeACaregiverPatientRelationship
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Caregivers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  description: 'The ID of the other party.'
+                  example: 5
+                  nullable: false
+              required:
+                - user_id
+  /api/caregivers/invites/pending:
+    get:
+      summary: 'List pending invites sent by the authenticated user'
+      operationId: listPendingInvitesSentByTheAuthenticatedUser
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Caregivers
+  /api/caregivers/reorder:
+    patch:
+      summary: 'Reorder caregivers by priority'
+      operationId: reorderCaregiversByPriority
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Caregivers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                caregiver_ids:
+                  type: array
+                  description: 'Ordered caregiver IDs.'
+                  example:
+                    - 12
+                    - 7
+                    - 4
+                  items:
+                    type: string
+              required:
+                - caregiver_ids
   /api/device-alarms:
     get:
       summary: 'List relevant device alarms'
@@ -211,7 +383,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the alarm.'
-        example: 16
+        example: 2
         required: true
         schema:
           type: integer
@@ -340,182 +512,10 @@ paths:
         in: path
         name: id
         description: 'The ID of the device.'
-        example: 7
+        example: 8
         required: true
         schema:
           type: integer
-  /api/invites/validate:
-    get:
-      summary: 'Validate an invite token (for public use in registration flows)'
-      operationId: validateAnInviteTokenforPublicUseInRegistrationFlows
-      description: ''
-      parameters:
-        -
-          in: query
-          name: token
-          description: 'The invite token.'
-          example: abc-123
-          required: true
-          schema:
-            type: string
-            description: 'The invite token.'
-            example: abc-123
-            nullable: false
-      responses:
-        500:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'Failed to validate token.'
-                  error: 'No query results for model [App\Models\Invite].'
-                properties:
-                  message:
-                    type: string
-                    example: 'Failed to validate token.'
-                  error:
-                    type: string
-                    example: 'No query results for model [App\Models\Invite].'
-      tags:
-        - Endpoints
-      security: []
-  /api/caregivers/invite:
-    post:
-      summary: 'Invite a user to be your caregiver by email'
-      operationId: inviteAUserToBeYourCaregiverByEmail
-      description: ''
-      parameters: []
-      responses: {  }
-      tags:
-        - Endpoints
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  description: 'The email of the invited caregiver.'
-                  example: test@example.com
-                  nullable: false
-              required:
-                - email
-  /api/caregivers/accept:
-    post:
-      summary: 'Accept a caregiver invitation and register if needed'
-      operationId: acceptACaregiverInvitationAndRegisterIfNeeded
-      description: ''
-      parameters: []
-      responses: {  }
-      tags:
-        - Endpoints
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                token:
-                  type: string
-                  description: 'The invitation token.'
-                  example: abc-123
-                  nullable: false
-                name:
-                  type: string
-                  description: 'Your name.'
-                  example: 'Jane Doe'
-                  nullable: false
-                password:
-                  type: string
-                  description: 'Your password.'
-                  example: secret123
-                  nullable: false
-                password_confirmation:
-                  type: string
-                  description: 'Confirm password.'
-                  example: secret123
-                  nullable: false
-              required:
-                - token
-                - name
-                - password
-                - password_confirmation
-  /api/caregivers/remove:
-    post:
-      summary: 'Remove a caregiver-patient relationship'
-      operationId: removeACaregiverPatientRelationship
-      description: ''
-      parameters: []
-      responses: {  }
-      tags:
-        - Endpoints
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                user_id:
-                  type: integer
-                  description: 'The ID of the other party.'
-                  example: 5
-                  nullable: false
-              required:
-                - user_id
-  /api/caregivers/invites/pending:
-    get:
-      summary: 'List pending invites sent by the authenticated user'
-      operationId: listPendingInvitesSentByTheAuthenticatedUser
-      description: ''
-      parameters: []
-      responses:
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: Unauthenticated.
-                properties:
-                  message:
-                    type: string
-                    example: Unauthenticated.
-      tags:
-        - Endpoints
-  /api/caregivers/reorder:
-    patch:
-      summary: 'Reorder caregivers by priority'
-      operationId: reorderCaregiversByPriority
-      description: ''
-      parameters: []
-      responses: {  }
-      tags:
-        - Endpoints
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                caregiver_ids:
-                  type: array
-                  description: 'Ordered caregiver IDs.'
-                  example:
-                    - 12
-                    - 7
-                    - 4
-                  items:
-                    type: string
-              required:
-                - caregiver_ids
   /api/user:
     get:
       summary: "Show the authenticated user's information."
@@ -682,7 +682,7 @@ paths:
                   type: array
                   description: ''
                   example:
-                    - in
+                    - cumque
                   items:
                     type: string
               required:
@@ -692,14 +692,14 @@ tags:
     name: Authentication
     description: "\nUser registration for mobile/API clients."
   -
+    name: Caregivers
+    description: "\nManage caregiver-patient relationships."
+  -
     name: 'Device Alarms'
     description: "\nRetrieve relevant alarms triggered by devices."
   -
     name: Devices
     description: "\nEndpoints for managing and viewing devices."
-  -
-    name: Endpoints
-    description: ''
   -
     name: User
     description: "\nEndpoints for managing the authenticated user's profile, caregivers, and patients."

@@ -45,7 +45,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer v146f5bhPdgD3VZkaE8ea6c'
+      - 'Bearer afve581EZPgbk6h6c4Vd3aD'
     controller: null
     method: null
     route: null
@@ -74,14 +74,14 @@ endpoints:
         name: id
         description: 'The ID of the alarm.'
         required: true
-        example: 16
+        example: 2
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      id: 16
+      id: 2
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -101,7 +101,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer vDbaV3586ZhPgEk1faed46c'
+      - 'Bearer fad4D3h5Pa16ZVbE8vgeck6'
     controller: null
     method: null
     route: null

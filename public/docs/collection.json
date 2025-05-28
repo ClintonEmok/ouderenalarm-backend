@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Ouderenalarm API",
-        "_postman_id": "dc83adc5-6f3e-4923-8126-679d9f05155b",
+        "_postman_id": "9e526dff-99b4-40f9-ac5c-444ded4946fa",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -130,6 +130,224 @@
             ]
         },
         {
+            "name": "Caregivers",
+            "description": "\nManage caregiver-patient relationships.",
+            "item": [
+                {
+                    "name": "Validate an invite token (for public use in registration flows)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/invites\/validate",
+                            "query": [
+                                {
+                                    "key": "token",
+                                    "value": "abc-123",
+                                    "description": "The invite token.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/invites\/validate?token=abc-123"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 500,
+                            "body": "{\"message\":\"Failed to validate token.\",\"error\":\"No query results for model [App\\\\Models\\\\Invite].\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Invite a user to be your caregiver by email",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/caregivers\/invite",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/caregivers\/invite"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"test@example.com\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Accept a caregiver invitation and register if needed",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/caregivers\/accept",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/caregivers\/accept"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"token\":\"abc-123\",\"name\":\"Jane Doe\",\"password\":\"secret123\",\"password_confirmation\":\"secret123\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Remove a caregiver-patient relationship",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/caregivers\/remove",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/caregivers\/remove"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"user_id\":5}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "List pending invites sent by the authenticated user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/caregivers\/invites\/pending",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/caregivers\/invites\/pending"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Reorder caregivers by priority",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/caregivers\/reorder",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/caregivers\/reorder"
+                        },
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"caregiver_ids\":[12,7,4]}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
             "name": "Device Alarms",
             "description": "\nRetrieve relevant alarms triggered by devices.",
             "item": [
@@ -190,7 +408,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "16",
+                                    "value": "2",
                                     "description": "The ID of the alarm."
                                 }
                             ]
@@ -412,7 +630,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "7",
+                                    "value": "8",
                                     "description": "The ID of the device."
                                 }
                             ]
@@ -465,7 +683,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "9",
+                                    "value": "1",
                                     "description": "The ID of the device to unassign."
                                 }
                             ]
@@ -483,224 +701,6 @@
                         ],
                         "body": null,
                         "description": "This removes the ownership link between the user and the device.\nOnly the device owner can perform this action."
-                    },
-                    "response": []
-                }
-            ]
-        },
-        {
-            "name": "Endpoints",
-            "description": "",
-            "item": [
-                {
-                    "name": "Validate an invite token (for public use in registration flows)",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/invites\/validate",
-                            "query": [
-                                {
-                                    "key": "token",
-                                    "value": "abc-123",
-                                    "description": "The invite token.",
-                                    "disabled": false
-                                }
-                            ],
-                            "raw": "{{baseUrl}}\/api\/invites\/validate?token=abc-123"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": [
-                        {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "vary",
-                                    "value": "Origin"
-                                }
-                            ],
-                            "code": 500,
-                            "body": "{\"message\":\"Failed to validate token.\",\"error\":\"No query results for model [App\\\\Models\\\\Invite].\"}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Invite a user to be your caregiver by email",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/caregivers\/invite",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/caregivers\/invite"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"email\":\"test@example.com\"}"
-                        },
-                        "description": ""
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Accept a caregiver invitation and register if needed",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/caregivers\/accept",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/caregivers\/accept"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"token\":\"abc-123\",\"name\":\"Jane Doe\",\"password\":\"secret123\",\"password_confirmation\":\"secret123\"}"
-                        },
-                        "description": ""
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Remove a caregiver-patient relationship",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/caregivers\/remove",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/caregivers\/remove"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"user_id\":5}"
-                        },
-                        "description": ""
-                    },
-                    "response": []
-                },
-                {
-                    "name": "List pending invites sent by the authenticated user",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/caregivers\/invites\/pending",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/caregivers\/invites\/pending"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "vary",
-                                    "value": "Origin"
-                                }
-                            ],
-                            "code": 401,
-                            "body": "{\"message\":\"Unauthenticated.\"}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Reorder caregivers by priority",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/caregivers\/reorder",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/caregivers\/reorder"
-                        },
-                        "method": "PATCH",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"caregiver_ids\":[12,7,4]}"
-                        },
-                        "description": ""
                     },
                     "response": []
                 }
@@ -951,7 +951,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"caregivers\":[\"in\"]}"
+                            "raw": "{\"caregivers\":[\"cumque\"]}"
                         },
                         "description": ""
                     },
