@@ -81,6 +81,89 @@ paths:
                 - password
                 - password_confirmation
       security: []
+  /api/login:
+    post:
+      summary: 'Login for Mobile/API Users (Token-based)'
+      operationId: loginForMobileAPIUsersTokenBased
+      description: 'This endpoint logs in users using Laravel Sanctum and returns an access token.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Login successful'
+                  access_token: 1|e3PDeODU1v6Fw7zUb1DQcqNfXk7LJACXfiHVAmk2
+                  user:
+                    id: 1
+                    name: 'John Doe'
+                    email: user@example.com
+                properties:
+                  message:
+                    type: string
+                    example: 'Login successful'
+                  access_token:
+                    type: string
+                    example: 1|e3PDeODU1v6Fw7zUb1DQcqNfXk7LJACXfiHVAmk2
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: 'John Doe'
+                      email:
+                        type: string
+                        example: user@example.com
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: "The user's email."
+                  example: user@example.com
+                  nullable: false
+                password:
+                  type: string
+                  description: "The user's password."
+                  example: password123
+                  nullable: false
+              required:
+                - email
+                - password
+      security: []
+  /api/logout:
+    post:
+      summary: 'Logout for Mobile/API Users (Token-based)'
+      operationId: logoutForMobileAPIUsersTokenBased
+      description: 'This endpoint revokes the current access token for the authenticated user.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Logout successful'
+                properties:
+                  message:
+                    type: string
+                    example: 'Logout successful'
+      tags:
+        - Authentication
   /api/invites/validate:
     get:
       summary: 'Validate an invite token (for public use in registration flows)'
@@ -99,34 +182,24 @@ paths:
             example: abc-123
             nullable: false
       responses:
-        404:
+        500:
           description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  message: 'No query results for model [App\Models\Invite].'
+                  message: 'Failed to validate token.'
+                  error: 'No query results for model [App\Models\Invite].'
                 properties:
                   message:
+                    type: string
+                    example: 'Failed to validate token.'
+                  error:
                     type: string
                     example: 'No query results for model [App\Models\Invite].'
       tags:
         - Caregivers
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                token:
-                  type: string
-                  description: ''
-                  example: laboriosam
-                  nullable: false
-              required:
-                - token
       security: []
   /api/caregivers/invite:
     post:
@@ -236,6 +309,33 @@ paths:
                     example: Unauthenticated.
       tags:
         - Caregivers
+  /api/caregivers/reorder:
+    patch:
+      summary: 'Reorder caregivers by priority'
+      operationId: reorderCaregiversByPriority
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Caregivers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                caregiver_ids:
+                  type: array
+                  description: 'Ordered caregiver IDs.'
+                  example:
+                    - 12
+                    - 7
+                    - 4
+                  items:
+                    type: string
+              required:
+                - caregiver_ids
   /api/device-alarms:
     get:
       summary: 'List relevant device alarms'
@@ -283,7 +383,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the alarm.'
-        example: 1
+        example: 2
         required: true
         schema:
           type: integer
@@ -412,105 +512,10 @@ paths:
         in: path
         name: id
         description: 'The ID of the device.'
-        example: 1
+        example: 8
         required: true
         schema:
           type: integer
-  /api/login:
-    post:
-      summary: '**Login for Mobile/API Users (Token-based)**'
-      operationId: LoginForMobileAPIUsersTokenBased
-      description: 'This endpoint logs in users via token-based authentication.'
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'Login successful'
-                  access_token: 1|e3PDeODU1v6Fw7zUb1DQcqNfXk7LJACXfiHVAmk2
-                  token_type: Bearer
-                  user:
-                    id: 1
-                    name: 'John Doe'
-                    email: user@example.com
-                    created_at: '2024-11-20T12:00:00.000000Z'
-                    updated_at: '2024-11-20T12:00:00.000000Z'
-                properties:
-                  message:
-                    type: string
-                    example: 'Login successful'
-                  access_token:
-                    type: string
-                    example: 1|e3PDeODU1v6Fw7zUb1DQcqNfXk7LJACXfiHVAmk2
-                  token_type:
-                    type: string
-                    example: Bearer
-                  user:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                        example: 1
-                      name:
-                        type: string
-                        example: 'John Doe'
-                      email:
-                        type: string
-                        example: user@example.com
-                      created_at:
-                        type: string
-                        example: '2024-11-20T12:00:00.000000Z'
-                      updated_at:
-                        type: string
-                        example: '2024-11-20T12:00:00.000000Z'
-      tags:
-        - Endpoints
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  description: "The user's email address."
-                  example: user@example.com
-                  nullable: false
-                password:
-                  type: string
-                  description: "The user's password."
-                  example: password123
-                  nullable: false
-              required:
-                - email
-                - password
-      security: []
-  /api/logout:
-    post:
-      summary: '**Logout for Mobile/API users (Token-based)**'
-      operationId: LogoutForMobileAPIUsersTokenBased
-      description: 'This endpoint logs out a user by revoking the current access token.'
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'Logout successful'
-                properties:
-                  message:
-                    type: string
-                    example: 'Logout successful'
-      tags:
-        - Endpoints
   /api/user:
     get:
       summary: "Show the authenticated user's information."
@@ -677,7 +682,7 @@ paths:
                   type: array
                   description: ''
                   example:
-                    - animi
+                    - cumque
                   items:
                     type: string
               required:
@@ -695,9 +700,6 @@ tags:
   -
     name: Devices
     description: "\nEndpoints for managing and viewing devices."
-  -
-    name: Endpoints
-    description: ''
   -
     name: User
     description: "\nEndpoints for managing the authenticated user's profile, caregivers, and patients."

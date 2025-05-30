@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Ouderenalarm API",
-        "_postman_id": "bbfe10bb-1c83-43bf-a44a-3a24e9b38b53",
+        "_postman_id": "9e526dff-99b4-40f9-ac5c-444ded4946fa",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -56,6 +56,76 @@
                             "name": ""
                         }
                     ]
+                },
+                {
+                    "name": "Login for Mobile\/API Users (Token-based)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/login",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/login"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"user@example.com\",\"password\":\"password123\"}"
+                        },
+                        "description": "This endpoint logs in users using Laravel Sanctum and returns an access token.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Login successful\",\n  \"access_token\": \"1|e3PDeODU1v6Fw7zUb1DQcqNfXk7LJACXfiHVAmk2\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"user@example.com\"\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Logout for Mobile\/API Users (Token-based)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/logout",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/logout"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "This endpoint revokes the current access token for the authenticated user."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Logout successful\"\n}",
+                            "name": ""
+                        }
+                    ]
                 }
             ]
         },
@@ -90,10 +160,7 @@
                                 "value": "application\/json"
                             }
                         ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"token\":\"laboriosam\"}"
-                        },
+                        "body": null,
                         "description": "",
                         "auth": {
                             "type": "noauth"
@@ -115,8 +182,8 @@
                                     "value": "Origin"
                                 }
                             ],
-                            "code": 404,
-                            "body": "{\n    \"message\": \"No query results for model [App\\\\Models\\\\Invite].\"\n}",
+                            "code": 500,
+                            "body": "{\"message\":\"Failed to validate token.\",\"error\":\"No query results for model [App\\\\Models\\\\Invite].\"}",
                             "name": ""
                         }
                     ]
@@ -249,6 +316,34 @@
                             "name": ""
                         }
                     ]
+                },
+                {
+                    "name": "Reorder caregivers by priority",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/caregivers\/reorder",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/caregivers\/reorder"
+                        },
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"caregiver_ids\":[12,7,4]}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
                 }
             ]
         },
@@ -313,7 +408,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "1",
+                                    "value": "2",
                                     "description": "The ID of the alarm."
                                 }
                             ]
@@ -535,7 +630,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "1",
+                                    "value": "8",
                                     "description": "The ID of the device."
                                 }
                             ]
@@ -588,7 +683,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "10",
+                                    "value": "1",
                                     "description": "The ID of the device to unassign."
                                 }
                             ]
@@ -608,82 +703,6 @@
                         "description": "This removes the ownership link between the user and the device.\nOnly the device owner can perform this action."
                     },
                     "response": []
-                }
-            ]
-        },
-        {
-            "name": "Endpoints",
-            "description": "",
-            "item": [
-                {
-                    "name": "**Login for Mobile\/API Users (Token-based)**",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/login",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/login"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"email\":\"user@example.com\",\"password\":\"password123\"}"
-                        },
-                        "description": "This endpoint logs in users via token-based authentication.",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"message\": \"Login successful\",\n  \"access_token\": \"1|e3PDeODU1v6Fw7zUb1DQcqNfXk7LJACXfiHVAmk2\",\n  \"token_type\": \"Bearer\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"user@example.com\",\n    \"created_at\": \"2024-11-20T12:00:00.000000Z\",\n    \"updated_at\": \"2024-11-20T12:00:00.000000Z\"\n  }\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "**Logout for Mobile\/API users (Token-based)**",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/logout",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/logout"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "This endpoint logs out a user by revoking the current access token."
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"message\": \"Logout successful\"\n}",
-                            "name": ""
-                        }
-                    ]
                 }
             ]
         },
@@ -932,7 +951,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"caregivers\":[\"animi\"]}"
+                            "raw": "{\"caregivers\":[\"cumque\"]}"
                         },
                         "description": ""
                     },

@@ -1,21 +1,21 @@
-name: User
+name: Devices
 description: |-
 
-  Endpoints for managing the authenticated user's profile, caregivers, and patients.
+  Endpoints for managing and viewing devices.
 endpoints:
   -
     httpMethods:
       - GET
-    uri: api/user
+    uri: api/my-devices
     metadata:
-      groupName: User
+      groupName: Devices
       groupDescription: |-
 
-        Endpoints for managing the authenticated user's profile, caregivers, and patients.
+        Endpoints for managing and viewing devices.
       subgroup: ''
       subgroupDescription: ''
-      title: "Show the authenticated user's information."
-      description: ''
+      title: 'Get all devices accessible to the authenticated user'
+      description: 'Returns devices the user owns (`own`) and devices they access through caregiving relationships (`caregiving`).'
       authenticated: true
       custom: []
     headers:
@@ -43,192 +43,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer DegcdPafE1368Zh546kVabv'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - PUT
-    uri: api/user
-    metadata:
-      groupName: User
-      groupDescription: |-
-
-        Endpoints for managing the authenticated user's profile, caregivers, and patients.
-      subgroup: ''
-      subgroupDescription: ''
-      title: "Update the authenticated user's profile information."
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      name:
-        name: name
-        description: "optional The user's name."
-        required: false
-        example: John
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      email:
-        name: email
-        description: 'optional Unique email.'
-        required: false
-        example: john@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      phone_number:
-        name: phone_number
-        description: 'optional Phone number.'
-        required: false
-        example: '+31612345678'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      name: John
-      email: john@example.com
-      phone_number: '+31612345678'
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 5Zkah1Vdbf3c4Pa6DE8vg6e'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - PUT
-    uri: api/user/password
-    metadata:
-      groupName: User
-      groupDescription: |-
-
-        Endpoints for managing the authenticated user's profile, caregivers, and patients.
-      subgroup: ''
-      subgroupDescription: ''
-      title: "Update the authenticated user's password."
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      current_password:
-        name: current_password
-        description: required.
-        required: false
-        example: oldpass123
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      new_password:
-        name: new_password
-        description: required.
-        required: false
-        example: newpass456
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      new_password_confirmation:
-        name: new_password_confirmation
-        description: required.
-        required: false
-        example: newpass456
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      current_password: oldpass123
-      new_password: newpass456
-      new_password_confirmation: newpass456
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer aEbPahfedVc184gvD53Z6k6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - DELETE
-    uri: api/user
-    metadata:
-      groupName: User
-      groupDescription: |-
-
-        Endpoints for managing the authenticated user's profile, caregivers, and patients.
-      subgroup: ''
-      subgroupDescription: ''
-      title: "Delete the authenticated user's account."
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      password:
-        name: password
-        description: "The user's password."
-        required: true
-        example: pass123
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      password: pass123
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer D1dVP6kcea4Ea5bZv8gf36h'
+      - 'Bearer D5468bea1fZEPvc6kh3Vgda'
     controller: null
     method: null
     route: null
@@ -236,15 +51,15 @@ endpoints:
   -
     httpMethods:
       - GET
-    uri: api/user/caregivers
+    uri: api/my-devices/own
     metadata:
-      groupName: User
+      groupName: Devices
       groupDescription: |-
 
-        Endpoints for managing the authenticated user's profile, caregivers, and patients.
+        Endpoints for managing and viewing devices.
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get all caregivers for the authenticated user.'
+      title: 'Get devices owned by the authenticated user'
       description: ''
       authenticated: true
       custom: []
@@ -273,7 +88,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer PDavb354dga1hE6Zek68cVf'
+      - 'Bearer de665gc4bfa8VZ1vDhEk3Pa'
     controller: null
     method: null
     route: null
@@ -281,15 +96,15 @@ endpoints:
   -
     httpMethods:
       - GET
-    uri: api/user/patients
+    uri: api/my-devices/caregiving
     metadata:
-      groupName: User
+      groupName: Devices
       groupDescription: |-
 
-        Endpoints for managing the authenticated user's profile, caregivers, and patients.
+        Endpoints for managing and viewing devices.
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get all patients the authenticated user cares for.'
+      title: 'Get devices accessible through caregiving relationships'
       description: ''
       authenticated: true
       custom: []
@@ -318,7 +133,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer cDvaP6kEZ54Vgba3f6e1h8d'
+      - 'Bearer h5VeDaPc8vb6Ed1f6Zk4a3g'
     controller: null
     method: null
     route: null
@@ -326,15 +141,15 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: api/user/caregivers/update
+    uri: api/devices/assign
     metadata:
-      groupName: User
+      groupName: Devices
       groupDescription: |-
 
-        Endpoints for managing the authenticated user's profile, caregivers, and patients.
+        Endpoints for managing and viewing devices.
       subgroup: ''
       subgroupDescription: ''
-      title: 'Update caregiver priorities.'
+      title: 'Assign a device to the authenticated user using its phone number'
       description: ''
       authenticated: true
       custom: []
@@ -347,47 +162,141 @@ endpoints:
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      caregivers:
-        name: caregivers
-        description: ''
+      phone_number:
+        name: phone_number
+        description: 'The phone number of the device.'
         required: true
-        example:
-          - animi
-        type: 'string[]'
+        example: '+31612345678'
+        type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         custom: []
-      'caregivers[].user_id':
-        name: 'caregivers[].user_id'
-        description: ''
-        required: true
-        example: 14
-        type: integer
+      nickname:
+        name: nickname
+        description: 'optional A nickname for the device.'
+        required: false
+        example: "Grandma's Alarm"
+        type: string
         enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      'caregivers[].priority':
-        name: 'caregivers[].priority'
-        description: ''
-        required: true
-        example: 11
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
+        exampleWasSpecified: true
+        nullable: true
         custom: []
     cleanBodyParameters:
-      caregivers:
-        - animi
+      phone_number: '+31612345678'
+      nickname: "Grandma's Alarm"
     fileParameters: []
     responses: []
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer eb36chDad4a8VvPf1Ek6g5Z'
+      - 'Bearer dkca6h568fagv1ZVE3bP4De'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/devices/{id}'
+    metadata:
+      groupName: Devices
+      groupDescription: |-
+
+        Endpoints for managing and viewing devices.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get a specific device by ID, if user has access'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the device.'
+        required: true
+        example: 8
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 8
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer h6E3Zeakvb56fgc1dPV48Da'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/devices/{id}'
+    metadata:
+      groupName: Devices
+      groupDescription: |-
+
+        Endpoints for managing and viewing devices.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Unassign a device from the authenticated user'
+      description: |-
+        This removes the ownership link between the user and the device.
+        Only the device owner can perform this action.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the device to unassign.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer aa418V6he5bPfZDkd6E3gvc'
     controller: null
     method: null
     route: null
