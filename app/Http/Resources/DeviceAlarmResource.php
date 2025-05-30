@@ -31,6 +31,8 @@ class DeviceAlarmResource extends JsonResource
                 'user' => [
                     'name' => optional(optional($this->device)->user)->name,
                 ],
+                // 👇 Caregivers en route added here
+                'caregivers_en_route' => $this->caregivers_en_route ?? 'Geen',
             ],
         ];
     }

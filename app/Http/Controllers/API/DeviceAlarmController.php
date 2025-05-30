@@ -17,7 +17,42 @@ class DeviceAlarmController extends Controller
     /**
      * List relevant device alarms
      *
-     * Only returns alarms that are fall or SOS alerts.
+     * Returns alarms that are either fall or SOS alerts, including basic device and user info,
+     * and a list of caregivers currently en route.
+     *
+     * @response {
+     *   "data": [
+     *     {
+     *       "id": 42,
+     *       "created_at": "2025-05-30 12:34:56",
+     *       "triggered_alerts": "Valalarm, Noodoproep",
+     *       "device": {
+     *         "imei": "123456789012345",
+     *         "phone_number": "+31612345678",
+     *         "connection_number": "CN001",
+     *         "user": {
+     *           "name": "Jan Jansen"
+     *         }
+     *       },
+     *       "caregivers_en_route": "Piet Pietersen, Klaas Klaassen"
+     *     }
+     *   ],
+     *   "links": {
+     *     "first": "http://example.com/api/device-alarms?page=1",
+     *     "last": "http://example.com/api/device-alarms?page=1",
+     *     "prev": null,
+     *     "next": null
+     *   },
+     *   "meta": {
+     *     "current_page": 1,
+     *     "from": 1,
+     *     "last_page": 1,
+     *     "path": "http://example.com/api/device-alarms",
+     *     "per_page": 15,
+     *     "to": 1,
+     *     "total": 1
+     *   }
+     * }
      *
      * @authenticated
      */
@@ -37,7 +72,25 @@ class DeviceAlarmController extends Controller
     /**
      * Show details for a specific device alarm
      *
+     * Returns the full details of a specific alarm, including triggered alerts,
+     * device and user information, and the list of caregivers en route.
+     *
      * @urlParam id int required The ID of the alarm.
+     *
+     * @response {
+     *   "id": 42,
+     *   "created_at": "2025-05-30 12:34:56",
+     *   "triggered_alerts": "Valalarm, Noodoproep",
+     *   "device": {
+     *     "imei": "123456789012345",
+     *     "phone_number": "+31612345678",
+     *     "connection_number": "CN001",
+     *     "user": {
+     *       "name": "Jan Jansen"
+     *     }
+     *   },
+     *   "caregivers_en_route": "Piet Pietersen, Klaas Klaassen"
+     * }
      *
      * @authenticated
      */
