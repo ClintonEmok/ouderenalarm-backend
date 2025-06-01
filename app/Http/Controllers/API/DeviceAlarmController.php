@@ -81,6 +81,11 @@ class DeviceAlarmController extends Controller
      *   "id": 42,
      *   "created_at": "2025-05-30 12:34:56",
      *   "triggered_alerts": "Valalarm, Noodoproep",
+     *   "location" : {
+     *       "latitude": "51.02323",
+     *       "longitude": "5.21212"
+     *       "timestamp": "2025-05-30 12:34:56"
+     *   }
      *   "device": {
      *     "imei": "123456789012345",
      *     "phone_number": "+31612345678",
