@@ -81,6 +81,7 @@ class DeviceAlarmController extends Controller
      *   "id": 42,
      *   "created_at": "2025-05-30 12:34:56",
      *   "triggered_alerts": "Valalarm, Noodoproep",
+     *   "false_alarm": true
      *   "location" : {
      *       "latitude": "51.02323",
      *       "longitude": "5.21212"
