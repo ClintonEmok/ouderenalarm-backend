@@ -23,6 +23,7 @@ class DeviceAlarmResource extends JsonResource
             'id' => $this->id,
             'created_at' => $this->created_at->toDateTimeString(),
             'triggered_alerts' => implode(', ', $alerts) ?: 'Geen',
+            'false_alarm' => $this->is_false_alarm,
             'location' => $this->device && $this->device->latestLocation
                 ? new LocationResource($this->device->latestLocation)
                 : null,

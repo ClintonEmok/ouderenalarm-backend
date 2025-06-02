@@ -40,6 +40,7 @@ class DeviceAlarm extends Model
         'bark_detection' => 'boolean',
         'ble_disconnected' => 'boolean',
         'watch_taken_away' => 'boolean',
+        'is_false_alarm' => 'boolean',
     ];
 
 
