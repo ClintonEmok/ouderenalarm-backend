@@ -26,7 +26,7 @@ class RecentDeviceAlarmsWidget extends BaseWidget
                 fn (Model $record): string => DeviceAlarmResource::getUrl('view',['record' => $record]),
             )
             ->columns([
-                TextColumn::make("created_at")->label("Wanneer")->sortable(),
+                TextColumn::make("created_at")->label("Wanneer")->dateTime(timezone: 'Europe/Amsterdam')->sortable(),
                 Tables\Columns\ColumnGroup::make('Soort melding',[
                     TextColumn::make('triggered_alerts')->label("Meldingen"),
 //                    Tables\Columns\IconColumn::make('fall_down_alert')->label('Valalarm'),
