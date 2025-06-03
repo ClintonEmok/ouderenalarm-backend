@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Pages\Auth;
+namespace App\Filament\Customer\Pages\Auth;
 
 use App\Models\UserInvitation;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;

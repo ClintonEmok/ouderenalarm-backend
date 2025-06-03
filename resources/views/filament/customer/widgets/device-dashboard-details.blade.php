@@ -8,13 +8,16 @@
             <div class="md:w-1/3 w-full">
                 <x-filament::section>
                     <x-slot name="heading">
-                         Apparaatinfo
+                         Mini Ouderenalarm
                     </x-slot>
 
                     @if ($device)
                         <div class="space-y-1">
 {{--                            <div class="text-sm text-gray-600">Naam</div>--}}
 {{--                            <div class="text-lg font-semibold">{{ $device->nickname ?? 'Geen naam' }}</div>--}}
+<div class="flex justify-center">
+<img src="{{ asset('images/black.jpeg') }}" alt="My Image" class="max-w-[400px] max-h-[300px]">
+</div>
 
                             <div class="text-sm text-gray-600 mt-2">IMEI</div>
                             <div class="text-base text-gray-800">{{ $device->imei }}</div>

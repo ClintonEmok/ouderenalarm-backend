@@ -5,13 +5,87 @@ info:
   version: 1.0.0
 servers:
   -
-    url: 'http://localhost:8000'
+    url: 'https://api.ouderen-alarmering.nl'
 paths:
-  /api/devices:
-    get:
-      summary: "Display a listing of the user's devices."
-      operationId: displayAListingOfTheUsersDevices
+  /api/register:
+    post:
+      summary: 'Register a new user and return an access token'
+      operationId: registerANewUserAndReturnAnAccessToken
       description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Registration successful'
+                  access_token: 1|xyz...
+                  user:
+                    id: 1
+                    name: 'John Doe'
+                    email: john@example.com
+                properties:
+                  message:
+                    type: string
+                    example: 'Registration successful'
+                  access_token:
+                    type: string
+                    example: 1|xyz...
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: 'John Doe'
+                      email:
+                        type: string
+                        example: john@example.com
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: "The user's name."
+                  example: 'John Doe'
+                  nullable: false
+                email:
+                  type: string
+                  description: "The user's email. Must be unique."
+                  example: john@example.com
+                  nullable: false
+                password:
+                  type: string
+                  description: 'The password (min: 8).'
+                  example: password123
+                  nullable: false
+                password_confirmation:
+                  type: string
+                  description: 'Must match password.'
+                  example: password123
+                  nullable: false
+              required:
+                - name
+                - email
+                - password
+                - password_confirmation
+      security: []
+  /api/login:
+    post:
+      summary: 'Login for Mobile/API Users (Token-based)'
+      operationId: loginForMobileAPIUsersTokenBased
+      description: 'This endpoint logs in users using Laravel Sanctum and returns an access token.'
       parameters: []
       responses:
         200:
@@ -20,18 +94,34 @@ paths:
             application/json:
               schema:
                 type: object
-                example: {  }
-                properties: {  }
+                example:
+                  message: 'Login successful'
+                  access_token: 1|e3PDeODU1v6Fw7zUb1DQcqNfXk7LJACXfiHVAmk2
+                  user:
+                    id: 1
+                    name: 'John Doe'
+                    email: user@example.com
+                properties:
+                  message:
+                    type: string
+                    example: 'Login successful'
+                  access_token:
+                    type: string
+                    example: 1|e3PDeODU1v6Fw7zUb1DQcqNfXk7LJACXfiHVAmk2
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: 'John Doe'
+                      email:
+                        type: string
+                        example: user@example.com
       tags:
-        - Devices
-    post:
-      summary: 'Store a newly created device for the authenticated user.'
-      operationId: storeANewlyCreatedDeviceForTheAuthenticatedUser
-      description: ''
-      parameters: []
-      responses: {  }
-      tags:
-        - Devices
+        - Authentication
       requestBody:
         required: true
         content:
@@ -39,42 +129,289 @@ paths:
             schema:
               type: object
               properties:
-                alarm_code:
+                email:
                   type: string
-                  description: 'Must not be greater than 20 characters.'
-                  example: qyglpfirscihxxvyyuo
-                  nullable: true
-                longitude:
-                  type: number
-                  description: 'Must be between -180 and 180.'
-                  example: -180
-                  nullable: true
-                latitude:
-                  type: number
-                  description: 'Must be between -90 and 90.'
-                  example: -89
-                  nullable: true
-                maps_link:
-                  type: string
-                  description: 'Must not be greater than 2083 characters.'
-                  example: iwyljgcushr
-                  nullable: true
-                phone_number:
-                  type: string
-                  description: 'Must not be greater than 15 characters.'
-                  example: tfsloayxf
+                  description: "The user's email."
+                  example: user@example.com
                   nullable: false
-                battery_percentage:
-                  type: integer
-                  description: 'Must be between 0 and 100.'
-                  example: 0
-                  nullable: true
+                password:
+                  type: string
+                  description: "The user's password."
+                  example: password123
+                  nullable: false
               required:
-                - phone_number
-  '/api/devices/{id}':
+                - email
+                - password
+      security: []
+  /api/logout:
+    post:
+      summary: 'Logout for Mobile/API Users (Token-based)'
+      operationId: logoutForMobileAPIUsersTokenBased
+      description: 'This endpoint revokes the current access token for the authenticated user.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Logout successful'
+                properties:
+                  message:
+                    type: string
+                    example: 'Logout successful'
+      tags:
+        - Authentication
+  /api/invites/validate:
     get:
-      summary: 'Display the specified device for the authenticated user.'
-      operationId: displayTheSpecifiedDeviceForTheAuthenticatedUser
+      summary: 'Validate an invite token (for public use in registration flows)'
+      operationId: validateAnInviteTokenforPublicUseInRegistrationFlows
+      description: ''
+      parameters:
+        -
+          in: query
+          name: token
+          description: 'The invite token.'
+          example: abc-123
+          required: true
+          schema:
+            type: string
+            description: 'The invite token.'
+            example: abc-123
+            nullable: false
+      responses:
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Failed to validate token.'
+                  error: 'No query results for model [App\Models\Invite].'
+                properties:
+                  message:
+                    type: string
+                    example: 'Failed to validate token.'
+                  error:
+                    type: string
+                    example: 'No query results for model [App\Models\Invite].'
+      tags:
+        - Caregivers
+      security: []
+  /api/caregivers/invite:
+    post:
+      summary: 'Invite a user to be your caregiver by email'
+      operationId: inviteAUserToBeYourCaregiverByEmail
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Caregivers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'The email of the invited caregiver.'
+                  example: test@example.com
+                  nullable: false
+              required:
+                - email
+  /api/caregivers/accept:
+    post:
+      summary: 'Accept a caregiver invitation and register if needed'
+      operationId: acceptACaregiverInvitationAndRegisterIfNeeded
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Caregivers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: 'The invitation token.'
+                  example: abc-123
+                  nullable: false
+                name:
+                  type: string
+                  description: 'Your name.'
+                  example: 'Jane Doe'
+                  nullable: false
+                password:
+                  type: string
+                  description: 'Your password.'
+                  example: secret123
+                  nullable: false
+                password_confirmation:
+                  type: string
+                  description: 'Confirm password.'
+                  example: secret123
+                  nullable: false
+              required:
+                - token
+                - name
+                - password
+                - password_confirmation
+  /api/caregivers/remove:
+    post:
+      summary: 'Remove a caregiver-patient relationship'
+      operationId: removeACaregiverPatientRelationship
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Caregivers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  description: 'The ID of the other party.'
+                  example: 5
+                  nullable: false
+              required:
+                - user_id
+  /api/caregivers/invites/pending:
+    get:
+      summary: 'List pending invites sent by the authenticated user'
+      operationId: listPendingInvitesSentByTheAuthenticatedUser
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Caregivers
+  /api/caregivers/reorder:
+    patch:
+      summary: 'Reorder caregivers by priority'
+      operationId: reorderCaregiversByPriority
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Caregivers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                caregiver_ids:
+                  type: array
+                  description: 'Ordered caregiver IDs.'
+                  example:
+                    - 12
+                    - 7
+                    - 4
+                  items:
+                    type: string
+              required:
+                - caregiver_ids
+  /api/device-alarms:
+    get:
+      summary: 'List relevant device alarms'
+      operationId: listRelevantDeviceAlarms
+      description: 'Only returns alarms that are fall or SOS alerts.'
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - 'Device Alarms'
+  '/api/device-alarms/{id}':
+    get:
+      summary: 'Show details for a specific device alarm'
+      operationId: showDetailsForASpecificDeviceAlarm
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - 'Device Alarms'
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the alarm.'
+        example: 2
+        required: true
+        schema:
+          type: integer
+  /api/my-devices:
+    get:
+      summary: 'Get all devices accessible to the authenticated user'
+      operationId: getAllDevicesAccessibleToTheAuthenticatedUser
+      description: 'Returns devices the user owns (`own`) and devices they access through caregiving relationships (`caregiving`).'
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Devices
+  /api/my-devices/own:
+    get:
+      summary: 'Get devices owned by the authenticated user'
+      operationId: getDevicesOwnedByTheAuthenticatedUser
       description: ''
       parameters: []
       responses:
@@ -92,55 +429,80 @@ paths:
                     example: Unauthenticated.
       tags:
         - Devices
-    put:
-      summary: 'Update the specified device for the authenticated user.'
-      operationId: updateTheSpecifiedDeviceForTheAuthenticatedUser
+  /api/my-devices/caregiving:
+    get:
+      summary: 'Get devices accessible through caregiving relationships'
+      operationId: getDevicesAccessibleThroughCaregivingRelationships
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Devices
+  /api/devices/assign:
+    post:
+      summary: 'Assign a device to the authenticated user using its phone number'
+      operationId: assignADeviceToTheAuthenticatedUserUsingItsPhoneNumber
       description: ''
       parameters: []
       responses: {  }
       tags:
         - Devices
       requestBody:
-        required: false
+        required: true
         content:
           application/json:
             schema:
               type: object
               properties:
-                alarm_code:
-                  type: string
-                  description: 'Must not be greater than 20 characters.'
-                  example: nuzgt
-                  nullable: true
-                longitude:
-                  type: number
-                  description: 'Must be between -180 and 180.'
-                  example: -180
-                  nullable: true
-                latitude:
-                  type: number
-                  description: 'Must be between -90 and 90.'
-                  example: -90
-                  nullable: true
-                maps_link:
-                  type: string
-                  description: 'Must not be greater than 2083 characters.'
-                  example: yuxxkdggvzngd
-                  nullable: true
                 phone_number:
                   type: string
-                  description: 'Must not be greater than 15 characters.'
-                  example: siekyjhqxacf
+                  description: 'The phone number of the device.'
+                  example: '+31612345678'
+                  nullable: false
+                nickname:
+                  type: string
+                  description: 'optional A nickname for the device.'
+                  example: "Grandma's Alarm"
                   nullable: true
-                battery_percentage:
-                  type: integer
-                  description: 'Must be between 0 and 100.'
-                  example: 1
-                  nullable: true
-    delete:
-      summary: 'Remove the specified device for the authenticated user.'
-      operationId: removeTheSpecifiedDeviceForTheAuthenticatedUser
+              required:
+                - phone_number
+  '/api/devices/{id}':
+    get:
+      summary: 'Get a specific device by ID, if user has access'
+      operationId: getASpecificDeviceByIDIfUserHasAccess
       description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Devices
+    delete:
+      summary: 'Unassign a device from the authenticated user'
+      operationId: unassignADeviceFromTheAuthenticatedUser
+      description: "This removes the ownership link between the user and the device.\nOnly the device owner can perform this action."
       parameters: []
       responses: {  }
       tags:
@@ -150,14 +512,14 @@ paths:
         in: path
         name: id
         description: 'The ID of the device.'
-        example: a
+        example: 8
         required: true
         schema:
-          type: string
+          type: integer
   /api/user:
     get:
-      summary: ''
-      operationId: getApiUser
+      summary: "Show the authenticated user's information."
+      operationId: showTheAuthenticatedUsersInformation
       description: ''
       parameters: []
       responses:
@@ -174,15 +536,173 @@ paths:
                     type: string
                     example: Unauthenticated.
       tags:
-        - Endpoints
-      security: []
+        - User
+    put:
+      summary: "Update the authenticated user's profile information."
+      operationId: updateTheAuthenticatedUsersProfileInformation
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - User
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: "optional The user's name."
+                  example: John
+                  nullable: false
+                email:
+                  type: string
+                  description: 'optional Unique email.'
+                  example: john@example.com
+                  nullable: false
+                phone_number:
+                  type: string
+                  description: 'optional Phone number.'
+                  example: '+31612345678'
+                  nullable: false
+    delete:
+      summary: "Delete the authenticated user's account."
+      operationId: deleteTheAuthenticatedUsersAccount
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  description: "The user's password."
+                  example: pass123
+                  nullable: false
+              required:
+                - password
+  /api/user/password:
+    put:
+      summary: "Update the authenticated user's password."
+      operationId: updateTheAuthenticatedUsersPassword
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - User
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                current_password:
+                  type: string
+                  description: required.
+                  example: oldpass123
+                  nullable: false
+                new_password:
+                  type: string
+                  description: required.
+                  example: newpass456
+                  nullable: false
+                new_password_confirmation:
+                  type: string
+                  description: required.
+                  example: newpass456
+                  nullable: false
+  /api/user/caregivers:
+    get:
+      summary: 'Get all caregivers for the authenticated user.'
+      operationId: getAllCaregiversForTheAuthenticatedUser
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - User
+  /api/user/patients:
+    get:
+      summary: 'Get all patients the authenticated user cares for.'
+      operationId: getAllPatientsTheAuthenticatedUserCaresFor
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - User
+  /api/user/caregivers/update:
+    post:
+      summary: 'Update caregiver priorities.'
+      operationId: updateCaregiverPriorities
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                caregivers:
+                  type: array
+                  description: ''
+                  example:
+                    - cumque
+                  items:
+                    type: string
+              required:
+                - caregivers
 tags:
   -
-    name: Devices
-    description: ''
+    name: Authentication
+    description: "\nUser registration for mobile/API clients."
   -
-    name: Endpoints
-    description: ''
+    name: Caregivers
+    description: "\nManage caregiver-patient relationships."
+  -
+    name: 'Device Alarms'
+    description: "\nRetrieve relevant alarms triggered by devices."
+  -
+    name: Devices
+    description: "\nEndpoints for managing and viewing devices."
+  -
+    name: User
+    description: "\nEndpoints for managing the authenticated user's profile, caregivers, and patients."
 components:
   securitySchemes:
     default:

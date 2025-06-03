@@ -5,60 +5,28 @@
             "key": "baseUrl",
             "type": "string",
             "name": "string",
-            "value": "http:\/\/localhost:8000"
+            "value": "https:\/\/api.ouderen-alarmering.nl"
         }
     ],
     "info": {
         "name": "Ouderenalarm API",
-        "_postman_id": "a49a213b-e9cf-430f-80c6-2cf2f8111a0d",
+        "_postman_id": "9e526dff-99b4-40f9-ac5c-444ded4946fa",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
     "item": [
         {
-            "name": "Devices",
-            "description": "",
+            "name": "Authentication",
+            "description": "\nUser registration for mobile\/API clients.",
             "item": [
                 {
-                    "name": "Display a listing of the user's devices.",
+                    "name": "Register a new user and return an access token",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/devices",
+                            "path": "api\/register",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/devices"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Store a newly created device for the authenticated user.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/devices",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/devices"
+                            "raw": "{{baseUrl}}\/api\/register"
                         },
                         "method": "POST",
                         "header": [
@@ -73,87 +41,32 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"alarm_code\":\"qyglpfirscihxxvyyuo\",\"longitude\":-180,\"latitude\":-89,\"maps_link\":\"iwyljgcushr\",\"phone_number\":\"tfsloayxf\",\"battery_percentage\":0}"
+                            "raw": "{\"name\":\"John Doe\",\"email\":\"john@example.com\",\"password\":\"password123\",\"password_confirmation\":\"password123\"}"
                         },
-                        "description": ""
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Display the specified device for the authenticated user.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/devices\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/devices\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "a",
-                                    "description": "The ID of the device."
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "http:\/\/localhost:3000"
-                                },
-                                {
-                                    "key": "access-control-allow-credentials",
-                                    "value": "true"
-                                }
-                            ],
-                            "code": 401,
-                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"Registration successful\",\n  \"access_token\": \"1|xyz...\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\"\n  }\n}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Update the specified device for the authenticated user.",
+                    "name": "Login for Mobile\/API Users (Token-based)",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/devices\/:id",
+                            "path": "api\/login",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/devices\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "voluptatem",
-                                    "description": "The ID of the device."
-                                }
-                            ]
+                            "raw": "{{baseUrl}}\/api\/login"
                         },
-                        "method": "PUT",
+                        "method": "POST",
                         "header": [
                             {
                                 "key": "Content-Type",
@@ -166,30 +79,32 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"alarm_code\":\"nuzgt\",\"longitude\":-180,\"latitude\":-90,\"maps_link\":\"yuxxkdggvzngd\",\"phone_number\":\"siekyjhqxacf\",\"battery_percentage\":1}"
+                            "raw": "{\"email\":\"user@example.com\",\"password\":\"password123\"}"
                         },
-                        "description": ""
+                        "description": "This endpoint logs in users using Laravel Sanctum and returns an access token.",
+                        "auth": {
+                            "type": "noauth"
+                        }
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Login successful\",\n  \"access_token\": \"1|e3PDeODU1v6Fw7zUb1DQcqNfXk7LJACXfiHVAmk2\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"user@example.com\"\n  }\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "Remove the specified device for the authenticated user.",
+                    "name": "Logout for Mobile\/API Users (Token-based)",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/devices\/:id",
+                            "path": "api\/logout",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/devices\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "voluptas",
-                                    "description": "The ID of the device."
-                                }
-                            ]
+                            "raw": "{{baseUrl}}\/api\/logout"
                         },
-                        "method": "DELETE",
+                        "method": "POST",
                         "header": [
                             {
                                 "key": "Content-Type",
@@ -201,24 +116,38 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "This endpoint revokes the current access token for the authenticated user."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Logout successful\"\n}",
+                            "name": ""
+                        }
+                    ]
                 }
             ]
         },
         {
-            "name": "Endpoints",
-            "description": "",
+            "name": "Caregivers",
+            "description": "\nManage caregiver-patient relationships.",
             "item": [
                 {
-                    "name": "GET api\/user",
+                    "name": "Validate an invite token (for public use in registration flows)",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/user",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/user"
+                            "path": "api\/invites\/validate",
+                            "query": [
+                                {
+                                    "key": "token",
+                                    "value": "abc-123",
+                                    "description": "The invite token.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/invites\/validate?token=abc-123"
                         },
                         "method": "GET",
                         "header": [
@@ -249,12 +178,137 @@
                                     "value": "application\/json"
                                 },
                                 {
-                                    "key": "access-control-allow-origin",
-                                    "value": "http:\/\/localhost:3000"
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 500,
+                            "body": "{\"message\":\"Failed to validate token.\",\"error\":\"No query results for model [App\\\\Models\\\\Invite].\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Invite a user to be your caregiver by email",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/caregivers\/invite",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/caregivers\/invite"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"test@example.com\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Accept a caregiver invitation and register if needed",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/caregivers\/accept",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/caregivers\/accept"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"token\":\"abc-123\",\"name\":\"Jane Doe\",\"password\":\"secret123\",\"password_confirmation\":\"secret123\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Remove a caregiver-patient relationship",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/caregivers\/remove",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/caregivers\/remove"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"user_id\":5}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "List pending invites sent by the authenticated user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/caregivers\/invites\/pending",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/caregivers\/invites\/pending"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
                                 },
                                 {
-                                    "key": "access-control-allow-credentials",
-                                    "value": "true"
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
                                 }
                             ],
                             "code": 401,
@@ -262,6 +316,646 @@
                             "name": ""
                         }
                     ]
+                },
+                {
+                    "name": "Reorder caregivers by priority",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/caregivers\/reorder",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/caregivers\/reorder"
+                        },
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"caregiver_ids\":[12,7,4]}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Device Alarms",
+            "description": "\nRetrieve relevant alarms triggered by devices.",
+            "item": [
+                {
+                    "name": "List relevant device alarms",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/device-alarms",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/device-alarms"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Only returns alarms that are fall or SOS alerts."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Show details for a specific device alarm",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/device-alarms\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/device-alarms\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "2",
+                                    "description": "The ID of the alarm."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Devices",
+            "description": "\nEndpoints for managing and viewing devices.",
+            "item": [
+                {
+                    "name": "Get all devices accessible to the authenticated user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/my-devices",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/my-devices"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns devices the user owns (`own`) and devices they access through caregiving relationships (`caregiving`)."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get devices owned by the authenticated user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/my-devices\/own",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/my-devices\/own"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get devices accessible through caregiving relationships",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/my-devices\/caregiving",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/my-devices\/caregiving"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Assign a device to the authenticated user using its phone number",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/devices\/assign",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/devices\/assign"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"phone_number\":\"+31612345678\",\"nickname\":\"Grandma's Alarm\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get a specific device by ID, if user has access",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/devices\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/devices\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "8",
+                                    "description": "The ID of the device."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Unassign a device from the authenticated user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/devices\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/devices\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the device to unassign."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "This removes the ownership link between the user and the device.\nOnly the device owner can perform this action."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "User",
+            "description": "\nEndpoints for managing the authenticated user's profile, caregivers, and patients.",
+            "item": [
+                {
+                    "name": "Show the authenticated user's information.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/user",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/user"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update the authenticated user's profile information.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/user",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/user"
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"John\",\"email\":\"john@example.com\",\"phone_number\":\"+31612345678\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update the authenticated user's password.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/user\/password",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/user\/password"
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"current_password\":\"oldpass123\",\"new_password\":\"newpass456\",\"new_password_confirmation\":\"newpass456\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete the authenticated user's account.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/user",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/user"
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"password\":\"pass123\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get all caregivers for the authenticated user.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/user\/caregivers",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/user\/caregivers"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get all patients the authenticated user cares for.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/user\/patients",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/user\/patients"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update caregiver priorities.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/user\/caregivers\/update",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/user\/caregivers\/update"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"caregivers\":[\"cumque\"]}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
                 }
             ]
         }

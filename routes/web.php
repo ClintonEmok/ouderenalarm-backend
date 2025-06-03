@@ -10,4 +10,5 @@ Route::middleware('signed')
     ->get('invitation/{invitation}/accept', AcceptCaregiverInvitation::class)
     ->name('invitation.accept');
 
+// TODO: Add register for customers
 require __DIR__.'/auth.php';
