@@ -25,14 +25,23 @@ Route::middleware('auth:sanctum')->group(function () {
     //
     // 👤 User
     //
-    Route::prefix('user')->controller(\App\Http\Controllers\API\UserController::class)->group(function () {
+    Route::prefix('user')->controller(\App\Http\Controllers\API\UserController::class)->middleware('auth:sanctum')->group(function () {
+        // Profile
         Route::get('/', 'show');
         Route::put('/', 'update');
         Route::put('/password', 'updatePassword');
         Route::delete('/', 'destroy');
+
+        // Caregivers & Patients
         Route::get('/caregivers', 'caregivers');
         Route::get('/patients', 'patients');
         Route::post('/caregivers/update', 'updateCaregiverPriorities');
+
+        // Notes
+        Route::get('/notes', 'userNotes');
+        Route::post('/notes', 'storeUserNote');
+        Route::put('/notes/{note}', 'updateUserNote');
+        Route::delete('/notes/{note}', 'deleteUserNote');
     });
 
     //
