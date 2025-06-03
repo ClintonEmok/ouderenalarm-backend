@@ -27,8 +27,8 @@ class UserResource extends JsonResource
                     'type' => $address->pivot->type,
                 ];
             }),
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => $this->created_at->toISOString(),
+            'updated_at' => $this->updated_at->toISOString(),
         ];
     }
 }

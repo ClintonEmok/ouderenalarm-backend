@@ -21,7 +21,7 @@ class DeviceAlarmResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'created_at' => $this->created_at->toDateTimeString(),
+            'created_at' => $this->created_at->toISOString(),
             'triggered_alerts' => implode(', ', $alerts) ?: 'Geen',
             'false_alarm' => $this->is_false_alarm,
             'location' => $this->device && $this->device->latestLocation

@@ -19,8 +19,8 @@ class InviteResource extends JsonResource
             'email' => $this->email,
             'status' => $this->status,
             'token' => $this->token,
-            'expires_at' => optional($this->expires_at)->toDateTimeString(),
-            'created_at' => $this->created_at->toDateTimeString(),
+            'expires_at' => optional($this->expires_at)->toISOString(),
+            'created_at' => $this->created_at->toISOString(),
             'user' => $this->whenLoaded('invitedUser', function () {
                 return new UserResource($this->invitedUser);
             }),

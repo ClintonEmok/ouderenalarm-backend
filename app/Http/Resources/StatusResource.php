@@ -19,7 +19,7 @@ class StatusResource extends JsonResource
             'battery_level' => $this->battery_level,
             'signal_strength' => $this->signal_strength,
             'status' => $this->status,
-            'timestamp' => $this->created_at->toDateTimeString(),
+            'timestamp' => $this->created_at->toISOString(),
         ];
     }
 }
