@@ -44,7 +44,7 @@ class NotesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('type')->badge(),
                 Tables\Columns\TextColumn::make('content')->label("Inhoud")->limit(50),
 //                Tables\Columns\TextColumn::make('author.name')->label('Auteur'),
-                Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op"),
+                Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op")->dateTime(timezone: 'Europe/Amsterdam'),
             ])
             ->filters([
                 //
