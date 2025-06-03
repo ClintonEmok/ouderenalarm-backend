@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Carbon\Carbon;
+use Filament\Facades\Filament;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\ServiceProvider;
@@ -27,9 +29,11 @@ class AppServiceProvider extends ServiceProvider
         ResetPassword::createUrlUsing(function (object $notifiable, string $token) {
             return config('app.frontend_url')."/password-reset/$token?email={$notifiable->getEmailForPasswordReset()}";
         });
+        
 
-        TextColumn::configureUsing(function (TextColumn $textColumn): void {
-            $textColumn->timezone('Europe/Amsterdam');
+        Filament::serving(function () {
+            Carbon::setLocale('nl');
+            date_default_timezone_set('Europe/Amsterdam');
         });
 
 
