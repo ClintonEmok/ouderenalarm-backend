@@ -160,6 +160,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->morphMany(Note::class, 'noteable');
     }
 
+    public function pushTokens()
+    {
+        return $this->hasMany(PushToken::class);
+    }
+
 
 
 }

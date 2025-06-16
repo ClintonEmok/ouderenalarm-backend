@@ -67,6 +67,37 @@ class ProcessEmergencyAlarm implements ShouldQueue
         );
 
         Log::info("Queued SIA {$eventCode} alarm for Alarm {$this->alarm->id} with URL: {$extraInfo}");
+
+        // 6. Send mobile push notification
+        $user = $this->alarm->device?->user;
+
+        if (!$user) {
+            Log::warning("No user linked to device for Alarm {$this->alarm->id}");
+            return;
+        }
+
+        $title = 'Alarm Triggered';
+        $body = match (true) {
+            $this->alarm->fall_down_alert => 'A fall was detected. Please check immediately.',
+            $this->alarm->sos_alert => 'SOS button was pressed. Please respond.',
+            default => 'An emergency alarm was triggered.',
+        };
+
+        $data = [
+            'alarm_id' => $this->alarm->id,
+            'device_id' => $this->alarm->device_id,
+            'type' => $eventCode,
+            'url' => $extraInfo,
+        ];
+
+        app(\App\Services\NotificationService::class)->sendToUserAndCaregivers(
+            $user,
+            $title,
+            $body,
+            $data
+        );
+
+        Log::info("Dispatched push notification for Alarm {$this->alarm->id}");
     }
 
     /**

@@ -56,6 +56,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/devices/{id}', 'unassign');
     });
 
+    Route::post('/push-tokens', [\App\Http\Controllers\API\PushTokenController::class, 'store']);
+    Route::delete('/push-tokens', [\App\Http\Controllers\API\PushTokenController::class, 'destroy']);
+
     //
     // 🚨 Alarms
     //
