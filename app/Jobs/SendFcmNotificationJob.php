@@ -2,13 +2,16 @@
 
 namespace App\Jobs;
 
+use App\Models\PushToken;
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\Middleware\RateLimited;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
+use Kreait\Firebase\Contract\Messaging;
 
 class SendFcmNotificationJob implements ShouldQueue
 {
@@ -21,33 +24,24 @@ class SendFcmNotificationJob implements ShouldQueue
         public array $data = []
     ) {}
 
-    public function handle(): void
+    public function handle(Messaging $messaging): void
     {
-        $payload = [
-            'to' => $this->token,
-            'notification' => [
-                'title' => $this->title,
-                'body' => $this->body,
-            ],
-            'data' => $this->data,
-        ];
+        $message = CloudMessage::new()
+            ->withNotification(Notification::create($this->title, $this->body))
+            ->withData($this->data)
+            ->toToken($this->token);
 
-        $response = Http::withToken(config('services.fcm.server_key'))
-            ->post('https://fcm.googleapis.com/fcm/send', $payload);
-
-        if ($response->failed()) {
-            logger()->error('FCM Push failed', [
+        try {
+            $messaging->send($message);
+        } catch (\Kreait\Firebase\Exception\Messaging\NotFound $e) {
+            // Token is invalid or expired
+            PushToken::where('token', $this->token)->delete();
+            Log::info("Deleted invalid push token: {$this->token}");
+        } catch (\Throwable $e) {
+            Log::error('Failed to send FCM push', [
                 'token' => $this->token,
-                'response' => $response->body(),
+                'error' => $e->getMessage(),
             ]);
         }
-    }
-
-    public function middleware(): array
-    {
-        return [
-            // Optional: prevent overloads or quota exhaustion
-            new RateLimited('fcm'),
-        ];
     }
 }
