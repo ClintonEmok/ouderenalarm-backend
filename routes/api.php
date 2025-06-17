@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Jobs\SendTestPushNotificationJob;
 
 
 
@@ -58,6 +59,15 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/push-tokens', [\App\Http\Controllers\API\PushTokenController::class, 'store']);
     Route::delete('/push-tokens', [\App\Http\Controllers\API\PushTokenController::class, 'destroy']);
+    Route::post('/test-push', function (\Illuminate\Http\Request $request) {
+        $request->validate([
+            'token' => 'required|string',
+        ]);
+
+        SendTestPushNotificationJob::dispatch($request->token);
+
+        return response()->json(['status' => 'queued']);
+    });
 
     //
     // 🚨 Alarms
