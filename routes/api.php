@@ -59,15 +59,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/push-tokens', [\App\Http\Controllers\API\PushTokenController::class, 'store']);
     Route::delete('/push-tokens', [\App\Http\Controllers\API\PushTokenController::class, 'destroy']);
-    Route::post('/test-push', function (\Illuminate\Http\Request $request) {
-        $request->validate([
-            'token' => 'required|string',
-        ]);
-
-        SendTestPushNotificationJob::dispatch($request->token);
-
-        return response()->json(['status' => 'queued']);
-    });
 
     //
     // 🚨 Alarms
@@ -87,4 +78,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/caregivers/invites/pending', 'pending');
         Route::patch('/caregivers/reorder', [\App\Http\Controllers\API\CaregiverController::class, 'reorderCaregivers']);
     });
+});
+Route::post('/test-push', function (\Illuminate\Http\Request $request) {
+    $request->validate([
+        'token' => 'required|string',
+    ]);
+
+    SendTestPushNotificationJob::dispatch($request->token);
+
+    return response()->json(['status' => 'queued']);
 });
