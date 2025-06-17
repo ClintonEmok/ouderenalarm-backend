@@ -76,11 +76,15 @@ class ProcessEmergencyAlarm implements ShouldQueue
             return;
         }
 
-        $title = 'Alarm Triggered';
+        $title = 'Alarm Geactiveerd';
+
+        $userName = $this->alarm->device?->user?->name ?? 'Een gebruiker';
+        $deviceName = $this->alarm->device?->nickname ? " (apparaat: {$this->alarm->device->nickname})" : '';
+
         $body = match (true) {
-            $this->alarm->fall_down_alert => 'A fall was detected. Please check immediately.',
-            $this->alarm->sos_alert => 'SOS button was pressed. Please respond.',
-            default => 'An emergency alarm was triggered.',
+            $this->alarm->fall_down_alert => "{$userName} is mogelijk gevallen{$deviceName}. Controleer alstublieft direct.",
+            $this->alarm->sos_alert => "{$userName} heeft op de SOS-knop gedrukt{$deviceName}. Reageer alstublieft zo snel mogelijk.",
+            default => "Er is een noodalarm geactiveerd door {$userName}{$deviceName}.",
         };
 
         $data = [
