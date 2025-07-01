@@ -109,7 +109,7 @@ class DeviceAlarmResource extends Resource
                 TextColumn::make("device.connection_number")->label("Aansluitnumer"),
                 TextColumn::make("device.phone_number")->label("Telefoonnummer"),
                 TextColumn::make("device.imei")->label("IMEI")->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op"),
+                Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op")->dateTime(timezone: 'Europe/Amsterdam'),
                 Tables\Columns\IconColumn::make('is_false_alarm')
                     ->boolean(),
                 Tables\Columns\ColumnGroup::make('Soort melding',[

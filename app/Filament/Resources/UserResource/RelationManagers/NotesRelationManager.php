@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\DeviceAlarmResource\RelationManagers;
+namespace App\Filament\Resources\UserResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -14,49 +14,47 @@ class NotesRelationManager extends RelationManager
 {
     protected static string $relationship = 'notes';
     protected static ?string $title = 'Notities';
-
     protected static ?string $modelLabel = "Notitie";
     protected static ?string $pluralLabel = "Notities";
-
-    public function isReadOnly(): bool
-    {
-        return false;
-    }
+    protected static ?string $recordTitleAttribute = 'content';
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Textarea::make('note')
+//                Transform to enum
+                Forms\Components\Select::make('type')
+                    ->options([
+                        'medical' => 'Medisch',
+                        'general' => 'Algemeen',
+                    ])
+                ,
+                Forms\Components\Textarea::make('content')->label("Inhoud")
+                    ->columnSpanFull()
                     ->required()
-                    ->maxLength(255)->columnSpanFull(),
+                    ->maxLength(255),
             ]);
     }
 
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('note')
-            ->modelLabel("notitie")
-            ->pluralModelLabel("notities")
+            ->recordTitleAttribute('content')
             ->columns([
-                Tables\Columns\TextColumn::make('note'),
+                Tables\Columns\TextColumn::make('type')->badge(),
+                Tables\Columns\TextColumn::make('content')->label("Inhoud")->limit(50),
+//                Tables\Columns\TextColumn::make('author.name')->label('Auteur'),
+                Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op")->dateTime(timezone: 'Europe/Amsterdam'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()->mutateFormDataUsing(function (array $data): array {
-                    $data['user_id'] = auth()->id();
-
-                    return $data;
-                })
-
+                Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-//                TODO: Bring back when policies work
-//                Tables\Actions\EditAction::make(),
-//                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -53,9 +53,9 @@ class DeviceResource extends Resource
                 Tables\Columns\TextColumn::make('phone_number')->label("Telefoonnummer")->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('imei')->label('IMEI')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op")
-                ->dateTime()->toggleable(isToggledHiddenByDefault: true),
+                    ->dateTime(timezone: 'Europe/Amsterdam')->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')->label("Bijgewerkt Op")
-                ->dateTime()->toggleable(isToggledHiddenByDefault: true),
+                    ->dateTime(timezone: 'Europe/Amsterdam')->toggleable(isToggledHiddenByDefault: true),
 
             ])
             ->filters([

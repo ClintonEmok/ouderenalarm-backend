@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Jobs\SendTestPushNotificationJob;
 
 
 
@@ -25,14 +26,23 @@ Route::middleware('auth:sanctum')->group(function () {
     //
     // 👤 User
     //
-    Route::prefix('user')->controller(\App\Http\Controllers\API\UserController::class)->group(function () {
+    Route::prefix('user')->controller(\App\Http\Controllers\API\UserController::class)->middleware('auth:sanctum')->group(function () {
+        // Profile
         Route::get('/', 'show');
         Route::put('/', 'update');
         Route::put('/password', 'updatePassword');
         Route::delete('/', 'destroy');
+
+        // Caregivers & Patients
         Route::get('/caregivers', 'caregivers');
         Route::get('/patients', 'patients');
         Route::post('/caregivers/update', 'updateCaregiverPriorities');
+
+        // Notes
+        Route::get('/notes', 'userNotes');
+        Route::post('/notes', 'storeUserNote');
+        Route::put('/notes/{note}', 'updateUserNote');
+        Route::delete('/notes/{note}', 'deleteUserNote');
     });
 
     //
@@ -46,6 +56,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/devices/{id}', 'show');
         Route::delete('/devices/{id}', 'unassign');
     });
+
+    Route::post('/push-tokens', [\App\Http\Controllers\API\PushTokenController::class, 'store']);
+    Route::delete('/push-tokens', [\App\Http\Controllers\API\PushTokenController::class, 'destroy']);
 
     //
     // 🚨 Alarms
@@ -65,4 +78,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/caregivers/invites/pending', 'pending');
         Route::patch('/caregivers/reorder', [\App\Http\Controllers\API\CaregiverController::class, 'reorderCaregivers']);
     });
+});
+Route::post('/test-push', function (\Illuminate\Http\Request $request) {
+    $request->validate([
+        'token' => 'required|string',
+    ]);
+
+    SendTestPushNotificationJob::dispatch($request->token);
+
+    return response()->json(['status' => 'queued']);
 });

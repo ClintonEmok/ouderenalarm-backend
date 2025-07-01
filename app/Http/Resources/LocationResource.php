@@ -17,7 +17,7 @@ class LocationResource extends JsonResource
         return [
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
-            'timestamp' => $this->created_at->toDateTimeString(),
+            'timestamp' => $this->created_at->toISOString(),
         ];
     }
 }

@@ -6,6 +6,7 @@ use App\Filament\Resources\CustomerResource\Pages;
 use App\Filament\Resources\CustomerResource\RelationManagers;
 use App\Filament\Resources\UserResource\RelationManagers\CaregiversRelationManager;
 use App\Filament\Resources\UserResource\RelationManagers\DevicesRelationManager;
+use App\Filament\Resources\UserResource\RelationManagers\NotesRelationManager;
 use App\Models\Country;
 use App\Models\Customer;
 use App\Models\User;
@@ -109,6 +110,7 @@ class CustomerResource extends Resource
     {
         return [
             RelationManagers\AddressesRelationManager::class,
+                NotesRelationManager::class,
                 CaregiversRelationManager::class,
                 DevicesRelationManager::class,
 

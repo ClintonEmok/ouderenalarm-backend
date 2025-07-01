@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Enums\InviteStatus;
+use App\Filament\Customer\Pages\CustomerDashboard;
 use Livewire\Component;
 use App\Models\Invite;
 use App\Models\User;use Filament\Actions\Action;use Filament\Actions\ActionGroup;use Filament\Forms\Components\TextInput;use Filament\Forms\Concerns\InteractsWithForms;use Filament\Forms\Form;use Filament\Pages\Concerns\InteractsWithFormActions;use Filament\Pages\Dashboard;use Filament\Pages\SimplePage;use Illuminate\Validation\Rules\Password;
@@ -90,7 +91,7 @@ class AcceptCaregiverInvitation extends SimplePage
         $this->invitationModel->acceptNew($user);
 //        $this->invitationModel->delete();
 //        TODO: Redirect to customer panel
-        $this->redirect(Dashboard::getUrl());
+        $this->redirect(CustomerDashboard::getUrl());
     }
 
     /**
