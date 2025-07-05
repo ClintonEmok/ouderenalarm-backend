@@ -5,6 +5,7 @@ namespace App\Filament\Resources\DeviceAlarmResource\RelationManagers;
 use App\Enums\CaregiverStatus;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Resources\Components\Tab;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -44,6 +45,7 @@ class CaregiverStatusesRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('name')->label('Naam'),
                 Tables\Columns\TextColumn::make('email'),
+                Tables\Columns\TextColumn::make('phone_number')->label('Telefoonnummer'),
                 Tables\Columns\TextColumn::make('pivot.status')
                     ->label('Status')
                     ->badge()
