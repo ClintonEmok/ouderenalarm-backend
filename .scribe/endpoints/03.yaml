@@ -1,65 +1,16 @@
-name: Devices
-description: |-
-
-  Endpoints for managing and viewing devices.
+name: Notes
+description: ''
 endpoints:
   -
     httpMethods:
       - GET
-    uri: api/my-devices
+    uri: api/user/notes
     metadata:
-      groupName: Devices
-      groupDescription: |-
-
-        Endpoints for managing and viewing devices.
+      groupName: Notes
+      groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get all devices accessible to the authenticated user'
-      description: 'Returns devices the user owns (`own`) and devices they access through caregiving relationships (`caregiving`).'
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 401
-        content: '{"message":"Unauthenticated."}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          vary: Origin
-        description: null
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer D5468bea1fZEPvc6kh3Vgda'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: api/my-devices/own
-    metadata:
-      groupName: Devices
-      groupDescription: |-
-
-        Endpoints for managing and viewing devices.
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get devices owned by the authenticated user'
+      title: 'Get notes for the authenticated user.'
       description: ''
       authenticated: true
       custom: []
@@ -76,64 +27,33 @@ endpoints:
     fileParameters: []
     responses:
       -
-        status: 401
-        content: '{"message":"Unauthenticated."}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          vary: Origin
-        description: null
+        status: 200
+        content: |-
+          {
+            "status": "success",
+            "message": "Notes retrieved successfully.",
+            "count": 1,
+            "data": [
+              {
+                "id": 1,
+                "type": "medical",
+                "content": "Feeling better.",
+                "author_id": 5,
+                "noteable_id": 5,
+                "noteable_type": "App\\Models\\User",
+                "created_at": "2025-05-19T12:00:00Z",
+                "updated_at": "2025-05-19T12:00:00Z"
+              }
+            ]
+          }
+        headers: []
+        description: Success
         custom: []
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer de665gc4bfa8VZ1vDhEk3Pa'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: api/my-devices/caregiving
-    metadata:
-      groupName: Devices
-      groupDescription: |-
-
-        Endpoints for managing and viewing devices.
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get devices accessible through caregiving relationships'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 401
-        content: '{"message":"Unauthenticated."}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          vary: Origin
-        description: null
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer h5VeDaPc8vb6Ed1f6Zk4a3g'
+      - 'Bearer bDZ18566fcPkE4V3ahvedga'
     controller: null
     method: null
     route: null
@@ -141,15 +61,13 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: api/devices/assign
+    uri: api/user/notes
     metadata:
-      groupName: Devices
-      groupDescription: |-
-
-        Endpoints for managing and viewing devices.
+      groupName: Notes
+      groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Assign a device to the authenticated user using its phone number'
+      title: 'Store a new note for the authenticated user.'
       description: ''
       authenticated: true
       custom: []
@@ -162,52 +80,72 @@ endpoints:
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      phone_number:
-        name: phone_number
-        description: 'The phone number of the device.'
-        required: true
-        example: '+31612345678'
+      type:
+        name: type
+        description: ''
+        required: false
+        example: medical
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      nickname:
-        name: nickname
-        description: 'optional A nickname for the device.'
-        required: false
-        example: "Grandma's Alarm"
+      content:
+        name: content
+        description: ''
+        required: true
+        example: 'I feel dizzy today.'
         type: string
         enumValues: []
         exampleWasSpecified: true
-        nullable: true
+        nullable: false
+        custom: []
+      anonymous:
+        name: anonymous
+        description: optional
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
         custom: []
     cleanBodyParameters:
-      phone_number: '+31612345678'
-      nickname: "Grandma's Alarm"
+      type: medical
+      content: 'I feel dizzy today.'
+      anonymous: true
     fileParameters: []
-    responses: []
+    responses:
+      -
+        status: 201
+        content: |-
+          {
+            "status": "success",
+            "message": "Note created successfully.",
+            "data": { "id": 2, "type": "medical", "content": "I feel dizzy today.", ... }
+          }
+        headers: []
+        description: ''
+        custom: []
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer dkca6h568fagv1ZVE3bP4De'
+      - 'Bearer a58fb6v4hdecVDaZ31EgkP6'
     controller: null
     method: null
     route: null
     custom: []
   -
     httpMethods:
-      - GET
-    uri: 'api/devices/{id}'
+      - PUT
+    uri: 'api/user/notes/{note_id}'
     metadata:
-      groupName: Devices
-      groupDescription: |-
-
-        Endpoints for managing and viewing devices.
+      groupName: Notes
+      groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get a specific device by ID, if user has access'
+      title: 'Update an existing note of the authenticated user.'
       description: ''
       authenticated: true
       custom: []
@@ -216,67 +154,9 @@ endpoints:
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      id:
-        name: id
-        description: 'The ID of the device.'
-        required: true
-        example: 8
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      id: 8
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 401
-        content: '{"message":"Unauthenticated."}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          vary: Origin
-        description: null
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer h6E3Zeakvb56fgc1dPV48Da'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - DELETE
-    uri: 'api/devices/{id}'
-    metadata:
-      groupName: Devices
-      groupDescription: |-
-
-        Endpoints for managing and viewing devices.
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Unassign a device from the authenticated user'
-      description: |-
-        This removes the ownership link between the user and the device.
-        Only the device owner can perform this action.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      id:
-        name: id
-        description: 'The ID of the device to unassign.'
+      note_id:
+        name: note_id
+        description: 'The ID of the note.'
         required: true
         example: 1
         type: integer
@@ -284,19 +164,129 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         custom: []
+      note:
+        name: note
+        description: 'The ID of the note.'
+        required: true
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
     cleanUrlParameters:
-      id: 1
+      note_id: 1
+      note: 5
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      type:
+        name: type
+        description: ''
+        required: false
+        example: general
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      content:
+        name: content
+        description: ''
+        required: true
+        example: 'Updated note content.'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      type: general
+      content: 'Updated note content.'
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "status": "success",
+            "message": "Note updated successfully.",
+            "data": { "id": 5, "type": "general", "content": "Updated note content.", ... }
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer Dgb6PZ18he4cEva3fkV5ad6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/user/notes/{note_id}'
+    metadata:
+      groupName: Notes
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Delete a note owned by the authenticated user.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      note_id:
+        name: note_id
+        description: 'The ID of the note.'
+        required: true
+        example: 14
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      note:
+        name: note
+        description: 'The ID of the note.'
+        required: true
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      note_id: 14
+      note: 5
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "status": "success",
+            "message": "Note deleted successfully."
+          }
+        headers: []
+        description: ''
+        custom: []
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer aa418V6he5bPfZDkd6E3gvc'
+      - 'Bearer khP63f6cevDa8Z1g4dV5bEa'
     controller: null
     method: null
     route: null

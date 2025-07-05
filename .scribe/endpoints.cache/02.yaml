@@ -45,7 +45,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 616E3faPhbekadg8vZ45VDc'
+      - 'Bearer 6Vd4kEbc86ePf1hZ5gDa3av'
     controller: null
     method: null
     route: null
@@ -114,7 +114,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 3a65f8agecdbkVE6hZvDP14'
+      - 'Bearer 5Z36bV8fva1ecd4PkEDgh6a'
     controller: null
     method: null
     route: null
@@ -183,7 +183,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer a4Z861a6d5hbPgvcEfkeD3V'
+      - 'Bearer 5Z8ad1eE36a6vVfhPDgbck4'
     controller: null
     method: null
     route: null
@@ -230,7 +230,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 561EeadZv4f3kD8bhgVa6Pc'
+      - 'Bearer gDZc1baV4k5v6e8fha3P6dE'
     controller: null
     method: null
     route: null
@@ -275,7 +275,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer e4Pc6hVg3b8k6dvaZf5DE1a'
+      - 'Bearer dv1aV68a6kZeh5fEgbP3c4D'
     controller: null
     method: null
     route: null
@@ -320,7 +320,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer Pfk6e4b3v1VgE5Z8adcha6D'
+      - 'Bearer Z3dEaVgfa8c66hk4Dv15bPe'
     controller: null
     method: null
     route: null
@@ -354,7 +354,7 @@ endpoints:
         description: ''
         required: true
         example:
-          - cumque
+          - qui
         type: 'string[]'
         enumValues: []
         exampleWasSpecified: false
@@ -364,7 +364,7 @@ endpoints:
         name: 'caregivers[].user_id'
         description: ''
         required: true
-        example: 14
+        example: 13
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -374,7 +374,7 @@ endpoints:
         name: 'caregivers[].priority'
         description: ''
         required: true
-        example: 6
+        example: 13
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -382,14 +382,14 @@ endpoints:
         custom: []
     cleanBodyParameters:
       caregivers:
-        - cumque
+        - qui
     fileParameters: []
     responses: []
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer gfc1E6PV5d8k6D4Zhabave3'
+      - 'Bearer D6ag6k3Ee8vP5bhcZf1aV4d'
     controller: null
     method: null
     route: null
