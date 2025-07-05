@@ -340,42 +340,32 @@ paths:
     get:
       summary: 'List relevant device alarms'
       operationId: listRelevantDeviceAlarms
-      description: 'Only returns alarms that are fall or SOS alerts.'
+      description: "Returns alarms that are either fall or SOS alerts, including basic device and user info,\nand a list of caregivers currently en route."
       parameters: []
       responses:
-        401:
+        200:
           description: ''
           content:
-            application/json:
+            text/plain:
               schema:
-                type: object
-                example:
-                  message: Unauthenticated.
-                properties:
-                  message:
-                    type: string
-                    example: Unauthenticated.
+                type: string
+                example: "{\n  \"data\": [\n    {\n      \"id\": 42,\n      \"created_at\": \"2025-05-30 12:34:56\",\n      \"triggered_alerts\": \"Valalarm, Noodoproep\",\n      \"false_alarm\": true\n      \"device\": {\n        \"imei\": \"123456789012345\",\n        \"phone_number\": \"+31612345678\",\n        \"connection_number\": \"CN001\",\n        \"user\": {\n          \"name\": \"Jan Jansen\"\n        }\n      },\n      \"caregivers_en_route\": \"Piet Pietersen, Klaas Klaassen\"\n    }\n  ],\n  \"links\": {\n    \"first\": \"http://example.com/api/device-alarms?page=1\",\n    \"last\": \"http://example.com/api/device-alarms?page=1\",\n    \"prev\": null,\n    \"next\": null\n  },\n  \"meta\": {\n    \"current_page\": 1,\n    \"from\": 1,\n    \"last_page\": 1,\n    \"path\": \"http://example.com/api/device-alarms\",\n    \"per_page\": 15,\n    \"to\": 1,\n    \"total\": 1\n  }\n}"
       tags:
         - 'Device Alarms'
   '/api/device-alarms/{id}':
     get:
       summary: 'Show details for a specific device alarm'
       operationId: showDetailsForASpecificDeviceAlarm
-      description: ''
+      description: "Returns the full details of a specific alarm, including triggered alerts,\ndevice and user information, and the list of caregivers en route."
       parameters: []
       responses:
-        401:
+        200:
           description: ''
           content:
-            application/json:
+            text/plain:
               schema:
-                type: object
-                example:
-                  message: Unauthenticated.
-                properties:
-                  message:
-                    type: string
-                    example: Unauthenticated.
+                type: string
+                example: "{\n  \"id\": 42,\n  \"created_at\": \"2025-05-30 12:34:56\",\n  \"triggered_alerts\": \"Valalarm, Noodoproep\",\n  \"false_alarm\": true\n  \"location\" : {\n      \"latitude\": \"51.02323\",\n      \"longitude\": \"5.21212\"\n      \"timestamp\": \"2025-05-30 12:34:56\"\n  }\n  \"device\": {\n    \"imei\": \"123456789012345\",\n    \"phone_number\": \"+31612345678\",\n    \"connection_number\": \"CN001\",\n    \"user\": {\n      \"name\": \"Jan Jansen\"\n    }\n  },\n  \"caregivers_en_route\": \"Piet Pietersen, Klaas Klaassen\"\n}"
       tags:
         - 'Device Alarms'
     parameters:
@@ -383,7 +373,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the alarm.'
-        example: 2
+        example: 16
         required: true
         schema:
           type: integer
@@ -512,10 +502,418 @@ paths:
         in: path
         name: id
         description: 'The ID of the device.'
-        example: 8
+        example: 14
         required: true
         schema:
           type: integer
+  /api/user/notes:
+    get:
+      summary: 'Get notes for the authenticated user.'
+      operationId: getNotesForTheAuthenticatedUser
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Notes retrieved successfully.'
+                  count: 1
+                  data:
+                    -
+                      id: 1
+                      type: medical
+                      content: 'Feeling better.'
+                      author_id: 5
+                      noteable_id: 5
+                      noteable_type: App\Models\User
+                      created_at: '2025-05-19T12:00:00Z'
+                      updated_at: '2025-05-19T12:00:00Z'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Notes retrieved successfully.'
+                  count:
+                    type: integer
+                    example: 1
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        type: medical
+                        content: 'Feeling better.'
+                        author_id: 5
+                        noteable_id: 5
+                        noteable_type: App\Models\User
+                        created_at: '2025-05-19T12:00:00Z'
+                        updated_at: '2025-05-19T12:00:00Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        type:
+                          type: string
+                          example: medical
+                        content:
+                          type: string
+                          example: 'Feeling better.'
+                        author_id:
+                          type: integer
+                          example: 5
+                        noteable_id:
+                          type: integer
+                          example: 5
+                        noteable_type:
+                          type: string
+                          example: App\Models\User
+                        created_at:
+                          type: string
+                          example: '2025-05-19T12:00:00Z'
+                        updated_at:
+                          type: string
+                          example: '2025-05-19T12:00:00Z'
+      tags:
+        - Notes
+    post:
+      summary: 'Store a new note for the authenticated user.'
+      operationId: storeANewNoteForTheAuthenticatedUser
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  \"status\": \"success\",\n  \"message\": \"Note created successfully.\",\n  \"data\": { \"id\": 2, \"type\": \"medical\", \"content\": \"I feel dizzy today.\", ... }\n}"
+      tags:
+        - Notes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  description: ''
+                  example: medical
+                  nullable: false
+                content:
+                  type: string
+                  description: ''
+                  example: 'I feel dizzy today.'
+                  nullable: false
+                anonymous:
+                  type: boolean
+                  description: optional
+                  example: true
+                  nullable: false
+              required:
+                - content
+  '/api/user/notes/{note_id}':
+    put:
+      summary: 'Update an existing note of the authenticated user.'
+      operationId: updateAnExistingNoteOfTheAuthenticatedUser
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  \"status\": \"success\",\n  \"message\": \"Note updated successfully.\",\n  \"data\": { \"id\": 5, \"type\": \"general\", \"content\": \"Updated note content.\", ... }\n}"
+      tags:
+        - Notes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  description: ''
+                  example: general
+                  nullable: false
+                content:
+                  type: string
+                  description: ''
+                  example: 'Updated note content.'
+                  nullable: false
+              required:
+                - content
+    delete:
+      summary: 'Delete a note owned by the authenticated user.'
+      operationId: deleteANoteOwnedByTheAuthenticatedUser
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Note deleted successfully.'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Note deleted successfully.'
+      tags:
+        - Notes
+    parameters:
+      -
+        in: path
+        name: note_id
+        description: 'The ID of the note.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: note
+        description: 'The ID of the note.'
+        example: 5
+        required: true
+        schema:
+          type: integer
+  /api/push-tokens:
+    post:
+      summary: 'Register or update a push token for the authenticated user.'
+      operationId: registerOrUpdateAPushTokenForTheAuthenticatedUser
+      description: "This endpoint is called by the mobile app after receiving a push token from FCM.\nIt ensures that the token is stored and linked to the current user, allowing them to receive notifications."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Push token registered successfully.'
+                  data:
+                    id: 1
+                    user_id: 42
+                    token: fcm_abc123
+                    platform: android
+                    app_version: 1.0.0
+                    created_at: '2025-06-14T12:34:56.000000Z'
+                    updated_at: '2025-06-14T12:34:56.000000Z'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Push token registered successfully.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      user_id:
+                        type: integer
+                        example: 42
+                      token:
+                        type: string
+                        example: fcm_abc123
+                      platform:
+                        type: string
+                        example: android
+                      app_version:
+                        type: string
+                        example: 1.0.0
+                      created_at:
+                        type: string
+                        example: '2025-06-14T12:34:56.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-06-14T12:34:56.000000Z'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The token field is required.'
+                  errors:
+                    token:
+                      - 'The token field is required.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The token field is required.'
+                  errors:
+                    type: object
+                    properties:
+                      token:
+                        type: array
+                        example:
+                          - 'The token field is required.'
+                        items:
+                          type: string
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'An error occurred while registering the push token.'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'An error occurred while registering the push token.'
+      tags:
+        - 'Push Notifications'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: 'The push token from FCM.'
+                  example: fcm_abc123
+                  nullable: false
+                platform:
+                  type: string
+                  description: 'The platform of the device.'
+                  example: android
+                  nullable: true
+                app_version:
+                  type: string
+                  description: 'The version of the app.'
+                  example: 1.0.0
+                  nullable: true
+              required:
+                - token
+    delete:
+      summary: 'Delete a push token for the authenticated user.'
+      operationId: deleteAPushTokenForTheAuthenticatedUser
+      description: 'This is typically called when the user logs out or disables notifications on the device.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Push token deleted successfully.'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Push token deleted successfully.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'No matching token found for user.'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'No matching token found for user.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The token field is required.'
+                  errors:
+                    token:
+                      - 'The token field is required.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The token field is required.'
+                  errors:
+                    type: object
+                    properties:
+                      token:
+                        type: array
+                        example:
+                          - 'The token field is required.'
+                        items:
+                          type: string
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'An error occurred while deleting the push token.'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'An error occurred while deleting the push token.'
+      tags:
+        - 'Push Notifications'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: 'The push token to delete.'
+                  example: fcm_abc123
+                  nullable: false
+              required:
+                - token
   /api/user:
     get:
       summary: "Show the authenticated user's information."
@@ -682,7 +1080,7 @@ paths:
                   type: array
                   description: ''
                   example:
-                    - cumque
+                    - qui
                   items:
                     type: string
               required:
@@ -700,6 +1098,12 @@ tags:
   -
     name: Devices
     description: "\nEndpoints for managing and viewing devices."
+  -
+    name: Notes
+    description: ''
+  -
+    name: 'Push Notifications'
+    description: ''
   -
     name: User
     description: "\nEndpoints for managing the authenticated user's profile, caregivers, and patients."
