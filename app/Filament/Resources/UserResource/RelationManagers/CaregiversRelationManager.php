@@ -70,12 +70,17 @@ class CaregiversRelationManager extends RelationManager
                         $generatedPassword = Str::random(12);
 
                         // Create the new caregiver user
-                        $user = User::create([
+                        $attributes = [
                             'name' => $name,
                             'email' => $email,
                             'phone_number' => $phone,
-                            'password' => Hash::make($generatedPassword),
-                        ]);
+                        ];
+
+                        if ($email) {
+                            $attributes['password'] = Hash::make($generatedPassword);
+                        }
+
+                        $user = User::create($attributes);
 
                         // Optional: assign caregiver role
                         $user->assignRole('customer');
@@ -84,7 +89,10 @@ class CaregiversRelationManager extends RelationManager
                         $inviter->caregivers()->attach($user->id);
 
                         // Send caregiver invite email with password
-                        Mail::to($email)->queue(new CaregiverInvitationMail($user, $generatedPassword));
+                        if ($email) {
+                            Mail::to($email)->queue(new CaregiverInvitationMail($user, $generatedPassword));
+                        }
+
 
                         // Confirm to admin
                         Notification::make()
@@ -97,7 +105,7 @@ class CaregiversRelationManager extends RelationManager
                     })
                     ->form([
                         Forms\Components\TextInput::make('name')->required(),
-                        Forms\Components\TextInput::make('email')->required()->email(),
+                        Forms\Components\TextInput::make('email')->email(),
                         PhoneInput::make('phone_number')->label('Telefoonnummer')->required(),
                     ]),
 
