@@ -53,9 +53,11 @@ class CaregiversRelationManager extends RelationManager
                         $name = $data['name'];
 
                         // Check if user already exists
-                        $user = User::where('email', $email)
-                            ->orWhere('phone_number', $phone)
+                        $user = User::query()
+                            ->where('phone_number', $phone)
+                            ->when($email, fn ($q) => $q->orWhere('email', $email))
                             ->first();
+
 
                         if ($user) {
                             Notification::make()
