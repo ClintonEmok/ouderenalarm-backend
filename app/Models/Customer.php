@@ -26,4 +26,21 @@ class Customer extends User
         return User::class;
     }
 
+    public function caregiverPatients()
+    {
+        return $this->hasMany(CaregiverPatient::class, 'caregiver_id');
+    }
+    public function caregivers()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'caregiver_patients',
+            'patient_id',
+            'caregiver_id'
+        )
+            ->withTimestamps()
+            ->withPivot('priority')
+            ->orderBy('caregiver_patients.priority');
+    }
+
 }

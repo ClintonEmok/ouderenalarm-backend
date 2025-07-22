@@ -85,6 +85,18 @@ class CustomerResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->filters([
+                Tables\Filters\Filter::make('exclude_only_caregivers')
+                    ->label('Excl. Contactpersonen')
+                    ->default()
+                    ->query(fn (Builder $query) => $query
+                        ->where(function ($query) {
+                            $query
+                                ->whereHas('caregivers') // patient (include)
+                                ->orWhereDoesntHave('caregiverPatients'); // not a caregiver (include)
+                        })
+                    ),
+            ])
             ->columns([
                 TextColumn::make('name')->label("Naam"),
                 TextColumn::make('email')->label('E-mailadres'),
@@ -92,9 +104,7 @@ class CustomerResource extends Resource
 //                Tables\Columns\TextColumn::make('country')->label('Land')
 //                    ->getStateUsing(fn ($record): ?string => Country::find($record->addresses->first()?->country)?->name ?? null),
             ])
-            ->filters([
-                //
-            ])
+
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
