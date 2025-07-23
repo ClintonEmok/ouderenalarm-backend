@@ -45,6 +45,31 @@ class User extends Authenticatable implements FilamentUser
         'remember_token',
     ];
 
+    protected static function booted()
+    {
+        static::deleting(function (User $user) {
+            // If this user is a patient
+            if ($user->caregivers()->exists()) {
+                foreach ($user->caregivers as $caregiver) {
+                    // Detach this patient from the caregiver
+                    $caregiver->patients()->detach($user->id);
+
+                    // Skip deleting if caregiver is an admin
+                    if ($caregiver->hasRole('super_admin')) {
+                        continue;
+                    }
+                    // If caregiver has no other patients, delete them
+                    if ($caregiver->patients()->count() === 0) {
+                        $caregiver->delete();
+                    }
+                }
+            }
+
+            // Also detach caregivers from this user (clean pivot)
+            $user->caregivers()->detach();
+        });
+    }
+
     /**
      * Get the attributes that should be cast.
      *
