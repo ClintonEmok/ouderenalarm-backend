@@ -30,7 +30,7 @@ class CustomerInvitationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Welkom bij Ouderen Alarm - 14 dagen gratis proefperiode',
+            subject: 'Ouderen Alarm: Je proefaccount is klaar',
         );
     }
 

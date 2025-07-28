@@ -30,6 +30,18 @@ Als contactpersoon kun je:
 - Zien wie al is gebeld
 - Zelf contact opnemen als dat nodig is
 
+## App downloaden
+
+Gebruik de OuderenAlarm app om direct meldingen te ontvangen en snel te reageren.
+
+<x-mail::button :url="'https://play.google.com/store/apps/details?id=com.clintonemok.ouderenalarm'">
+Download voor Android
+</x-mail::button>
+
+<x-mail::button :url="'https://apps.apple.com/nl/app/ouderenalarm/id6746759752?l=en-GB'">
+Download voor iPhone
+</x-mail::button>
+
 Dank voor je betrokkenheid!
 
 Groet,
