@@ -30,7 +30,7 @@ class CustomerInvitationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Ouderen Alarm: Je proefaccount is klaar',
+            subject: 'Ouderen Alarm: Je proefaccount staat klaar',
         );
     }
 
