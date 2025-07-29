@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Mail;
+namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -14,29 +15,28 @@ class CustomerInvitationMail extends Mailable
 
     public $customer;
     public $password;
+    protected string $subjectLine;
 
-    /**
-     * Create a new message instance.
-     */
     public function __construct($customer, $password)
     {
         $this->customer = $customer;
         $this->password = $password;
+
+        $this->subjectLine = collect([
+            'Welkom bij Ouderen Alarm – jouw gratis proefperiode start nu',
+            'Ouderen Alarm: Je proefaccount staat klaar',
+            'Jouw gratis proefperiode is gestart!',
+            'Ouderen Alarm: Direct aan de slag met je account',
+        ])->random();
     }
 
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Ouderen Alarm: Je proefaccount staat klaar',
+            subject: $this->subjectLine,
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content(
@@ -48,11 +48,6 @@ class CustomerInvitationMail extends Mailable
         );
     }
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array
-     */
     public function attachments(): array
     {
         return [];

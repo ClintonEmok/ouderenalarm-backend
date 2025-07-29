@@ -11,9 +11,16 @@ Ter voorbereiding sturen we je alvast een voorbereidingsgids zodat je gelijk wee
 
 ## Inloggen
 
-Je kunt inloggen op [www.ouderen-alarmering.nl](https://www.ouderen-alarmering.nl)
+Gebruik de OuderenAlarm app om direct meldingen te ontvangen en snel te reageren.
 
-<img src="{{ asset('images/email/inloggen.png') }}" alt="Inloggen Illustratie" style="max-width: 100%; height: auto; margin: 20px 0;">
+<x-mail::button :url="'https://play.google.com/store/apps/details?id=com.clintonemok.ouderenalarm'">
+Download voor Android
+</x-mail::button>
+
+<x-mail::button :url="'https://apps.apple.com/nl/app/ouderenalarm/id6746759752?l=en-GB'">
+Download voor iPhone
+</x-mail::button>
+
 
 **E-mailadres:**
 {{ $customer->email }}
@@ -21,31 +28,31 @@ Je kunt inloggen op [www.ouderen-alarmering.nl](https://www.ouderen-alarmering.n
 **Wachtwoord:**
 {{ $password }}
 
-Je kunt je wachtwoord later zelf aanpassen in het portaal.
+Je kunt je wachtwoord later zelf aanpassen in de app.
 
-<img src="{{ asset('images/email/wachtwoord.png') }}" alt="Wachtwoord Aanpassen" style="max-width: 100%; height: auto; margin: 20px 0;">
+<img src="{{ asset('images/app/wachtwoord.jpeg') }}" alt="Wachtwoord Aanpassen" style="max-width: 100%; height: auto; margin: 20px 0;">
 
 ---
 
 ## Familieleden toevoegen
 
-Je kunt eenvoudig familieleden toevoegen in het portaal. Je bepaalt zelf wie als eerste wordt gebeld bij een noodgeval (nummer 1 = eerste contactpersoon).
-
-<img src="{{ asset('images/email/familieleden.png') }}" alt="Familie Toevoegen" style="max-width: 100%; height: auto; margin: 20px 0;">
-
-Als er iets gebeurt, nemen onze veiligheidsexperts binnen **30 seconden** contact op. Je ziet live in het portaal wat er is gebeurd en wie er onderweg is.
-
-<img src="{{ asset('images/email/noodmelding.png') }}" alt="Live Alarm Inzicht" style="max-width: 100%; height: auto; margin: 20px 0;">
+U kunt eenvoudig familieleden / thuiszorg / huisarts / etc toevoegen in de app.
+U bepaalt zelf wie als eerste wordt gebeld bij een noodgeval (nummer 1 = eerste contactpersoon).
 
 ---
 
-Wij koppelen het apparaat alvast aan jouw account zodat je het direct kunt gebruiken zodra het wordt geleverd.
+Status controleren:
 
-<x-mail::button :url="'https://api.ouderen-alarmering.nl/customer/login'">
-Log direct in
-</x-mail::button>
+Als er iets gebeurt, nemen onze veiligheidsexperts binnen 30 seconden contact op.
+Uw contactpersonen zien live in het portaal wat er is gebeurd en wie er onderweg is.
 
-Nogmaals bedankt, en we wensen jou en je familieleden een veilige en geruststellende toekomst!
+Voor extra veiligheid kunnen uw contactpersonen ook altijd controleren hoe vol het apparaatje is en zien waar u bent!
+
+Wij koppelen het apparaat alvast aan uw account zodat u het direct kunt gebruiken zodra het geleverd wordt!
+
+Bij vragen kunt u altijd mailen naar dit e-mail adres
+(support@ouderen-alarmering.nl)
+
 
 Groet,
 **Team OuderenAlarm**
