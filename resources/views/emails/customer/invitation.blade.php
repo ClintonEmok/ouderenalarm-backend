@@ -44,7 +44,10 @@ U bepaalt zelf wie als eerste wordt gebeld bij een noodgeval (nummer 1 = eerste 
 Status controleren:
 
 Als er iets gebeurt, nemen onze veiligheidsexperts binnen 30 seconden contact op.
-Uw contactpersonen zien live in het portaal wat er is gebeurd en wie er onderweg is.
+Uw contactpersonen zien live in de app wat er is gebeurd en wie er onderweg is.
+
+<img src="{{ asset('images/app/noodmelding.jpeg') }}" alt="Meldingen" style="max-width: 100%; height: auto; margin: 20px 0;">
+
 
 Voor extra veiligheid kunnen uw contactpersonen ook altijd controleren hoe vol het apparaatje is en zien waar u bent!
 
