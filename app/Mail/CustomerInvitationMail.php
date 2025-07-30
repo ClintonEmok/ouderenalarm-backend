@@ -1,13 +1,13 @@
 <?php
 
 namespace App\Mail;
-namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\Attachment;
 
 class CustomerInvitationMail extends Mailable
 {
@@ -50,6 +50,10 @@ class CustomerInvitationMail extends Mailable
 
     public function attachments(): array
     {
-        return [];
+        return [
+            Attachment::fromPath(public_path('/documenten/handleiding.pdf'))
+                ->as('Handleiding.pdf')
+                ->withMime('application/pdf'),
+        ];
     }
 }
