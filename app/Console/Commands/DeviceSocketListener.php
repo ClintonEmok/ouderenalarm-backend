@@ -46,7 +46,7 @@ class DeviceSocketListener extends Command
             }
 
             // ✅ Set 5-second receive timeout on client socket
-            socket_set_option($client, SOL_SOCKET, SO_RCVTIMEO, ['sec' => 5, 'usec' => 0]);
+            socket_set_option($client, SOL_SOCKET, SO_RCVTIMEO, ['sec' => 30, 'usec' => 0]);
 
             Log::info("New connection established");
 
