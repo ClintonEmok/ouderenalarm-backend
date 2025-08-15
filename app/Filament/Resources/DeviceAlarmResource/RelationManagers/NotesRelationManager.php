@@ -27,9 +27,38 @@ class NotesRelationManager extends RelationManager
     {
         return $form
             ->schema([
+                Forms\Components\Hidden::make('is_false_alarm')
+                    ->required()
+                    ->rules(['required', 'boolean']),
+
+
+                Forms\Components\Actions::make([
+                    Forms\Components\Actions\Action::make('selectTrueAlarm')
+                        ->label('Markeer als echt alarm')
+                        ->icon('heroicon-o-check-circle')
+                        ->color(fn ($get) => match ($get('is_false_alarm')) {
+                            false => 'success',    // selected
+                            true => 'gray',        // unselected
+                            default => 'success',  // default initial state
+                        })
+                        ->action(fn ($set) => $set('is_false_alarm', false)),
+
+                    Forms\Components\Actions\Action::make('selectFalseAlarm')
+                        ->label('Markeer als vals alarm')
+                        ->icon('heroicon-o-x-circle')
+                        ->color(fn ($get) => match ($get('is_false_alarm')) {
+                            true => 'danger',      // selected
+                            false => 'gray',       // unselected
+                            default => 'danger',   // default initial state
+                        })
+                        ->action(fn ($set) => $set('is_false_alarm', true)),
+
+
+                ])->alignCenter()->label('Beoordeling')->columnSpanFull(),
                 Forms\Components\Textarea::make('note')
                     ->required()
-                    ->maxLength(255)->columnSpanFull(),
+                    ->maxLength(255)
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -41,6 +70,10 @@ class NotesRelationManager extends RelationManager
             ->pluralModelLabel("notities")
             ->columns([
                 Tables\Columns\TextColumn::make('note'),
+                Tables\Columns\IconColumn::make('is_false_alarm')
+                    ->label('Vals Alarm')
+                    ->boolean()
+
             ])
             ->filters([
                 //

@@ -44,21 +44,7 @@ class DeviceAlarmResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
-            Actions::make([ Action::make('toggleFalseAlarm')
-                ->label(fn ($record) => $record->is_false_alarm ? 'Markeer als echt alarm' : 'Markeer als vals alarm')
-                ->icon(fn ($record) => $record->is_false_alarm ? 'heroicon-o-x-circle' : 'heroicon-o-check-circle')
-                ->color(fn ($record) => $record->is_false_alarm ? 'success' : 'danger')
-                ->requiresConfirmation()
-                ->action(function ($record) {
-                    $record->update(['is_false_alarm' => ! $record->is_false_alarm]);
-
-                    Notification::make()
-                        ->title('Status gewijzigd')
-                        ->body($record->is_false_alarm ? 'Alarm gemarkeerd als vals.' : 'Alarm gemarkeerd als echt.')
-                        ->success()
-                        ->send();
-                }),]),
-
+//
 
             Section::make("Klantendetails")->schema([
                 TextEntry::make("device.user.name")->label("Naam"),
@@ -111,6 +97,7 @@ class DeviceAlarmResource extends Resource
                 TextColumn::make("device.imei")->label("IMEI")->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op")->dateTime(timezone: 'Europe/Amsterdam'),
                 Tables\Columns\IconColumn::make('is_false_alarm')
+                    ->label("Vals alarm")
                     ->boolean(),
                 Tables\Columns\ColumnGroup::make('Soort melding',[
                     TextColumn::make('triggered_alerts')->label("Meldingen"),
