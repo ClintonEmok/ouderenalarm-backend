@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DeviceAlarmResource\Widgets\RecentDeviceAlarmsWidget;
 use App\Filament\Resources\DeviceResource\Pages;
 use App\Filament\Resources\DeviceResource\RelationManagers;
+use App\Filament\Resources\DeviceResource\Widgets\BatteryTrendChart;
 use App\Models\Device;
 use Dotswan\MapPicker\Fields\Map;
 use Dotswan\MapPicker\Infolists\MapEntry;
@@ -134,7 +135,8 @@ class DeviceResource extends Resource
     public static function getWidgets(): array
     {
         return [
-            DeviceResource\Widgets\RecentDeviceAlarmsWidget::class
+            DeviceResource\Widgets\RecentDeviceAlarmsWidget::class,
+            BatteryTrendChart::class
         ];
     }
 
