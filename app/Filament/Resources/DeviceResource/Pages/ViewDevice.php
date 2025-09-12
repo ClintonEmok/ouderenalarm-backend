@@ -24,7 +24,8 @@ class ViewDevice extends ViewRecord
     {
         return [
     DeviceResource\Widgets\RecentDeviceAlarmsWidget::class,
-            DeviceResource\Widgets\BatteryTrendChart::class
+            DeviceResource\Widgets\BatteryTrendChart::class,
+
         ];
     }
 }

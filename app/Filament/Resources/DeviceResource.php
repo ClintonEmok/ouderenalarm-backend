@@ -6,6 +6,7 @@ use App\Filament\Resources\DeviceAlarmResource\Widgets\RecentDeviceAlarmsWidget;
 use App\Filament\Resources\DeviceResource\Pages;
 use App\Filament\Resources\DeviceResource\RelationManagers;
 use App\Filament\Resources\DeviceResource\Widgets\BatteryTrendChart;
+use App\Filament\Resources\GeneralStatusesRelationManagerResource\RelationManagers\GeneralStatusesRelationManager;
 use App\Models\Device;
 use Dotswan\MapPicker\Fields\Map;
 use Dotswan\MapPicker\Infolists\MapEntry;
@@ -131,14 +132,16 @@ class DeviceResource extends Resource
         return [
             //
 //            RelationManagers\GpsLocationsRelationManager::class
-            RelationManagers\UserRelationManager::class
+            RelationManagers\UserRelationManager::class,
+            GeneralStatusesRelationManager::class
         ];
     }
     public static function getWidgets(): array
     {
         return [
             DeviceResource\Widgets\RecentDeviceAlarmsWidget::class,
-            BatteryTrendChart::class
+            BatteryTrendChart::class,
+
         ];
     }
 
