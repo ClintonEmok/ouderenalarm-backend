@@ -30,7 +30,7 @@ class GeneralStatusesRelationManager extends RelationManager
             ->recordTitleAttribute('created_at')
             ->columns([
                 Tables\Columns\TextColumn::make('created_at')->label("Gemaakt op")->dateTime(),
-                Tables\Columns\TextColumn::make('battery_level')->label("Batterijniveau")->dateTime(),
+                Tables\Columns\TextColumn::make('battery_level')->label("Batterijniveau"),
             ]) ->defaultSort('created_at', 'desc')
             ->filters([
                 //
