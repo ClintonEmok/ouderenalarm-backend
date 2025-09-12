@@ -95,6 +95,7 @@ class DeviceResource extends Resource
                 TextEntry::make("imei")->label("IMEI"),
                 TextEntry::make("phone_number")->label("Telefoonnummer"),
                 TextEntry::make("connection_number")->label("Aansluitnummer"),
+                TextEntry::make('updated_at')->label('Bijgewerkt op')->dateTime(timezone: 'Europe/Amsterdam'),
             ])->collapsible(),
             Section::make("Kaart")->schema([
                 MapEntry::make("location")
@@ -119,6 +120,7 @@ class DeviceResource extends Resource
                     ->state(fn($record) => $record->latestLocation?->longitude ?? 'Geen locatie gevonden')->copyable()
                     ->copyMessage('Gekopieerd!')
                     ->copyMessageDuration(1500),
+                TextEntry::make('updated_at')->label('Bijgewerkt op')->state(fn ($record) => $record->latestLocation?->updated_at ?? "")->dateTime(timezone: 'Europe/Amsterdam'),
             ])->collapsible(),
 
         ]);

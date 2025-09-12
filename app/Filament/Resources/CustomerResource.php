@@ -75,6 +75,7 @@ class CustomerResource extends Resource
                         Forms\Components\Placeholder::make('updated_at')
                             ->label('Laatst aangepast op')
                             ->content(fn (User $record): ?string => $record->updated_at?->diffForHumans()),
+                        Forms\Components\Placeholder::make('device')->label("Heeft een apparaat?")->content(fn(User $record): ?string => $record->devices()->exists() ? 'ja' : 'nee')
                     ])
                     ->columnSpan(['lg' => 1])
                     ->hidden(fn (?User $record) => $record === null),

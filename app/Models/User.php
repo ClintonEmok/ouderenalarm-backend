@@ -101,7 +101,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function devices(): HasMany
     {
-        return $this->hasMany(Device::class);
+        return $this->hasMany(Device::class,'user_id');
     }
 
     public function shippingAddresses()
