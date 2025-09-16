@@ -99,8 +99,8 @@ class CustomerResource extends Resource
                     ),
             ])
             ->columns([
-                TextColumn::make('name')->label("Naam"),
-                TextColumn::make('email')->label('E-mailadres'),
+                TextColumn::make('name')->label("Naam")->searchable(isIndividual: true),
+                TextColumn::make('email')->label('E-mailadres')->searchable(isIndividual: true),
                 TextColumn::make('phone_number')->label("Telefoonnummer"),
 //                Tables\Columns\TextColumn::make('country')->label('Land')
 //                    ->getStateUsing(fn ($record): ?string => Country::find($record->addresses->first()?->country)?->name ?? null),
