@@ -57,7 +57,6 @@ class DeviceResource extends Resource
                 Tables\Columns\TextColumn::make('latest_activity_at')
                     ->label('Latest Activity')
                     ->dateTime(timezone: 'Europe/Amsterdam')
-                    ->sortable()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')->label("Aangemaakt op")
                     ->dateTime(timezone: 'Europe/Amsterdam')->toggleable(isToggledHiddenByDefault: true),
