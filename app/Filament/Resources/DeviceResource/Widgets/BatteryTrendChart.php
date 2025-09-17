@@ -65,7 +65,7 @@ class BatteryTrendChart extends ChartWidget
                 ->perDay()
                 ->average('battery_level');
 
-            $labels = $trend->map(fn (TrendValue $v) => Carbon::parse($v->date)->format('d-m'))->all();
+            $labels = $trend->map(fn (TrendValue $v) => Carbon::parse($v->date)->timezone('Europe/Amsterdam')->format('d-m'))->all();
         } elseif ($filter === 'month') {
             // Laatste 30 dagen -> per dag gemiddelde
             $start = now()->subDays(29)->startOfDay();
@@ -77,7 +77,7 @@ class BatteryTrendChart extends ChartWidget
                 ->perDay()
                 ->average('battery_level');
 
-            $labels = $trend->map(fn (TrendValue $v) => Carbon::parse($v->date)->format('d-m'))->all();
+            $labels = $trend->map(fn (TrendValue $v) => Carbon::parse($v->date)->timezone('Europe/Amsterdam')->format('d-m'))->all();
         } else {
             // Dag: laatste 24 uur -> per uur gemiddelde
             $start = now()->subHours(23)->startOfHour();
@@ -89,7 +89,7 @@ class BatteryTrendChart extends ChartWidget
                 ->perHour()
                 ->average('battery_level');
 
-            $labels = $trend->map(fn (TrendValue $v) => Carbon::parse($v->date)->format('H:i'))->all();
+            $labels = $trend->map(fn (TrendValue $v) => Carbon::parse($v->date)->timezone('Europe/Amsterdam')->format('H:i'))->all();
         }
 
         $values = $trend->map(fn (TrendValue $v) => $v->aggregate)->all();

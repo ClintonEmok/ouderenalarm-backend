@@ -67,4 +67,24 @@ class Device extends Model
 
         return $query->where('user_id', $user->id);
     }
+
+    public function getLatestActivityAtAttribute()
+    {
+        // Use already eager-loaded relations if available, fallback to querying
+        $latestAlarm    = $this->relationLoaded('alarms')
+            ? $this->alarms->max('created_at')
+            : $this->alarms()->max('created_at');
+
+        $latestLocation = $this->relationLoaded('gpsLocations')
+            ? $this->gpsLocations->max('created_at')
+            : $this->gpsLocations()->max('created_at');
+
+        $latestStatus   = $this->relationLoaded('generalStatuses')
+            ? $this->generalStatuses->max('created_at')
+            : $this->generalStatuses()->max('created_at');
+
+        return collect([$latestAlarm, $latestLocation, $latestStatus])
+            ->filter()
+            ->max();
+    }
 }
