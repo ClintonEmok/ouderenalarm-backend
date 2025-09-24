@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -48,25 +49,34 @@ class User extends Authenticatable implements FilamentUser
     protected static function booted()
     {
         static::deleting(function (User $user) {
-            // If this user is a patient
+            Log::info("Generating cancellations for user ID {$user->id}");
+
+            // 🧼 1. Caregiver cleanup
             if ($user->caregivers()->exists()) {
                 foreach ($user->caregivers as $caregiver) {
-                    // Detach this patient from the caregiver
                     $caregiver->patients()->detach($user->id);
 
-                    // Skip deleting if caregiver is an admin
                     if ($caregiver->hasRole('super_admin')) {
                         continue;
                     }
-                    // If caregiver has no other patients, delete them
+
                     if ($caregiver->patients()->count() === 0) {
                         $caregiver->delete();
                     }
                 }
             }
 
-            // Also detach caregivers from this user (clean pivot)
             $user->caregivers()->detach();
+
+            // 📩 2. Altijd pending cancellations genereren voor alle devices
+            foreach ($user->devices as $device) {
+                if (!empty($device->connection_number)) {
+                    PendingCancellation::create([
+                        'connection_number' => $device->connection_number,
+                        'customer_name' => $user->name,
+                    ]);
+                }
+            }
         });
     }
 
