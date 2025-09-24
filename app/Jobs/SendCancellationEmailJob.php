@@ -27,11 +27,12 @@ class SendCancellationEmailJob implements ShouldQueue
             return "{$connectionNumber} - {$name} (opzegging per direct)";
         }, array_keys($this->connectionInfo), $this->connectionInfo);
 
-        $body = implode("\n", $lines);
+        $date = now()->timezone('Europe/Amsterdam')->format('d-m-Y');
+        $body = "Datum: {$date}\n\n" . implode("\n", $lines);
 
-        Mail::raw($body, function ($message) {
+        Mail::raw($body, function ($message) use ($date) {
             $message->to('administratie@alarmmeldnet.nl')
-                ->subject('Opzegging aansluitingen');
+                ->subject("Opzegging aansluitingen – {$date}");
         });
     }
 }
