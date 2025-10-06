@@ -18,9 +18,9 @@ class DeviceAccessRequestResource extends Resource
     protected static ?string $model = DeviceAccessRequest::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationLabel = 'Access Requests';
-    protected static ?string $pluralLabel = 'Device Access Requests';
-    protected static ?string $modelLabel = 'Access Request';
+    protected static ?string $navigationLabel = 'Apparaattoegangverzoek';
+    protected static ?string $pluralLabel = 'Apparaattoegangverzoeken';
+    protected static ?string $modelLabel = 'Apparaattoegangverzoek';
     protected static ?string $navigationGroup = 'Devices';
 
     public static function form(Form $form): Form

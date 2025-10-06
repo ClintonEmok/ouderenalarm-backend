@@ -12,8 +12,8 @@
 <p>
 Ouderenalarm B.V.<br>
 T.a.v. Opzeggingen<br>
-Strijpsestraat 193<br>
-5616 GK Eindhoven
+Achterweg 28<br>
+, 4156 AC Rumpt
 </p>
 
 <p>Laat het ons weten vóór het einde van je proefperiode om automatische verlenging te voorkomen.</p>
