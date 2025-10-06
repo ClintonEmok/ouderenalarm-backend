@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\Jobs\SendTrialEndingEmailJob;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -48,6 +49,12 @@ class User extends Authenticatable implements FilamentUser
 
     protected static function booted()
     {
+        static::created(function (User $user) {
+            // 📅 Plan herinneringsmail 10 dagen na registratie
+            SendTrialEndingEmailJob::dispatch($user->id)->delay(now()->addDays(10));
+
+            Log::info("Scheduled trial ending email for user ID {$user->id}");
+        });
         static::deleting(function (User $user) {
             Log::info("Generating cancellations for user ID {$user->id}");
 
