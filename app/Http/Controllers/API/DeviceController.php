@@ -7,9 +7,9 @@ use App\Http\Resources\DeviceResource;
 use App\Models\Device;
 use App\Models\DeviceAccessRequest;
 use App\Notifications\NewDeviceAccessRequest;
-use Filament\Notifications\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 
 /**
  * @group Devices
