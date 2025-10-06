@@ -45,7 +45,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6Vd4kEbc86ePf1hZ5gDa3av'
+      - 'Bearer hf5baZaVkcDeE61P8v364gd'
     controller: null
     method: null
     route: null
@@ -114,7 +114,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5Z36bV8fva1ecd4PkEDgh6a'
+      - 'Bearer fkavc63de158V6E4PbahgDZ'
     controller: null
     method: null
     route: null
@@ -183,7 +183,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5Z8ad1eE36a6vVfhPDgbck4'
+      - 'Bearer 1E8dgak5chb3VPv4D6Z6fea'
     controller: null
     method: null
     route: null
@@ -230,7 +230,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer gDZc1baV4k5v6e8fha3P6dE'
+      - 'Bearer a61a8654evgPcb3kfDEZhdV'
     controller: null
     method: null
     route: null
@@ -275,7 +275,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer dv1aV68a6kZeh5fEgbP3c4D'
+      - 'Bearer f856vhea31gbcZP4d6EakVD'
     controller: null
     method: null
     route: null
@@ -320,7 +320,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer Z3dEaVgfa8c66hk4Dv15bPe'
+      - 'Bearer 1a348ah65kcg6dEVbDZvePf'
     controller: null
     method: null
     route: null
@@ -354,7 +354,7 @@ endpoints:
         description: ''
         required: true
         example:
-          - qui
+          - facilis
         type: 'string[]'
         enumValues: []
         exampleWasSpecified: false
@@ -364,7 +364,7 @@ endpoints:
         name: 'caregivers[].user_id'
         description: ''
         required: true
-        example: 13
+        example: 2
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -374,7 +374,7 @@ endpoints:
         name: 'caregivers[].priority'
         description: ''
         required: true
-        example: 13
+        example: 19
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -382,14 +382,14 @@ endpoints:
         custom: []
     cleanBodyParameters:
       caregivers:
-        - qui
+        - facilis
     fileParameters: []
     responses: []
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer D6ag6k3Ee8vP5bhcZf1aV4d'
+      - 'Bearer v6k6cb5ZDPVf1h43Ed8egaa'
     controller: null
     method: null
     route: null

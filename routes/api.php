@@ -55,6 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/devices/assign', 'assign');
         Route::get('/devices/{id}', 'show');
         Route::delete('/devices/{id}', 'unassign');
+        Route::post('/devices/request-access',  'requestAccess');
     });
 
     Route::post('/push-tokens', [\App\Http\Controllers\API\PushTokenController::class, 'store']);

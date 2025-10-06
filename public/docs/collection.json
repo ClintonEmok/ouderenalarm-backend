@@ -5,12 +5,12 @@
             "key": "baseUrl",
             "type": "string",
             "name": "string",
-            "value": "https:\/\/api.ouderen-alarmering.nl"
+            "value": "http:\/\/localhost:8000"
         }
     ],
     "info": {
         "name": "Ouderenalarm API",
-        "_postman_id": "2f4da39f-d3ca-4bee-955a-85b6952a1ed6",
+        "_postman_id": "2a22352f-d1a1-4f37-9c17-a08202e6eb6a",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -395,7 +395,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "16",
+                                    "value": "12",
                                     "description": "The ID of the alarm."
                                 }
                             ]
@@ -604,7 +604,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "14",
+                                    "value": "15",
                                     "description": "The ID of the device."
                                 }
                             ]
@@ -657,7 +657,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "15",
+                                    "value": "10",
                                     "description": "The ID of the device to unassign."
                                 }
                             ]
@@ -675,6 +675,81 @@
                         ],
                         "body": null,
                         "description": "This removes the ownership link between the user and the device.\nOnly the device owner can perform this action."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Request access to an existing device",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/devices\/request-access",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/devices\/request-access"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"phone_number\":\"+31612345678\",\"message\":\"Ik wil toegang omdat ik voor deze persoon zorg.\"}"
+                        },
+                        "description": "Allows a user to request access to a device based on its phone number.\nThis request is submitted to the system administrator for review."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n \"message\": \"Access request submitted successfully.\",\n \"device_found\": true,\n \"device_id\": 42,\n \"access_request\": {\n   \"id\": 101,\n   \"phone_number\": \"+31612345678\",\n   \"message\": \"Ik wil toegang omdat ik voor deze persoon zorg.\",\n   \"created_at\": \"2025-10-06T11:23:45.000000Z\"\n }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n \"message\": \"Failed to submit device access request.\",\n \"error\": \"An unexpected error occurred.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Endpoints",
+            "description": "",
+            "item": [
+                {
+                    "name": "POST api\/test-push",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/test-push",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/test-push"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
                     },
                     "response": []
                 }
@@ -812,7 +887,7 @@
                                 {
                                     "id": "note_id",
                                     "key": "note_id",
-                                    "value": "14",
+                                    "value": "1",
                                     "description": "The ID of the note."
                                 },
                                 {
@@ -1199,7 +1274,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"caregivers\":[\"qui\"]}"
+                            "raw": "{\"caregivers\":[\"facilis\"]}"
                         },
                         "description": ""
                     },

@@ -45,7 +45,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer V3vg5Z6adcDE6fka4Pb1he8'
+      - 'Bearer af851Ec3VD4Z6a6dPgbkhev'
     controller: null
     method: null
     route: null
@@ -90,7 +90,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6adaV6E5vfbDe4Phkc813Zg'
+      - 'Bearer 1ghecfaaZ8b4PD5EvdV63k6'
     controller: null
     method: null
     route: null
@@ -135,7 +135,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer g46ckfEhD8a3V5bdP1va6eZ'
+      - 'Bearer hcg6Z1dakevPa6VD3458bfE'
     controller: null
     method: null
     route: null
@@ -193,7 +193,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer VPaEhae8b3v6df4D56g1Zkc'
+      - 'Bearer av54ckE6hDa16bg38VPdfeZ'
     controller: null
     method: null
     route: null
@@ -222,14 +222,14 @@ endpoints:
         name: id
         description: 'The ID of the device.'
         required: true
-        example: 14
+        example: 15
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      id: 14
+      id: 15
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -249,7 +249,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer Z1e8acdEg6faVhb6k4DP35v'
+      - 'Bearer V18k6EvdcDfP3hag65ebaZ4'
     controller: null
     method: null
     route: null
@@ -280,14 +280,14 @@ endpoints:
         name: id
         description: 'The ID of the device to unassign.'
         required: true
-        example: 15
+        example: 10
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      id: 15
+      id: 10
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -298,7 +298,94 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer Zb8h365gVD4f1dvPc6Eaeka'
+      - 'Bearer a8ga3E1eZP6vfDb6V5ck4dh'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/devices/request-access
+    metadata:
+      groupName: Devices
+      groupDescription: |-
+
+        Endpoints for managing and viewing devices.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Request access to an existing device'
+      description: |-
+        Allows a user to request access to a device based on its phone number.
+        This request is submitted to the system administrator for review.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      phone_number:
+        name: phone_number
+        description: 'The phone number of the device.'
+        required: true
+        example: '+31612345678'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      message:
+        name: message
+        description: 'optional A custom message to explain the reason for the access request.'
+        required: false
+        example: 'Ik wil toegang omdat ik voor deze persoon zorg.'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+    cleanBodyParameters:
+      phone_number: '+31612345678'
+      message: 'Ik wil toegang omdat ik voor deze persoon zorg.'
+    fileParameters: []
+    responses:
+      -
+        status: 201
+        content: |-
+          {
+           "message": "Access request submitted successfully.",
+           "device_found": true,
+           "device_id": 42,
+           "access_request": {
+             "id": 101,
+             "phone_number": "+31612345678",
+             "message": "Ik wil toegang omdat ik voor deze persoon zorg.",
+             "created_at": "2025-10-06T11:23:45.000000Z"
+           }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+           "message": "Failed to submit device access request.",
+           "error": "An unexpected error occurred."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer v83g6bDa56daEfcPeZ4khV1'
     controller: null
     method: null
     route: null

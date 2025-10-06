@@ -5,7 +5,11 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DeviceResource;
 use App\Models\Device;
+use App\Models\DeviceAccessRequest;
+use App\Notifications\NewDeviceAccessRequest;
+use Filament\Notifications\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @group Devices
@@ -167,5 +171,84 @@ class DeviceController extends Controller
         $device->save();
 
         return response()->json(['message' => 'Device unassigned successfully.']);
+    }
+
+    /**
+     * Request access to an existing device
+     *
+     * Allows a user to request access to a device based on its phone number.
+     * This request is submitted to the system administrator for review.
+     *
+     * @bodyParam phone_number string required The phone number of the device. Example: +31612345678
+     * @bodyParam message string optional A custom message to explain the reason for the access request. Example: Ik wil toegang omdat ik voor deze persoon zorg.
+     *
+     * @response 201 {
+     *  "message": "Access request submitted successfully.",
+     *  "device_found": true,
+     *  "device_id": 42,
+     *  "access_request": {
+     *    "id": 101,
+     *    "phone_number": "+31612345678",
+     *    "message": "Ik wil toegang omdat ik voor deze persoon zorg.",
+     *    "created_at": "2025-10-06T11:23:45.000000Z"
+     *  }
+     * }
+     *
+     * @response 500 {
+     *  "message": "Failed to submit device access request.",
+     *  "error": "An unexpected error occurred."
+     * }
+     *
+     * @authenticated
+     */
+    public function requestAccess(Request $request)
+    {
+        $validated = $request->validate([
+            'phone_number' => ['required', 'string'],
+            'message' => ['nullable', 'string'],
+        ]);
+
+        try {
+            $user = $request->user();
+
+            // Optional: check if the device exists
+            $device = Device::where('phone_number', $validated['phone_number'])->first();
+
+            // Create the access request
+            $accessRequest = DeviceAccessRequest::create([
+                'user_id' => $user->id,
+                'phone_number' => $validated['phone_number'],
+                'message' => $validated['message'] ?? null,
+            ]);
+
+            // Ensure user is loaded for notification
+            $accessRequest->load('user');
+
+            // Send notification to admin (or role-based users)
+            Notification::route('mail', 'clintonneemok11@gmail.com')
+                ->notify(new NewDeviceAccessRequest($accessRequest));
+
+            return response()->json([
+                'message' => 'Access request submitted successfully.',
+                'device_found' => (bool) $device,
+                'device_id' => optional($device)->id,
+                'access_request' => [
+                    'id' => $accessRequest->id,
+                    'phone_number' => $accessRequest->phone_number,
+                    'message' => $accessRequest->message,
+                    'created_at' => $accessRequest->created_at,
+                ],
+            ], 201);
+        } catch (\Exception $e) {
+            Log::error('Failed to submit device access request', [
+                'user_id' => $request->user()?->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to submit device access request.',
+                'error' => app()->isLocal() ? $e->getMessage() : 'An unexpected error occurred.',
+            ], 500);
+        }
     }
 }

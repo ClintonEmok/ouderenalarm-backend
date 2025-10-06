@@ -26,7 +26,7 @@
             </style>
 
     <script>
-        var tryItOutBaseUrl = "https://api.ouderen-alarmering.nl";
+        var tryItOutBaseUrl = "http://localhost:8000";
         var useCsrf = Boolean(1);
         var csrfUrl = "/sanctum/csrf-cookie";
     </script>
@@ -143,6 +143,19 @@
                                                                                 <li class="tocify-item level-2" data-unique="devices-DELETEapi-devices--id-">
                                 <a href="#devices-DELETEapi-devices--id-">Unassign a device from the authenticated user</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="devices-POSTapi-devices-request-access">
+                                <a href="#devices-POSTapi-devices-request-access">Request access to an existing device</a>
+                            </li>
+                                                                        </ul>
+                            </ul>
+                    <ul id="tocify-header-endpoints" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="endpoints">
+                    <a href="#endpoints">Endpoints</a>
+                </li>
+                                    <ul id="tocify-subheader-endpoints" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="endpoints-POSTapi-test-push">
+                                <a href="#endpoints-POSTapi-test-push">POST api/test-push</a>
+                            </li>
                                                                         </ul>
                             </ul>
                     <ul id="tocify-header-notes" class="tocify-header">
@@ -214,7 +227,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: June 16, 2025</li>
+        <li>Last updated: October 6, 2025</li>
     </ul>
 </div>
 
@@ -223,7 +236,7 @@
     <div class="content">
         <h1 id="introduction">Introduction</h1>
 <aside>
-    <strong>Base URL</strong>: <code>https://api.ouderen-alarmering.nl</code>
+    <strong>Base URL</strong>: <code>http://localhost:8000</code>
 </aside>
 <p>This documentation aims to provide all the information you need to work with our API.</p>
 <aside>As you scroll, you'll see code examples for working with the API in different programming languages in the dark area to the right (or as part of the content on mobile).
@@ -251,7 +264,7 @@ You can switch the language used with the tabs at the top right (or from the nav
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "https://api.ouderen-alarmering.nl/api/register" \
+    "http://localhost:8000/api/register" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -265,7 +278,7 @@ You can switch the language used with the tabs at the top right (or from the nav
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/register"
+    "http://localhost:8000/api/register"
 );
 
 const headers = {
@@ -434,7 +447,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "https://api.ouderen-alarmering.nl/api/login" \
+    "http://localhost:8000/api/login" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -446,7 +459,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/login"
+    "http://localhost:8000/api/login"
 );
 
 const headers = {
@@ -592,7 +605,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "https://api.ouderen-alarmering.nl/api/logout" \
+    "http://localhost:8000/api/logout" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -600,7 +613,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/logout"
+    "http://localhost:8000/api/logout"
 );
 
 const headers = {
@@ -726,14 +739,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://api.ouderen-alarmering.nl/api/invites/validate?token=abc-123" \
+    --get "http://localhost:8000/api/invites/validate?token=abc-123" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/invites/validate"
+    "http://localhost:8000/api/invites/validate"
 );
 
 const params = {
@@ -870,7 +883,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "https://api.ouderen-alarmering.nl/api/caregivers/invite" \
+    "http://localhost:8000/api/caregivers/invite" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -882,7 +895,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/caregivers/invite"
+    "http://localhost:8000/api/caregivers/invite"
 );
 
 const headers = {
@@ -1013,7 +1026,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "https://api.ouderen-alarmering.nl/api/caregivers/accept" \
+    "http://localhost:8000/api/caregivers/accept" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -1028,7 +1041,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/caregivers/accept"
+    "http://localhost:8000/api/caregivers/accept"
 );
 
 const headers = {
@@ -1195,7 +1208,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "https://api.ouderen-alarmering.nl/api/caregivers/remove" \
+    "http://localhost:8000/api/caregivers/remove" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -1207,7 +1220,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/caregivers/remove"
+    "http://localhost:8000/api/caregivers/remove"
 );
 
 const headers = {
@@ -1338,7 +1351,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://api.ouderen-alarmering.nl/api/caregivers/invites/pending" \
+    --get "http://localhost:8000/api/caregivers/invites/pending" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -1346,7 +1359,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/caregivers/invites/pending"
+    "http://localhost:8000/api/caregivers/invites/pending"
 );
 
 const headers = {
@@ -1476,7 +1489,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PATCH \
-    "https://api.ouderen-alarmering.nl/api/caregivers/reorder" \
+    "http://localhost:8000/api/caregivers/reorder" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -1492,7 +1505,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/caregivers/reorder"
+    "http://localhost:8000/api/caregivers/reorder"
 );
 
 const headers = {
@@ -1634,7 +1647,7 @@ and a list of caregivers currently en route.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://api.ouderen-alarmering.nl/api/device-alarms" \
+    --get "http://localhost:8000/api/device-alarms" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -1642,7 +1655,7 @@ and a list of caregivers currently en route.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/device-alarms"
+    "http://localhost:8000/api/device-alarms"
 );
 
 const headers = {
@@ -1797,7 +1810,7 @@ device and user information, and the list of caregivers en route.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://api.ouderen-alarmering.nl/api/device-alarms/16" \
+    --get "http://localhost:8000/api/device-alarms/12" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -1805,7 +1818,7 @@ device and user information, and the list of caregivers en route.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/device-alarms/16"
+    "http://localhost:8000/api/device-alarms/12"
 );
 
 const headers = {
@@ -1936,10 +1949,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="GETapi-device-alarms--id-"
-               value="16"
+               value="12"
                data-component="url">
     <br>
-<p>The ID of the alarm. Example: <code>16</code></p>
+<p>The ID of the alarm. Example: <code>12</code></p>
             </div>
                     </form>
 
@@ -1961,7 +1974,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://api.ouderen-alarmering.nl/api/my-devices" \
+    --get "http://localhost:8000/api/my-devices" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -1969,7 +1982,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/my-devices"
+    "http://localhost:8000/api/my-devices"
 );
 
 const headers = {
@@ -2099,7 +2112,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://api.ouderen-alarmering.nl/api/my-devices/own" \
+    --get "http://localhost:8000/api/my-devices/own" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -2107,7 +2120,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/my-devices/own"
+    "http://localhost:8000/api/my-devices/own"
 );
 
 const headers = {
@@ -2237,7 +2250,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://api.ouderen-alarmering.nl/api/my-devices/caregiving" \
+    --get "http://localhost:8000/api/my-devices/caregiving" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -2245,7 +2258,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/my-devices/caregiving"
+    "http://localhost:8000/api/my-devices/caregiving"
 );
 
 const headers = {
@@ -2375,7 +2388,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "https://api.ouderen-alarmering.nl/api/devices/assign" \
+    "http://localhost:8000/api/devices/assign" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -2388,7 +2401,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/devices/assign"
+    "http://localhost:8000/api/devices/assign"
 );
 
 const headers = {
@@ -2531,7 +2544,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://api.ouderen-alarmering.nl/api/devices/14" \
+    --get "http://localhost:8000/api/devices/15" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -2539,7 +2552,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/devices/14"
+    "http://localhost:8000/api/devices/15"
 );
 
 const headers = {
@@ -2660,10 +2673,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="GETapi-devices--id-"
-               value="14"
+               value="15"
                data-component="url">
     <br>
-<p>The ID of the device. Example: <code>14</code></p>
+<p>The ID of the device. Example: <code>15</code></p>
             </div>
                     </form>
 
@@ -2682,7 +2695,7 @@ Only the device owner can perform this action.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "https://api.ouderen-alarmering.nl/api/devices/15" \
+    "http://localhost:8000/api/devices/10" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -2690,7 +2703,7 @@ Only the device owner can perform this action.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/devices/15"
+    "http://localhost:8000/api/devices/10"
 );
 
 const headers = {
@@ -2795,12 +2808,308 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="DELETEapi-devices--id-"
-               value="15"
+               value="10"
                data-component="url">
     <br>
-<p>The ID of the device to unassign. Example: <code>15</code></p>
+<p>The ID of the device to unassign. Example: <code>10</code></p>
             </div>
                     </form>
+
+                    <h2 id="devices-POSTapi-devices-request-access">Request access to an existing device</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Allows a user to request access to a device based on its phone number.
+This request is submitted to the system administrator for review.</p>
+
+<span id="example-requests-POSTapi-devices-request-access">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost:8000/api/devices/request-access" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"phone_number\": \"+31612345678\",
+    \"message\": \"Ik wil toegang omdat ik voor deze persoon zorg.\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/devices/request-access"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "phone_number": "+31612345678",
+    "message": "Ik wil toegang omdat ik voor deze persoon zorg."
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-devices-request-access">
+            <blockquote>
+            <p>Example response (201):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Access request submitted successfully.&quot;,
+    &quot;device_found&quot;: true,
+    &quot;device_id&quot;: 42,
+    &quot;access_request&quot;: {
+        &quot;id&quot;: 101,
+        &quot;phone_number&quot;: &quot;+31612345678&quot;,
+        &quot;message&quot;: &quot;Ik wil toegang omdat ik voor deze persoon zorg.&quot;,
+        &quot;created_at&quot;: &quot;2025-10-06T11:23:45.000000Z&quot;
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (500):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Failed to submit device access request.&quot;,
+    &quot;error&quot;: &quot;An unexpected error occurred.&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-devices-request-access" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-devices-request-access"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-devices-request-access"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-devices-request-access" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-devices-request-access">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-devices-request-access" data-method="POST"
+      data-path="api/devices/request-access"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-devices-request-access', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-devices-request-access"
+                    onclick="tryItOut('POSTapi-devices-request-access');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-devices-request-access"
+                    onclick="cancelTryOut('POSTapi-devices-request-access');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-devices-request-access"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/devices/request-access</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-devices-request-access"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-devices-request-access"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-devices-request-access"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>phone_number</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="phone_number"                data-endpoint="POSTapi-devices-request-access"
+               value="+31612345678"
+               data-component="body">
+    <br>
+<p>The phone number of the device. Example: <code>+31612345678</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>message</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="message"                data-endpoint="POSTapi-devices-request-access"
+               value="Ik wil toegang omdat ik voor deze persoon zorg."
+               data-component="body">
+    <br>
+<p>optional A custom message to explain the reason for the access request. Example: <code>Ik wil toegang omdat ik voor deze persoon zorg.</code></p>
+        </div>
+        </form>
+
+                <h1 id="endpoints">Endpoints</h1>
+
+    
+
+                                <h2 id="endpoints-POSTapi-test-push">POST api/test-push</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-POSTapi-test-push">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost:8000/api/test-push" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/test-push"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-test-push">
+</span>
+<span id="execution-results-POSTapi-test-push" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-test-push"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-test-push"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-test-push" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-test-push">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-test-push" data-method="POST"
+      data-path="api/test-push"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-test-push', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-test-push"
+                    onclick="tryItOut('POSTapi-test-push');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-test-push"
+                    onclick="cancelTryOut('POSTapi-test-push');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-test-push"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/test-push</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-test-push"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-test-push"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
 
                 <h1 id="notes">Notes</h1>
 
@@ -2820,7 +3129,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://api.ouderen-alarmering.nl/api/user/notes" \
+    --get "http://localhost:8000/api/user/notes" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -2828,7 +3137,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/user/notes"
+    "http://localhost:8000/api/user/notes"
 );
 
 const headers = {
@@ -2965,7 +3274,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "https://api.ouderen-alarmering.nl/api/user/notes" \
+    "http://localhost:8000/api/user/notes" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -2979,7 +3288,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/user/notes"
+    "http://localhost:8000/api/user/notes"
 );
 
 const headers = {
@@ -3155,7 +3464,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "https://api.ouderen-alarmering.nl/api/user/notes/1" \
+    "http://localhost:8000/api/user/notes/1" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -3168,7 +3477,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/user/notes/1"
+    "http://localhost:8000/api/user/notes/1"
 );
 
 const headers = {
@@ -3345,7 +3654,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "https://api.ouderen-alarmering.nl/api/user/notes/14" \
+    "http://localhost:8000/api/user/notes/1" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -3353,7 +3662,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/user/notes/14"
+    "http://localhost:8000/api/user/notes/1"
 );
 
 const headers = {
@@ -3468,10 +3777,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="note_id"                data-endpoint="DELETEapi-user-notes--note_id-"
-               value="14"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the note. Example: <code>14</code></p>
+<p>The ID of the note. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>note</code></b>&nbsp;&nbsp;
@@ -3505,7 +3814,7 @@ It ensures that the token is stored and linked to the current user, allowing the
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "https://api.ouderen-alarmering.nl/api/push-tokens" \
+    "http://localhost:8000/api/push-tokens" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -3519,7 +3828,7 @@ It ensures that the token is stored and linked to the current user, allowing the
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/push-tokens"
+    "http://localhost:8000/api/push-tokens"
 );
 
 const headers = {
@@ -3717,7 +4026,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "https://api.ouderen-alarmering.nl/api/push-tokens" \
+    "http://localhost:8000/api/push-tokens" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -3729,7 +4038,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/push-tokens"
+    "http://localhost:8000/api/push-tokens"
 );
 
 const headers = {
@@ -3908,7 +4217,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://api.ouderen-alarmering.nl/api/user" \
+    --get "http://localhost:8000/api/user" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -3916,7 +4225,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/user"
+    "http://localhost:8000/api/user"
 );
 
 const headers = {
@@ -4046,7 +4355,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "https://api.ouderen-alarmering.nl/api/user" \
+    "http://localhost:8000/api/user" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -4060,7 +4369,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/user"
+    "http://localhost:8000/api/user"
 );
 
 const headers = {
@@ -4215,7 +4524,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "https://api.ouderen-alarmering.nl/api/user/password" \
+    "http://localhost:8000/api/user/password" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -4229,7 +4538,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/user/password"
+    "http://localhost:8000/api/user/password"
 );
 
 const headers = {
@@ -4384,7 +4693,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "https://api.ouderen-alarmering.nl/api/user" \
+    "http://localhost:8000/api/user" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -4396,7 +4705,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/user"
+    "http://localhost:8000/api/user"
 );
 
 const headers = {
@@ -4527,7 +4836,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://api.ouderen-alarmering.nl/api/user/caregivers" \
+    --get "http://localhost:8000/api/user/caregivers" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -4535,7 +4844,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/user/caregivers"
+    "http://localhost:8000/api/user/caregivers"
 );
 
 const headers = {
@@ -4665,7 +4974,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://api.ouderen-alarmering.nl/api/user/patients" \
+    --get "http://localhost:8000/api/user/patients" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -4673,7 +4982,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/user/patients"
+    "http://localhost:8000/api/user/patients"
 );
 
 const headers = {
@@ -4803,13 +5112,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "https://api.ouderen-alarmering.nl/api/user/caregivers/update" \
+    "http://localhost:8000/api/user/caregivers/update" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
     \"caregivers\": [
-        \"qui\"
+        \"facilis\"
     ]
 }"
 </code></pre></div>
@@ -4817,7 +5126,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://api.ouderen-alarmering.nl/api/user/caregivers/update"
+    "http://localhost:8000/api/user/caregivers/update"
 );
 
 const headers = {
@@ -4828,7 +5137,7 @@ const headers = {
 
 let body = {
     "caregivers": [
-        "qui"
+        "facilis"
     ]
 };
 
@@ -4938,10 +5247,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="caregivers.0.user_id"                data-endpoint="POSTapi-user-caregivers-update"
-               value="13"
+               value="2"
                data-component="body">
     <br>
-<p>Example: <code>13</code></p>
+<p>Example: <code>2</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>priority</code></b>&nbsp;&nbsp;
@@ -4949,10 +5258,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="caregivers.0.priority"                data-endpoint="POSTapi-user-caregivers-update"
-               value="13"
+               value="19"
                data-component="body">
     <br>
-<p>Example: <code>13</code></p>
+<p>Example: <code>19</code></p>
                     </div>
                                     </details>
         </div>

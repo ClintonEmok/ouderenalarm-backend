@@ -55,7 +55,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer bDZ18566fcPkE4V3ahvedga'
+      - 'Bearer da8ce3fgZVPk61Eav6h4Db5'
     controller: null
     method: null
     route: null
@@ -133,7 +133,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer a58fb6v4hdecVDaZ31EgkP6'
+      - 'Bearer Vk3cED816g5d4afb6PvZeah'
     controller: null
     method: null
     route: null
@@ -222,7 +222,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer Dgb6PZ18he4cEva3fkV5ad6'
+      - 'Bearer 1gZa6d3hav4Vf6cPeDkb58E'
     controller: null
     method: null
     route: null
@@ -249,7 +249,7 @@ endpoints:
         name: note_id
         description: 'The ID of the note.'
         required: true
-        example: 14
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -266,7 +266,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      note_id: 14
+      note_id: 1
       note: 5
     queryParameters: []
     cleanQueryParameters: []
@@ -288,7 +288,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer khP63f6cevDa8Z1g4dV5bEa'
+      - 'Bearer efkcavZEVa6583dg1Pbh46D'
     controller: null
     method: null
     route: null
